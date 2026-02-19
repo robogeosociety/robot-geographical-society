@@ -8,7 +8,15 @@
       "Bash(gh pr list:*)",
       "Bash(git pull:*)",
       "Bash(git branch:*)",
-      "Bash(git remote prune:*)"
+      "Bash(git remote prune:*)",
+      "Bash(git -C:*)",
+      "WebSearch",
+      "WebFetch(domain:www.nps.gov)",
+      "WebFetch(domain:www.fs.usda.gov)",
+      "WebFetch(domain:recreation.gov)",
+      "Bash(npm test:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run dev:*)"
     ]
   }
 }
