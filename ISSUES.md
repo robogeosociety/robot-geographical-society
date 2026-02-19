@@ -24,15 +24,13 @@ Before proposing changes, understand the codebase:
    - `npm run build` — confirm the production build succeeds.
 3. **Iterate** until all checks pass.
 
-## Phase 3: Pull Request & Preview
+## Phase 3: Pull Request
 
 1. **Open a PR** targeting `main`, using `Fixes #N` or `Closes #N` keywords in the PR body so GitHub auto-closes the issue on merge.
 2. **CI auto-runs**: `.github/workflows/ci.yaml` runs lint, tests, and build. A status comment is posted on the PR.
-3. **Live preview**: run `/deploy-preview` manually to sync the branch to `~/dev/maps/rgs/` and publish to GitHub Pages at `https://tommyroar.github.io/maps/rgs/`.
-4. **Wait for review**: Push new commits to the same branch in response to feedback. **Do NOT merge** — keep the PR open until the human maintainer merges it.
+3. **Wait for review**: Push new commits to the same branch in response to feedback. **Do NOT merge** — keep the PR open until the human maintainer merges it.
 
-## Phase 4: Production & Closure
+## Phase 4: Merge & Closure
 
-1. After the human merges to `main`, run `/deploy-preview` to sync and publish the final build to `https://tommyroar.github.io/maps/rgs/`.
-2. Verify the fix at the live URL.
-3. Close the issue only after confirming the production deployment succeeded.
+1. After the human merges to `main`, the issue is automatically closed by GitHub.
+2. `/deploy-preview` is a **manual** command run by the maintainer whenever a preview build is desired — it is not part of the PR or merge workflow.
