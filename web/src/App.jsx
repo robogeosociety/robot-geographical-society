@@ -58,8 +58,8 @@ export default function App() {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/outdoors-v12',
-      center: [-120.5, 47.5],
-      zoom: 6,
+      center: [-120.5, 47.3],
+      zoom: 6.5,
       failIfMajorPerformanceCaveat: false,
     });
 
@@ -190,45 +190,39 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>Robot Geographical Society</h1>
-        <p className="app-subtitle">Washington State Campsite Explorer</p>
-      </header>
-
-      <div className="controls">
-        {Object.entries(AGENCY_LABELS).map(([key, label]) => (
-          <button
-            key={key}
-            className={`agency-toggle ${activeAgencies.includes(key) ? 'active' : 'inactive'}`}
-            style={
-              activeAgencies.includes(key)
-                ? { borderColor: AGENCY_COLORS[key], color: AGENCY_COLORS[key] }
-                : {}
-            }
-            onClick={() => toggleAgency(key)}
-            aria-pressed={activeAgencies.includes(key)}
-          >
-            <span
-              className="agency-dot"
+      <div className="map-wrapper">
+        <div className="controls">
+          {Object.entries(AGENCY_LABELS).map(([key, label]) => (
+            <button
+              key={key}
+              className={`agency-toggle ${activeAgencies.includes(key) ? 'active' : 'inactive'}`}
               style={
                 activeAgencies.includes(key)
-                  ? { backgroundColor: AGENCY_COLORS[key] }
+                  ? { borderColor: AGENCY_COLORS[key], color: AGENCY_COLORS[key] }
                   : {}
               }
-            />
-            {label}
-          </button>
-        ))}
-      </div>
+              onClick={() => toggleAgency(key)}
+              aria-pressed={activeAgencies.includes(key)}
+            >
+              <span
+                className="agency-dot"
+                style={
+                  activeAgencies.includes(key)
+                    ? { backgroundColor: AGENCY_COLORS[key] }
+                    : {}
+                }
+              />
+              {label}
+            </button>
+          ))}
+        </div>
 
-      <div className="map-wrapper">
         {mapError && (
           <div className="map-error" role="alert">
             <strong>Map Error:</strong> {mapError}
           </div>
         )}
         <div ref={mapContainerRef} className="map-container" />
-      </div>
 
       {selectedCampsite && (
         <div className="detail-panel" role="dialog" aria-label="Campsite details">
@@ -288,6 +282,7 @@ export default function App() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
