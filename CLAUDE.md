@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**robot-geographical-society** is a robotic trip planner for human adventure, written in Python.
+**robot-geographical-society** is a robotic trip planner for human adventure — a modern, computer-driven equivalent of the Royal Geographical Society, focused on helping users discover and reserve campsites across Washington State Parks, USFS, and the National Park Service.
+
+### Core Features (Functional Prototype)
+- **Map interface** built on Mapbox GL JS showing campsites currently open for reservation
+- **Static JSON dataset** of all campsites with metadata (site count, parameters, links)
+- **Static RSS feed** of reservation opening dates for tracked campsites (year-round sites excluded)
+- **Rich popups** per campsite: site count, site types (RV/tent/bike-in/parking), ICS calendar links, and links to official pages
 
 ## Setup
 
