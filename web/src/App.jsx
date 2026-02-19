@@ -23,6 +23,8 @@ const MONTH_NAMES = [
 
 const SOURCE_ID = 'campsites';
 const CIRCLES_LAYER = 'campsite-circles';
+const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
+const WA_BOUNDS = [[-124.83, 45.54], [-116.92, 49.00]];
 
 export default function App() {
   const mapContainerRef = useRef(null);
@@ -35,6 +37,8 @@ export default function App() {
   );
   const [mapError, setMapError] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const isDebug = new URLSearchParams(window.location.search).has('debug');
+  const [debugInfo, setDebugInfo] = useState({ zoom: '—', lng: '—', lat: '—' });
 
   // Build Mapbox filter expression for active agencies
   const buildFilter = useCallback((agencies) => {
@@ -57,15 +61,28 @@ export default function App() {
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/outdoors-v12',
-      center: [-120.5, 47.5],
-      zoom: 6,
+      style: MAP_STYLE,
+      bounds: WA_BOUNDS,
+      fitBoundsOptions: { padding: 40 },
       failIfMajorPerformanceCaveat: false,
     });
 
     mapRef.current = map;
 
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    if (isDebug) {
+      const updateDebug = () => {
+        const c = map.getCenter();
+        setDebugInfo({
+          zoom: map.getZoom().toFixed(2),
+          lng: c.lng.toFixed(4),
+          lat: c.lat.toFixed(4),
+        });
+      };
+      map.on('idle', updateDebug);
+      map.on('move', updateDebug);
+    }
 
     map.on('error', (e) => {
       console.error('Mapbox error:', e);
@@ -190,45 +207,45 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>Robot Geographical Society</h1>
-        <p className="app-subtitle">Washington State Campsite Explorer</p>
-      </header>
-
-      <div className="controls">
-        {Object.entries(AGENCY_LABELS).map(([key, label]) => (
-          <button
-            key={key}
-            className={`agency-toggle ${activeAgencies.includes(key) ? 'active' : 'inactive'}`}
-            style={
-              activeAgencies.includes(key)
-                ? { borderColor: AGENCY_COLORS[key], color: AGENCY_COLORS[key] }
-                : {}
-            }
-            onClick={() => toggleAgency(key)}
-            aria-pressed={activeAgencies.includes(key)}
-          >
-            <span
-              className="agency-dot"
+      <div className="map-wrapper">
+        <div className="controls">
+          {Object.entries(AGENCY_LABELS).map(([key, label]) => (
+            <button
+              key={key}
+              className={`agency-toggle ${activeAgencies.includes(key) ? 'active' : 'inactive'}`}
               style={
                 activeAgencies.includes(key)
-                  ? { backgroundColor: AGENCY_COLORS[key] }
+                  ? { borderColor: AGENCY_COLORS[key], color: AGENCY_COLORS[key] }
                   : {}
               }
-            />
-            {label}
-          </button>
-        ))}
-      </div>
+              onClick={() => toggleAgency(key)}
+              aria-pressed={activeAgencies.includes(key)}
+            >
+              <span
+                className="agency-dot"
+                style={
+                  activeAgencies.includes(key)
+                    ? { backgroundColor: AGENCY_COLORS[key] }
+                    : {}
+                }
+              />
+              {label}
+            </button>
+          ))}
+        </div>
 
-      <div className="map-wrapper">
         {mapError && (
           <div className="map-error" role="alert">
             <strong>Map Error:</strong> {mapError}
           </div>
         )}
         <div ref={mapContainerRef} className="map-container" />
-      </div>
+
+        {isDebug && (
+          <div className="debug-panel">
+            zoom: {debugInfo.zoom} | lng: {debugInfo.lng} | lat: {debugInfo.lat}
+          </div>
+        )}
 
       {selectedCampsite && (
         <div className="detail-panel" role="dialog" aria-label="Campsite details">
@@ -288,6 +305,7 @@ export default function App() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

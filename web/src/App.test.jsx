@@ -8,11 +8,10 @@ beforeEach(() => {
 });
 
 describe('App smoke tests', () => {
-  it('renders the app header', () => {
+  it('renders the controls overlay', () => {
     render(<App />);
-    expect(
-      screen.getByText('Robot Geographical Society')
-    ).toBeInTheDocument();
+    const controls = document.querySelector('.controls');
+    expect(controls).not.toBeNull();
   });
 
   it('renders all four agency toggle buttons', () => {
