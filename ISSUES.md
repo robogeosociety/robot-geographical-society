@@ -33,4 +33,3 @@ Before proposing changes, understand the codebase:
 ## Phase 4: Merge & Closure
 
 1. After the human merges to `main`, the issue is automatically closed by GitHub.
-2. `/deploy-preview` is a **manual** command run by the maintainer whenever a preview build is desired — it is not part of the PR or merge workflow.

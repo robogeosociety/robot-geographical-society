@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-permissions:
-  contents: read
-  pull-requests: write
-
 jobs:
   lint-test-build:
     runs-on: ubuntu-latest
@@ -38,15 +34,3 @@ jobs:
       - name: Build
         working-directory: web
         run: npm run build
-
-      - name: Comment on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '**CI passed** ✓ lint · test · build\n\nRun `/deploy-preview` to publish a live preview at https://tommyroar.github.io/maps/rgs/'
-            })
