@@ -37,8 +37,8 @@ export default function App() {
   );
   const [mapError, setMapError] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [debugInfo, setDebugInfo] = useState(null);
   const isDebug = new URLSearchParams(window.location.search).has('debug');
+  const [debugInfo, setDebugInfo] = useState({ zoom: '—', lng: '—', lat: '—' });
 
   // Build Mapbox filter expression for active agencies
   const buildFilter = useCallback((agencies) => {
@@ -78,11 +78,10 @@ export default function App() {
           zoom: map.getZoom().toFixed(2),
           lng: c.lng.toFixed(4),
           lat: c.lat.toFixed(4),
-          style: MAP_STYLE.split('/').pop(),
         });
       };
+      map.on('idle', updateDebug);
       map.on('move', updateDebug);
-      map.on('load', updateDebug);
     }
 
     map.on('error', (e) => {
@@ -242,9 +241,9 @@ export default function App() {
         )}
         <div ref={mapContainerRef} className="map-container" />
 
-        {isDebug && debugInfo && (
+        {isDebug && (
           <div className="debug-panel">
-            zoom: {debugInfo.zoom} | lng: {debugInfo.lng} | lat: {debugInfo.lat} | style: {debugInfo.style}
+            zoom: {debugInfo.zoom} | lng: {debugInfo.lng} | lat: {debugInfo.lat}
           </div>
         )}
 
