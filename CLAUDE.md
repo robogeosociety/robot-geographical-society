@@ -12,11 +12,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Static RSS feed** of reservation opening dates for tracked campsites (year-round sites excluded)
 - **Rich popups** per campsite: site count, site types (RV/tent/bike-in/parking), ICS calendar links, and links to official pages
 
-## Repository Boundary — CRITICAL
-
-**All source code commits go in this repo (`robot-geographical-society`).** Do NOT commit application code to `~/dev/maps` (github.com/tommyroar/maps).
-
-The `maps` repo is a **deploy target only**. Never commit RGS source directly to maps.
 
 ## Tooling
 
