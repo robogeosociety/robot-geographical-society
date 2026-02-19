@@ -12,18 +12,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Static RSS feed** of reservation opening dates for tracked campsites (year-round sites excluded)
 - **Rich popups** per campsite: site count, site types (RV/tent/bike-in/parking), ICS calendar links, and links to official pages
 
-## Setup
+## Repository Boundary — CRITICAL
 
-This project is in early development. No dependency manager or build tooling has been committed yet. Based on the `.gitignore`, the project is expected to use one of: `uv`, `poetry`, `pipenv`, or `pdm` for dependency management, and `pytest` for testing.
+**All source code commits go in this repo (`robot-geographical-society`).** Do NOT commit application code to `~/dev/maps` (github.com/tommyroar/maps).
 
-Once tooling is established, update this file with the actual commands.
+The `maps` repo is a **deploy target only**. To publish a preview to GitHub Pages, use the `/deploy-preview` slash command, which syncs `web/` and `data/` to `maps/rgs/` and pushes. Never commit RGS source directly to maps.
 
-## Expected Tooling (from .gitignore signals)
+## Tooling
 
-- **Testing:** `pytest`
-- **Linting/Formatting:** `ruff`
-- **Type checking:** `mypy`
-- **Dependency management:** `uv` (preferred) or `poetry`
+- **Frontend:** `web/` — React + Vite + Mapbox GL JS
+  - `npm run dev` — local dev server
+  - `npm test -- --run` — run tests (Vitest)
+  - `npm run lint` — ESLint
+  - `npm run build` — production build
+- **Campsite data:** `data/campsites.json` — GeoJSON FeatureCollection
 
 ## Development Protocol
 
