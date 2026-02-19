@@ -16,7 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **All source code commits go in this repo (`robot-geographical-society`).** Do NOT commit application code to `~/dev/maps` (github.com/tommyroar/maps).
 
-The `maps` repo is a **deploy target only**. To publish a preview to GitHub Pages, use the `/deploy-preview` slash command, which syncs `web/` and `data/` to `maps/rgs/` and pushes. Never commit RGS source directly to maps.
+The `maps` repo is a **deploy target only**. Never commit RGS source directly to maps.
 
 ## Tooling
 
