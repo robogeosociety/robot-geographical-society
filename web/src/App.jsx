@@ -23,6 +23,8 @@ const MONTH_NAMES = [
 
 const SOURCE_ID = 'campsites';
 const CIRCLES_LAYER = 'campsite-circles';
+const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
+const WA_BOUNDS = [[-124.83, 45.54], [-116.92, 49.00]];
 
 export default function App() {
   const mapContainerRef = useRef(null);
@@ -35,6 +37,8 @@ export default function App() {
   );
   const [mapError, setMapError] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [debugInfo, setDebugInfo] = useState(null);
+  const isDebug = new URLSearchParams(window.location.search).has('debug');
 
   // Build Mapbox filter expression for active agencies
   const buildFilter = useCallback((agencies) => {
@@ -57,15 +61,29 @@ export default function App() {
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/outdoors-v12',
-      center: [-120.5, 47.3],
-      zoom: 6.5,
+      style: MAP_STYLE,
+      bounds: WA_BOUNDS,
+      fitBoundsOptions: { padding: 40 },
       failIfMajorPerformanceCaveat: false,
     });
 
     mapRef.current = map;
 
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    if (isDebug) {
+      const updateDebug = () => {
+        const c = map.getCenter();
+        setDebugInfo({
+          zoom: map.getZoom().toFixed(2),
+          lng: c.lng.toFixed(4),
+          lat: c.lat.toFixed(4),
+          style: MAP_STYLE.split('/').pop(),
+        });
+      };
+      map.on('move', updateDebug);
+      map.on('load', updateDebug);
+    }
 
     map.on('error', (e) => {
       console.error('Mapbox error:', e);
@@ -223,6 +241,12 @@ export default function App() {
           </div>
         )}
         <div ref={mapContainerRef} className="map-container" />
+
+        {isDebug && debugInfo && (
+          <div className="debug-panel">
+            zoom: {debugInfo.zoom} | lng: {debugInfo.lng} | lat: {debugInfo.lat} | style: {debugInfo.style}
+          </div>
+        )}
 
       {selectedCampsite && (
         <div className="detail-panel" role="dialog" aria-label="Campsite details">
