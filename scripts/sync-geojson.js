@@ -28,6 +28,15 @@ function parseOpenDate(val) {
   return MONTH_MAP[month] ?? null;
 }
 
+const slugify = (text) =>
+  text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-');
+
 // Minimal YAML frontmatter parser for the known campsite schema
 function parseFrontmatter(raw) {
   const match = raw.match(/^---\n([\s\S]*?)\n---/);
@@ -107,7 +116,9 @@ function validate(fm, open_month, filePath) {
 
 function buildFeature(fm, filePath) {
   const open_month = parseOpenDate(fm.open_date);
+  const id = slugify(fm.name);
   const props = {
+    id,
     name: fm.name,
     agency: fm.agency,
     agency_short: fm.agency_short,
@@ -122,6 +133,7 @@ function buildFeature(fm, filePath) {
   validate(fm, open_month, filePath);
   return {
     type: 'Feature',
+    id,
     geometry: { type: 'Point', coordinates: [fm.lng, fm.lat] },
     properties: props,
   };

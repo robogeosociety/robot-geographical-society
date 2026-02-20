@@ -32,6 +32,8 @@ export default function App() {
   const hoveredIdRef = useRef(null);
 
   const [selectedCampsite, setSelectedCampsite] = useState(null);
+  const [campsiteDetails, setCampsiteDetails] = useState(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
   const [activeAgencies, setActiveAgencies] = useState(
     Object.keys(AGENCY_COLORS)
   );
@@ -39,6 +41,7 @@ export default function App() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const isDebug = new URLSearchParams(window.location.search).has('debug');
   const [debugInfo, setDebugInfo] = useState({ zoom: '—', lng: '—', lat: '—' });
+  const [debugCopied, setDebugCopied] = useState(false);
 
   // Build Mapbox filter expression for active agencies
   const buildFilter = useCallback((agencies) => {
@@ -197,6 +200,41 @@ export default function App() {
     map.setFilter(CIRCLES_LAYER, filter);
   }, [activeAgencies, mapLoaded, buildFilter]);
 
+  // Fetch campsite details from API when one is selected
+  useEffect(() => {
+    if (!selectedCampsite) {
+      setCampsiteDetails(null);
+      return;
+    }
+
+    setLoadingDetails(true);
+    // Use the ID from the selected campsite feature properties
+    const id = selectedCampsite.id;
+    if (!id) {
+        console.warn('No ID found for selected campsite');
+        setLoadingDetails(false);
+        return;
+    }
+
+    const backendUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:8787' 
+      : `http://${window.location.hostname}:8787`;
+
+    fetch(`${backendUrl}/campsite/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch details');
+        return res.json();
+      })
+      .then((data) => {
+        setCampsiteDetails(data);
+        setLoadingDetails(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching campsite details:', err);
+        setLoadingDetails(false);
+      });
+  }, [selectedCampsite]);
+
   const toggleAgency = (agency) => {
     setActiveAgencies((prev) =>
       prev.includes(agency)
@@ -242,8 +280,29 @@ export default function App() {
         <div ref={mapContainerRef} className="map-container" />
 
         {isDebug && (
-          <div className="debug-panel">
-            zoom: {debugInfo.zoom} | lng: {debugInfo.lng} | lat: {debugInfo.lat}
+          <div
+            className="debug-panel"
+            onClick={() => {
+              const text = JSON.stringify(debugInfo);
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(text);
+              } else {
+                const el = document.createElement('textarea');
+                el.value = text;
+                el.style.cssText = 'position:fixed;opacity:0';
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+              }
+              setDebugCopied(true);
+              setTimeout(() => setDebugCopied(false), 1500);
+            }}
+            style={{ cursor: 'copy', pointerEvents: 'auto' }}
+          >
+            {debugCopied
+              ? 'copied!'
+              : `zoom: ${debugInfo.zoom} | lng: ${debugInfo.lng} | lat: ${debugInfo.lat}`}
           </div>
         )}
 
@@ -292,6 +351,25 @@ export default function App() {
           {selectedCampsite.notes && (
             <p className="panel-notes">{selectedCampsite.notes}</p>
           )}
+
+          {loadingDetails ? (
+            <div className="loading-indicator">Loading additional details...</div>
+          ) : campsiteDetails?.reservation_dates?.length > 0 ? (
+            <div className="panel-reservations">
+              <h3>Opening Reservation Dates</h3>
+              <ul className="res-list">
+                {campsiteDetails.reservation_dates.map((date) => (
+                  <li key={date} className="res-item">
+                    ðŸ—“ï¸  {new Date(date).toLocaleDateString(undefined, {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           <div className="panel-actions">
             <a

@@ -3,6 +3,7 @@
   "features": [
     {
       "type": "Feature",
+      "id": "fishtrap-recreation-area",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -11,6 +12,7 @@
         ]
       },
       "properties": {
+        "id": "fishtrap-recreation-area",
         "name": "Fishtrap Recreation Area",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
@@ -28,6 +30,7 @@
     },
     {
       "type": "Feature",
+      "id": "juniper-dunes-wilderness",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -36,6 +39,7 @@
         ]
       },
       "properties": {
+        "id": "juniper-dunes-wilderness",
         "name": "Juniper Dunes Wilderness",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
@@ -52,6 +56,7 @@
     },
     {
       "type": "Feature",
+      "id": "liberty-recreation-site",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -60,6 +65,7 @@
         ]
       },
       "properties": {
+        "id": "liberty-recreation-site",
         "name": "Liberty Recreation Site",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
@@ -77,6 +83,7 @@
     },
     {
       "type": "Feature",
+      "id": "taunton-dispersed-area",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -85,6 +92,7 @@
         ]
       },
       "properties": {
+        "id": "taunton-dispersed-area",
         "name": "Taunton Dispersed Area",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
@@ -102,6 +110,7 @@
     },
     {
       "type": "Feature",
+      "id": "yakima-river-canyon",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -110,6 +119,7 @@
         ]
       },
       "properties": {
+        "id": "yakima-river-canyon",
         "name": "Yakima River Canyon",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
@@ -127,6 +137,7 @@
     },
     {
       "type": "Feature",
+      "id": "colonial-creek-north",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -135,6 +146,7 @@
         ]
       },
       "properties": {
+        "id": "colonial-creek-north",
         "name": "Colonial Creek North",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -152,6 +164,7 @@
     },
     {
       "type": "Feature",
+      "id": "colonial-creek-south",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -160,6 +173,7 @@
         ]
       },
       "properties": {
+        "id": "colonial-creek-south",
         "name": "Colonial Creek South",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -177,6 +191,7 @@
     },
     {
       "type": "Feature",
+      "id": "cougar-rock",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -185,6 +200,7 @@
         ]
       },
       "properties": {
+        "id": "cougar-rock",
         "name": "Cougar Rock",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -202,6 +218,7 @@
     },
     {
       "type": "Feature",
+      "id": "deer-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -210,6 +227,7 @@
         ]
       },
       "properties": {
+        "id": "deer-park",
         "name": "Deer Park",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -226,6 +244,7 @@
     },
     {
       "type": "Feature",
+      "id": "fairholme",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -234,6 +253,7 @@
         ]
       },
       "properties": {
+        "id": "fairholme",
         "name": "Fairholme",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -251,6 +271,7 @@
     },
     {
       "type": "Feature",
+      "id": "goodell-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -259,6 +280,7 @@
         ]
       },
       "properties": {
+        "id": "goodell-creek",
         "name": "Goodell Creek",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -276,6 +298,7 @@
     },
     {
       "type": "Feature",
+      "id": "gorge-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -284,6 +307,7 @@
         ]
       },
       "properties": {
+        "id": "gorge-lake",
         "name": "Gorge Lake",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -300,6 +324,7 @@
     },
     {
       "type": "Feature",
+      "id": "graves-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -308,6 +333,7 @@
         ]
       },
       "properties": {
+        "id": "graves-creek",
         "name": "Graves Creek",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -325,6 +351,7 @@
     },
     {
       "type": "Feature",
+      "id": "heart-o-the-hills",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -333,6 +360,7 @@
         ]
       },
       "properties": {
+        "id": "heart-o-the-hills",
         "name": "Heart O' the Hills",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -350,6 +378,7 @@
     },
     {
       "type": "Feature",
+      "id": "hoh-rain-forest",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -358,6 +387,7 @@
         ]
       },
       "properties": {
+        "id": "hoh-rain-forest",
         "name": "Hoh Rain Forest",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -375,6 +405,7 @@
     },
     {
       "type": "Feature",
+      "id": "kalaloch",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -383,6 +414,7 @@
         ]
       },
       "properties": {
+        "id": "kalaloch",
         "name": "Kalaloch",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -401,6 +433,7 @@
     },
     {
       "type": "Feature",
+      "id": "kettle-falls",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -409,6 +442,7 @@
         ]
       },
       "properties": {
+        "id": "kettle-falls",
         "name": "Kettle Falls",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -426,6 +460,7 @@
     },
     {
       "type": "Feature",
+      "id": "mora",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -434,6 +469,7 @@
         ]
       },
       "properties": {
+        "id": "mora",
         "name": "Mora",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -451,6 +487,7 @@
     },
     {
       "type": "Feature",
+      "id": "mowich-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -459,6 +496,7 @@
         ]
       },
       "properties": {
+        "id": "mowich-lake",
         "name": "Mowich Lake",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -475,6 +513,7 @@
     },
     {
       "type": "Feature",
+      "id": "newhalem-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -483,6 +522,7 @@
         ]
       },
       "properties": {
+        "id": "newhalem-creek",
         "name": "Newhalem Creek",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -500,6 +540,7 @@
     },
     {
       "type": "Feature",
+      "id": "north-fork",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -508,6 +549,7 @@
         ]
       },
       "properties": {
+        "id": "north-fork",
         "name": "North Fork",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -524,6 +566,7 @@
     },
     {
       "type": "Feature",
+      "id": "ohanapecosh",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -532,6 +575,7 @@
         ]
       },
       "properties": {
+        "id": "ohanapecosh",
         "name": "Ohanapecosh",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -549,6 +593,7 @@
     },
     {
       "type": "Feature",
+      "id": "queets",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -557,6 +602,7 @@
         ]
       },
       "properties": {
+        "id": "queets",
         "name": "Queets",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -573,6 +619,7 @@
     },
     {
       "type": "Feature",
+      "id": "snag-cove",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -581,6 +628,7 @@
         ]
       },
       "properties": {
+        "id": "snag-cove",
         "name": "Snag Cove",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -597,6 +645,7 @@
     },
     {
       "type": "Feature",
+      "id": "sol-duc",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -605,6 +654,7 @@
         ]
       },
       "properties": {
+        "id": "sol-duc",
         "name": "Sol Duc",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -622,6 +672,7 @@
     },
     {
       "type": "Feature",
+      "id": "south-beach",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -630,6 +681,7 @@
         ]
       },
       "properties": {
+        "id": "south-beach",
         "name": "South Beach",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -647,6 +699,7 @@
     },
     {
       "type": "Feature",
+      "id": "spring-canyon",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -655,6 +708,7 @@
         ]
       },
       "properties": {
+        "id": "spring-canyon",
         "name": "Spring Canyon",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -672,6 +726,7 @@
     },
     {
       "type": "Feature",
+      "id": "staircase",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -680,6 +735,7 @@
         ]
       },
       "properties": {
+        "id": "staircase",
         "name": "Staircase",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -697,6 +753,7 @@
     },
     {
       "type": "Feature",
+      "id": "white-river",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -705,6 +762,7 @@
         ]
       },
       "properties": {
+        "id": "white-river",
         "name": "White River",
         "agency": "National Park Service",
         "agency_short": "nps",
@@ -722,6 +780,7 @@
     },
     {
       "type": "Feature",
+      "id": "beaver-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -730,6 +789,7 @@
         ]
       },
       "properties": {
+        "id": "beaver-lake",
         "name": "Beaver Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -747,6 +807,7 @@
     },
     {
       "type": "Feature",
+      "id": "beckler-river",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -755,6 +816,7 @@
         ]
       },
       "properties": {
+        "id": "beckler-river",
         "name": "Beckler River",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -772,6 +834,7 @@
     },
     {
       "type": "Feature",
+      "id": "blue-lake-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -780,6 +843,7 @@
         ]
       },
       "properties": {
+        "id": "blue-lake-creek",
         "name": "Blue Lake Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -796,6 +860,7 @@
     },
     {
       "type": "Feature",
+      "id": "bonaparte-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -804,6 +869,7 @@
         ]
       },
       "properties": {
+        "id": "bonaparte-lake",
         "name": "Bonaparte Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -821,6 +887,7 @@
     },
     {
       "type": "Feature",
+      "id": "buck-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -829,6 +896,7 @@
         ]
       },
       "properties": {
+        "id": "buck-creek",
         "name": "Buck Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -846,6 +914,7 @@
     },
     {
       "type": "Feature",
+      "id": "bumping-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -854,6 +923,7 @@
         ]
       },
       "properties": {
+        "id": "bumping-lake",
         "name": "Bumping Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -871,6 +941,7 @@
     },
     {
       "type": "Feature",
+      "id": "chiwawa-horse-camp",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -879,6 +950,7 @@
         ]
       },
       "properties": {
+        "id": "chiwawa-horse-camp",
         "name": "Chiwawa Horse Camp",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -896,6 +968,7 @@
     },
     {
       "type": "Feature",
+      "id": "clear-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -904,6 +977,7 @@
         ]
       },
       "properties": {
+        "id": "clear-creek",
         "name": "Clear Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -921,6 +995,7 @@
     },
     {
       "type": "Feature",
+      "id": "coho",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -929,6 +1004,7 @@
         ]
       },
       "properties": {
+        "id": "coho",
         "name": "Coho",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -946,6 +1022,7 @@
     },
     {
       "type": "Feature",
+      "id": "cottonwood",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -954,6 +1031,7 @@
         ]
       },
       "properties": {
+        "id": "cottonwood",
         "name": "Cottonwood",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -971,6 +1049,7 @@
     },
     {
       "type": "Feature",
+      "id": "denny-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -979,6 +1058,7 @@
         ]
       },
       "properties": {
+        "id": "denny-creek",
         "name": "Denny Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -996,6 +1076,7 @@
     },
     {
       "type": "Feature",
+      "id": "douglas-fir",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1004,6 +1085,7 @@
         ]
       },
       "properties": {
+        "id": "douglas-fir",
         "name": "Douglas Fir",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1021,6 +1103,7 @@
     },
     {
       "type": "Feature",
+      "id": "falls-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1029,6 +1112,7 @@
         ]
       },
       "properties": {
+        "id": "falls-creek",
         "name": "Falls Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1046,6 +1130,7 @@
     },
     {
       "type": "Feature",
+      "id": "lake-leo",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1054,6 +1139,7 @@
         ]
       },
       "properties": {
+        "id": "lake-leo",
         "name": "Lake Leo",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1070,6 +1156,7 @@
     },
     {
       "type": "Feature",
+      "id": "rimrock-lake-indian-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1078,6 +1165,7 @@
         ]
       },
       "properties": {
+        "id": "rimrock-lake-indian-creek",
         "name": "Rimrock Lake (Indian Creek)",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1095,6 +1183,7 @@
     },
     {
       "type": "Feature",
+      "id": "soda-springs",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1103,6 +1192,7 @@
         ]
       },
       "properties": {
+        "id": "soda-springs",
         "name": "Soda Springs",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1120,6 +1210,7 @@
     },
     {
       "type": "Feature",
+      "id": "steamboat-creek-iron-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1128,6 +1219,7 @@
         ]
       },
       "properties": {
+        "id": "steamboat-creek-iron-creek",
         "name": "Steamboat Creek (Iron Creek)",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1145,6 +1237,7 @@
     },
     {
       "type": "Feature",
+      "id": "takhlakh-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1153,6 +1246,7 @@
         ]
       },
       "properties": {
+        "id": "takhlakh-lake",
         "name": "Takhlakh Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1170,6 +1264,7 @@
     },
     {
       "type": "Feature",
+      "id": "trout-lake-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1178,6 +1273,7 @@
         ]
       },
       "properties": {
+        "id": "trout-lake-creek",
         "name": "Trout Lake Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1195,6 +1291,7 @@
     },
     {
       "type": "Feature",
+      "id": "walupt-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1203,6 +1300,7 @@
         ]
       },
       "properties": {
+        "id": "walupt-lake",
         "name": "Walupt Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1220,6 +1318,7 @@
     },
     {
       "type": "Feature",
+      "id": "wynoochee-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1228,6 +1327,7 @@
         ]
       },
       "properties": {
+        "id": "wynoochee-lake",
         "name": "Wynoochee Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
@@ -1245,6 +1345,7 @@
     },
     {
       "type": "Feature",
+      "id": "battle-ground-lake-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1253,6 +1354,7 @@
         ]
       },
       "properties": {
+        "id": "battle-ground-lake-state-park",
         "name": "Battle Ground Lake State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1270,6 +1372,7 @@
     },
     {
       "type": "Feature",
+      "id": "beacon-rock-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1278,6 +1381,7 @@
         ]
       },
       "properties": {
+        "id": "beacon-rock-state-park",
         "name": "Beacon Rock State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1295,6 +1399,7 @@
     },
     {
       "type": "Feature",
+      "id": "bogachiel-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1303,6 +1408,7 @@
         ]
       },
       "properties": {
+        "id": "bogachiel-state-park",
         "name": "Bogachiel State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1320,6 +1426,7 @@
     },
     {
       "type": "Feature",
+      "id": "bruceport-county-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1328,6 +1435,7 @@
         ]
       },
       "properties": {
+        "id": "bruceport-county-park",
         "name": "Bruceport County Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1345,6 +1453,7 @@
     },
     {
       "type": "Feature",
+      "id": "cape-disappointment-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1353,6 +1462,7 @@
         ]
       },
       "properties": {
+        "id": "cape-disappointment-state-park",
         "name": "Cape Disappointment State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1371,6 +1481,7 @@
     },
     {
       "type": "Feature",
+      "id": "curlew-lake-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1379,6 +1490,7 @@
         ]
       },
       "properties": {
+        "id": "curlew-lake-state-park",
         "name": "Curlew Lake State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1396,6 +1508,7 @@
     },
     {
       "type": "Feature",
+      "id": "deception-pass-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1404,6 +1517,7 @@
         ]
       },
       "properties": {
+        "id": "deception-pass-state-park",
         "name": "Deception Pass State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1422,6 +1536,7 @@
     },
     {
       "type": "Feature",
+      "id": "dosewallips-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1430,6 +1545,7 @@
         ]
       },
       "properties": {
+        "id": "dosewallips-state-park",
         "name": "Dosewallips State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1447,6 +1563,7 @@
     },
     {
       "type": "Feature",
+      "id": "fort-flagler-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1455,6 +1572,7 @@
         ]
       },
       "properties": {
+        "id": "fort-flagler-state-park",
         "name": "Fort Flagler State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1472,6 +1590,7 @@
     },
     {
       "type": "Feature",
+      "id": "fort-worden-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1480,6 +1599,7 @@
         ]
       },
       "properties": {
+        "id": "fort-worden-state-park",
         "name": "Fort Worden State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1497,6 +1617,7 @@
     },
     {
       "type": "Feature",
+      "id": "grayland-beach-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1505,6 +1626,7 @@
         ]
       },
       "properties": {
+        "id": "grayland-beach-state-park",
         "name": "Grayland Beach State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1522,6 +1644,7 @@
     },
     {
       "type": "Feature",
+      "id": "kitsap-memorial-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1530,6 +1653,7 @@
         ]
       },
       "properties": {
+        "id": "kitsap-memorial-state-park",
         "name": "Kitsap Memorial State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1547,6 +1671,7 @@
     },
     {
       "type": "Feature",
+      "id": "larrabee-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1555,6 +1680,7 @@
         ]
       },
       "properties": {
+        "id": "larrabee-state-park",
         "name": "Larrabee State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1572,6 +1698,7 @@
     },
     {
       "type": "Feature",
+      "id": "moran-state-park-orcas-island",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1580,6 +1707,7 @@
         ]
       },
       "properties": {
+        "id": "moran-state-park-orcas-island",
         "name": "Moran State Park (Orcas Island)",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1598,6 +1726,7 @@
     },
     {
       "type": "Feature",
+      "id": "ocean-city-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1606,6 +1735,7 @@
         ]
       },
       "properties": {
+        "id": "ocean-city-state-park",
         "name": "Ocean City State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1623,6 +1753,7 @@
     },
     {
       "type": "Feature",
+      "id": "osoyoos-lake-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1631,6 +1762,7 @@
         ]
       },
       "properties": {
+        "id": "osoyoos-lake-state-park",
         "name": "Osoyoos Lake State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1648,6 +1780,7 @@
     },
     {
       "type": "Feature",
+      "id": "pacific-beach-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1656,6 +1789,7 @@
         ]
       },
       "properties": {
+        "id": "pacific-beach-state-park",
         "name": "Pacific Beach State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1673,6 +1807,7 @@
     },
     {
       "type": "Feature",
+      "id": "palouse-falls-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1681,6 +1816,7 @@
         ]
       },
       "properties": {
+        "id": "palouse-falls-state-park",
         "name": "Palouse Falls State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1697,6 +1833,7 @@
     },
     {
       "type": "Feature",
+      "id": "paradise-point-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1705,6 +1842,7 @@
         ]
       },
       "properties": {
+        "id": "paradise-point-state-park",
         "name": "Paradise Point State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1722,6 +1860,7 @@
     },
     {
       "type": "Feature",
+      "id": "potlatch-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1730,6 +1869,7 @@
         ]
       },
       "properties": {
+        "id": "potlatch-state-park",
         "name": "Potlatch State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1747,6 +1887,7 @@
     },
     {
       "type": "Feature",
+      "id": "riverside-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1755,6 +1896,7 @@
         ]
       },
       "properties": {
+        "id": "riverside-state-park",
         "name": "Riverside State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1772,6 +1914,7 @@
     },
     {
       "type": "Feature",
+      "id": "seaquest-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1780,6 +1923,7 @@
         ]
       },
       "properties": {
+        "id": "seaquest-state-park",
         "name": "Seaquest State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1797,6 +1941,7 @@
     },
     {
       "type": "Feature",
+      "id": "sequim-bay-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1805,6 +1950,7 @@
         ]
       },
       "properties": {
+        "id": "sequim-bay-state-park",
         "name": "Sequim Bay State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1822,6 +1968,7 @@
     },
     {
       "type": "Feature",
+      "id": "steamboat-rock-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1830,6 +1977,7 @@
         ]
       },
       "properties": {
+        "id": "steamboat-rock-state-park",
         "name": "Steamboat Rock State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
@@ -1847,6 +1995,7 @@
     },
     {
       "type": "Feature",
+      "id": "sun-lakes-dry-falls-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1855,6 +2004,7 @@
         ]
       },
       "properties": {
+        "id": "sun-lakes-dry-falls-state-park",
         "name": "Sun Lakes-Dry Falls State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
