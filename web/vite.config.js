@@ -5,6 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: true,
+    fs: {
+      allow: ['..'],
+    },
   },
   test: {
     environment: 'jsdom',
