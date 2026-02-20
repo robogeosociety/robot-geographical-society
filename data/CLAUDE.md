@@ -7,9 +7,11 @@ This file instructs Claude Code on how to work with campsite data in this projec
 Individual campsite files (`data/{agency}/WA/{name}/index.md` or `data/{agency}/WA/{park}/{name}/index.md`) are the **source of truth**. The GeoJSON (`data/campsites.json`) is a **derived artifact** — regenerate it from the markdown files, never edit it directly.
 
 To sync after any edits:
+```bash
+uv run --project data jupyter nbconvert --to notebook --inplace --execute data/sync_campsites.ipynb
 ```
-node scripts/sync-geojson.js
-```
+
+The notebook validates first and halts before writing if any errors are found. Outputs are written back into the notebook so you can inspect results inline.
 
 ---
 
@@ -92,7 +94,7 @@ Link directly to the campground page on the agency website, not the homepage. Ex
 ## Updating existing data
 
 1. Edit the relevant `index.md` field(s)
-2. Run `node scripts/sync-geojson.js`
+2. Run the sync notebook (see above)
 3. Commit both the `index.md` change and the updated `data/campsites.json`
 
 ## Validation checklist
