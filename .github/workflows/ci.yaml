@@ -16,12 +16,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
 
-      - name: Install dependencies
+      - name: Install root and backend dependencies
         run: |
-          npm install -g concurrently wrangler wait-on
+          npm install -g wrangler
           cd backend && npm install
-          cd ../web && npm install
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
 
       - name: Install Playwright Browsers
         working-directory: web
@@ -46,9 +51,8 @@ jobs:
         env:
           VITE_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijoiam9lIiwiYSI6ImNsamVnZzFpZzAwZHYzZ214ZzFqZzFqZzEifQ.fake-token
         run: |
-          # Use concurrently to run the dev servers and the build process in parallel.
-          # The build process will wait for the ports to be open before running.
-          npx concurrently --success first --kill-others \
+          # Use local concurrently and wait-on from web/node_modules
+          ./node_modules/.bin/concurrently --success first --kill-others \
             "cd ../backend && npx wrangler dev --port 8787 --local --ip 0.0.0.0" \
             "npx vite --port 5173 --host 0.0.0.0" \
-            "npx wait-on http-get://localhost:8787/ http-get://localhost:5173/ && npm run build"
+            "./node_modules/.bin/wait-on http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
