@@ -190,7 +190,7 @@ export default function App() {
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [isDebug]);
 
   // Apply agency filters when activeAgencies or map load state changes
   useEffect(() => {

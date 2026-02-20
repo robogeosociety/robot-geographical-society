@@ -4,6 +4,9 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
+  {
+    ignores: ['dist/**'],
+  },
   js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
@@ -13,6 +16,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.es2021,
+        ...globals.node,
       },
       parserOptions: {
         ecmaFeatures: { jsx: true },
