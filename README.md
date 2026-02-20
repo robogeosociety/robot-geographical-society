@@ -15,6 +15,26 @@ The Robot Geographical Society performs the same job using computers, foregoing 
     * ICS links to opening days and first reservstion days
     * Links to official sites
 
+## Tech Stack
+
+The Robot Geographical Society is built on a modern, serverless stack designed for high performance and low maintenance.
+
+### Frontend
+- **[React](https://react.dev/)** (v19): Modern UI library for building the interactive map interface.
+- **[Vite](https://vite.dev/)**: Fast frontend build tool and development server.
+- **[Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/)**: High-performance vector map engine for campsite visualization.
+- **[Vanilla CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)**: Custom-designed, lightweight, and modern styling.
+
+### Backend & Infrastructure
+- **[Hono](https://hono.dev/)**: Small, fast, web framework built on Web Standards.
+- **[Cloudflare Workers](https://developers.cloudflare.com/workers/)**: Serverless execution environment for the backend API.
+- **[Cloudflare KV](https://developers.cloudflare.com/kv/)**: Low-latency, key-value data store for campsite metadata and reservation details.
+
+### Testing & Quality
+- **[Playwright](https://playwright.dev/)**: End-to-end and integration testing framework.
+- **[Vitest](https://vitest.dev/)**: Vite-native unit testing framework for components and API logic.
+- **[ESLint](https://eslint.org/)**: Pluggable JavaScript linting for code quality.
+
 ## CI/CD & Testing Strategy
 
 The project employs a robust testing and automation pipeline via GitHub Actions to ensure reliability across the full stack.
