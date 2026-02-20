@@ -207,6 +207,11 @@ export default function App() {
       return;
     }
 
+    // Standalone mode: all data is embedded in GeoJSON, no backend needed
+    if (import.meta.env.VITE_STANDALONE === 'true') {
+      return;
+    }
+
     setLoadingDetails(true);
     // Use the ID from the selected campsite feature properties
     const id = selectedCampsite.id;
