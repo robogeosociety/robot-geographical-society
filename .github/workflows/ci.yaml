@@ -19,14 +19,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
-      - name: Install root and backend dependencies
+      - name: Install dependencies
         run: |
           npm install -g wrangler
           cd backend && npm install
-
-      - name: Install web dependencies
-        working-directory: web
-        run: npm ci
+          cd ../web && npm install
 
       - name: Install Playwright Browsers
         working-directory: web
@@ -50,9 +47,12 @@ jobs:
         working-directory: web
         env:
           VITE_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijoiam9lIiwiYSI6ImNsamVnZzFpZzAwZHYzZ214ZzFqZzFqZzEifQ.fake-token
+          CI: true
+          WRANGLER_SEND_METRICS: false
         run: |
-          # Use local concurrently and wait-on from web/node_modules
+          # Start backend and frontend, wait for them to be ready, then build (which runs e2e)
+          # We use 127.0.0.1 explicitly to avoid IPv6 issues in CI
           ./node_modules/.bin/concurrently --success first --kill-others \
-            "cd ../backend && npx wrangler dev --port 8787 --local --ip 0.0.0.0" \
-            "npx vite --port 5173 --host 0.0.0.0" \
-            "./node_modules/.bin/wait-on http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
+            "cd ../backend && npx wrangler dev --port 8787 --local --ip 127.0.0.1" \
+            "npx vite --port 5173 --host 127.0.0.1" \
+            "./node_modules/.bin/wait-on -t 60000 http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
