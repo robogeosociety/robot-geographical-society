@@ -269,7 +269,7 @@ body {
 
 /* Debug panel */
 .debug-panel {
-  position: absolute;
+  position: fixed;
   bottom: 40px;
   left: 12px;
   z-index: 100;
