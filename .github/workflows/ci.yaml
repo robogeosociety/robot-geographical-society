@@ -50,9 +50,8 @@ jobs:
           CI: true
           WRANGLER_SEND_METRICS: false
         run: |
-          # Start backend and frontend, wait for them to be ready, then build (which runs e2e)
-          # We use 127.0.0.1 explicitly to avoid IPv6 issues in CI
+          # Use 127.0.0.1 for everything. Wait-on will ensure ports are open and responding correctly.
           ./node_modules/.bin/concurrently --success first --kill-others \
             "cd ../backend && npx wrangler dev --port 8787 --local --ip 127.0.0.1" \
             "npx vite --port 5173 --host 127.0.0.1" \
-            "./node_modules/.bin/wait-on -t 60000 http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
+            "./node_modules/.bin/wait-on -t 90000 http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
