@@ -1,0 +1,11 @@
+name = "robot-geographical-society-backend"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "CAMPSITES"
+id = "xxxx" # Not needed for local dev
+preview_id = "xxxx" # Not needed for local dev
+
+[observability]
+enabled = true

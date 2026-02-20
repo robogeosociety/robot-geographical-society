@@ -16,7 +16,16 @@
       "WebFetch(domain:recreation.gov)",
       "Bash(npm test:*)",
       "Bash(npm run lint:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(gh issue create:*)",
+      "Bash(git push:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(gh workflow run:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(node:*)"
     ]
   }
 }

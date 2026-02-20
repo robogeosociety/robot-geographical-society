@@ -20,17 +20,38 @@ jobs:
           cache-dependency-path: web/package-lock.json
 
       - name: Install dependencies
+        run: |
+          npm install -g wrangler
+          cd backend && npm install
+          cd ../web && npm install
+
+      - name: Install Playwright Browsers
         working-directory: web
-        run: npm ci
+        run: npx playwright install --with-deps chromium
+
+      - name: Sync data and Seed KV
+        run: |
+          node scripts/sync-geojson.js
+          cd backend && node scripts/generate-seed.cjs
+          npx wrangler kv bulk put kv-seed.json --binding CAMPSITES --local --preview false
 
       - name: Lint
         working-directory: web
         run: npm run lint
 
-      - name: Test
+      - name: Unit Tests
         working-directory: web
         run: npm test -- --run
 
-      - name: Build
+      - name: Build and E2E Test
         working-directory: web
-        run: npm run build
+        env:
+          VITE_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijoiam9lIiwiYSI6ImNsamVnZzFpZzAwZHYzZ214ZzFqZzFqZzEifQ.fake-token
+          CI: true
+          WRANGLER_SEND_METRICS: false
+        run: |
+          # Use 127.0.0.1 for everything. Wait-on will ensure ports are open and responding correctly.
+          ./node_modules/.bin/concurrently --success first --kill-others \
+            "cd ../backend && npx wrangler dev --port 8787 --local --ip 127.0.0.1" \
+            "npx vite --port 5173 --host 127.0.0.1" \
+            "./node_modules/.bin/wait-on -t 90000 http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
