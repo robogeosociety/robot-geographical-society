@@ -19,13 +19,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install -g concurrently wrangler
+          npm install -g concurrently wrangler wait-on
           cd backend && npm install
           cd ../web && npm install
 
       - name: Install Playwright Browsers
         working-directory: web
         run: npx playwright install --with-deps chromium
+
+      - name: Sync data and Seed KV
+        run: |
+          node scripts/sync-geojson.js
+          cd backend && node scripts/generate-seed.cjs
+          npx wrangler kv bulk put kv-seed.json --binding CAMPSITES --local --preview false
 
       - name: Lint
         working-directory: web
@@ -38,17 +44,11 @@ jobs:
       - name: Build and E2E Test
         working-directory: web
         env:
-          VITE_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijoiam9lIiwiYSI6ImNsamVnZzFpZzAwZHYzZ214ZzFqZzFqZzFqZzEifQ.fake-token
+          VITE_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijoiam9lIiwiYSI6ImNsamVnZzFpZzAwZHYzZ214ZzFqZzFqZzEifQ.fake-token
         run: |
-          # 1. Sync data and seed local KV
-          cd .. && node scripts/sync-geojson.js
-          cd backend && node scripts/generate-seed.cjs
-          npx wrangler kv bulk put kv-seed.json --binding CAMPSITES --local --preview false
-          
-          # 2. Build the frontend (which triggers E2E via postbuild)
-          # We run the dev server in background for E2E tests to hit
-          cd ../web
+          # Use concurrently to run the dev servers and the build process in parallel.
+          # The build process will wait for the ports to be open before running.
           npx concurrently --success first --kill-others \
             "cd ../backend && npx wrangler dev --port 8787 --local --ip 0.0.0.0" \
             "npx vite --port 5173 --host 0.0.0.0" \
-            "sleep 10 && npm run build"
+            "npx wait-on http-get://localhost:8787/ http-get://localhost:5173/ && npm run build"
