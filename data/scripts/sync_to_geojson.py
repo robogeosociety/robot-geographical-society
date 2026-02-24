@@ -12,7 +12,7 @@ import sys
 import json
 import yaml
 import re
-import toml
+import tomllib
 from pathlib import Path
 
 AGENCIES = ["blm", "nps", "usfs", "wa-state-parks"]
@@ -133,7 +133,8 @@ def main():
 
     print(f"Reading {toml_path}...")
     try:
-        config = toml.load(toml_path)
+        with open(toml_path, "rb") as f:
+             config = tomllib.load(f)
     except Exception as e:
         print(f"Error parsing campsites.toml: {e}", file=sys.stderr)
         sys.exit(1)

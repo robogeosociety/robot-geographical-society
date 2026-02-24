@@ -19,7 +19,7 @@ reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
 quality_score: 100
 availability:
-  last_updated: '2026-02-23T22:39:17.780420'
+  last_updated: '2026-02-23T22:45:39.600468'
   source: WA Parks
   summary:
     first_available: '2026-02-01'
