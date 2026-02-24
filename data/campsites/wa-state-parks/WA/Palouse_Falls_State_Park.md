@@ -6,14 +6,19 @@ state: WA
 lat: 46.6638
 lng: -118.2274
 sites: 10
-types: [tent]
+types:
+- tent
 reservable: true
-year_round: false
-open_date: "April 1"
-first_reservation_date: null
 reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
 quality_score: 80
+season:
+  type: seasonal
+  start: 04-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 270
 ---
 
 Washington State waterfall; 198-ft drop into the Palouse River canyon

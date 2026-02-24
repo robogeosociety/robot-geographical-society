@@ -47,7 +47,7 @@ def validate(fm: dict, path: Path) -> list[str]:
     errors = []
 
     for field in ["name", "agency", "agency_short", "lat", "lng",
-                  "sites", "types", "reservable", "year_round"]:
+                  "sites", "types", "reservable", "season"]:
         if fm.get(field) is None:
             errors.append(f"missing required field: {field}")
 
@@ -57,13 +57,13 @@ def validate(fm: dict, path: Path) -> list[str]:
     if lng is not None and not (WA_LNG[0] <= lng <= WA_LNG[1]):
         errors.append(f"lng {lng} outside WA range {WA_LNG}")
 
-    open_date = fm.get("open_date")
-    if fm.get("year_round") and open_date is not None:
-        errors.append("year_round: true but open_date is set")
-    if not fm.get("year_round") and open_date is not None:
-        month_name = str(open_date).split()[0].lower()
-        if month_name not in MONTH_MAP:
-            errors.append(f"open_date month '{month_name}' not recognised")
+    season = fm.get("season")
+    if season:
+        if "type" not in season:
+            errors.append("season missing 'type'")
+        elif season["type"] == "seasonal":
+            if not season.get("start") or not season.get("end"):
+                errors.append("seasonal type requires 'start' and 'end' dates")
 
     for t in fm.get("types") or []:
         if t not in VALID_TYPES:
@@ -84,11 +84,6 @@ def validate(fm: dict, path: Path) -> list[str]:
 
     return errors
 
-def _open_date_to_month(val) -> int | None:
-    if not val:
-        return None
-    return MONTH_MAP.get(str(val).strip().split()[0].lower())
-
 def build_feature(fm: dict) -> dict:
     """Build a GeoJSON Feature from parsed frontmatter."""
     return {
@@ -104,8 +99,8 @@ def build_feature(fm: dict) -> dict:
             "sites":            fm["sites"],
             "types":            fm["types"],
             "reservable":       fm["reservable"],
-            "year_round":       fm["year_round"],
-            "open_month":       _open_date_to_month(fm.get("open_date")),
+            "season":           fm.get("season"),
+            "booking":          fm.get("booking"),
             "reservation_url":  fm.get("reservation_url"),
             "rec_gov_id":       fm.get("rec_gov_id"),
             "wa_park_id":       fm.get("resource_location_id"),

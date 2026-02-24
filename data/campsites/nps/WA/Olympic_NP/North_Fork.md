@@ -6,14 +6,19 @@ state: WA
 lat: 47.5271
 lng: -123.5913
 sites: 9
-types: [tent]
+types:
+- tent
 reservable: false
-year_round: false
-open_date: "May 1"
-first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
+season:
+  type: seasonal
+  start: 05-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 Small primitive campground in Quinault Valley

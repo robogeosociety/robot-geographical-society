@@ -8,7 +8,8 @@
     "agency",
     "lat",
     "lng",
-    "reservation_url"
+    "reservation_url",
+    "season"
   ],
   "properties": {
     "name": {
@@ -59,19 +60,26 @@
       "type": "string",
       "format": "uri"
     },
-    "year_round": {
-      "type": "boolean"
+    "season": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["year_round", "seasonal"] },
+        "start": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" },
+        "end": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" }
+      },
+      "required": ["type"]
     },
-    "open_date": {
-      "type": ["string", "null"],
-      "description": "Opening date string (e.g. 'May 15')"
-    },
-    "close_date": {
-      "type": ["string", "null"]
+    "booking": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["rolling", "fixed"] },
+        "window_days": { "type": "integer" },
+        "opens_at": { "type": "string" }
+      }
     },
     "rec_gov_id": {
       "type": ["string", "null"],
-      "pattern": "^\d+$"
+      "pattern": "^\\d+$"
     },
     "resource_location_id": {
       "type": ["integer", "null"]
@@ -81,14 +89,5 @@
         "minimum": 0,
         "maximum": 100
     }
-  },
-  "oneOf": [
-    {
-      "properties": { "year_round": { "const": true } },
-      "required": ["year_round"]
-    },
-    {
-      "required": ["open_date"]
-    }
-  ]
+  }
 }

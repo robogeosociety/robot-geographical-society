@@ -6,14 +6,20 @@ state: WA
 lat: 47.6868
 lng: -122.9017
 sites: 140
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: true
-year_round: false
-open_date: "April 1"
-first_reservation_date: null
 reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
 quality_score: 80
+season:
+  type: seasonal
+  start: 04-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 270
 ---
 
 At the confluence of the Dosewallips River and Hood Canal

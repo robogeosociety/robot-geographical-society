@@ -6,14 +6,20 @@ state: WA
 lat: 47.4221
 lng: -121.4338
 sites: 33
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: true
-year_round: false
-open_date: "May 1"
-first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
+season:
+  type: seasonal
+  start: 05-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 Near Snoqualmie Pass; access to Franklin Falls and Alpine Lakes Wilderness

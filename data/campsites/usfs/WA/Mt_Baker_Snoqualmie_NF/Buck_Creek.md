@@ -6,14 +6,20 @@ state: WA
 lat: 48.1629
 lng: -121.3118
 sites: 29
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: true
-year_round: false
-open_date: "June 1"
-first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
+season:
+  type: seasonal
+  start: 06-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 On the Suiattle River; access to Glacier Peak Wilderness

@@ -11,10 +11,7 @@ types:
 - rv
 - walk-in
 reservable: true
-year_round: false
 resource_location_id: -2147483624
-open_date: March 1
-first_reservation_date: null
 reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
 quality_score: 100
@@ -25,6 +22,13 @@ availability:
     first_available: '2026-02-01'
     season_open: '2026-02-01'
     season_close: '2026-07-01'
+season:
+  type: seasonal
+  start: 02-01
+  end: 07-01
+booking:
+  type: rolling
+  window_days: 270
 ---
 
 Largest state park campground; Cranberry Lake and North Beach loops

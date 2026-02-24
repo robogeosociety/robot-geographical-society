@@ -6,14 +6,18 @@ state: WA
 lat: 46.8268
 lng: -120.4927
 sites: 25
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: false
-year_round: true
-open_date: null
-first_reservation_date: null
 reservation_url: https://www.blm.gov/
 official_url: https://www.blm.gov/
 quality_score: 80
+season:
+  type: year_round
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 Along the Yakima River between Ellensburg and Yakima; popular for fly fishing

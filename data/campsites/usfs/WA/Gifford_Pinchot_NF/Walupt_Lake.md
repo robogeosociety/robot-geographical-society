@@ -6,14 +6,20 @@ state: WA
 lat: 46.4154
 lng: -121.4729
 sites: 44
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: true
-year_round: false
-open_date: "July 1"
-first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
+season:
+  type: seasonal
+  start: 07-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 Remote lake near the Goat Rocks Wilderness; excellent fishing

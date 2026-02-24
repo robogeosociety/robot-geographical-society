@@ -6,14 +6,20 @@ state: WA
 lat: 46.2668
 lng: -121.6018
 sites: 54
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: true
-year_round: false
-open_date: "July 1"
-first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
+season:
+  type: seasonal
+  start: 07-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 Stunning views of Mt. Adams from the lake; high-elevation campground

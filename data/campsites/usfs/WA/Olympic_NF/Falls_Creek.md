@@ -6,14 +6,20 @@ state: WA
 lat: 47.5482
 lng: -124.0718
 sites: 31
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: false
-year_round: false
-open_date: "May 1"
-first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
+season:
+  type: seasonal
+  start: 05-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 In the Quinault Valley; access to Lake Quinault and rainforest trails

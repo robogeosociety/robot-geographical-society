@@ -6,14 +6,18 @@ state: WA
 lat: 47.1704
 lng: -119.2238
 sites: 15
-types: [tent,rv]
+types:
+- tent
+- rv
 reservable: false
-year_round: true
-open_date: null
-first_reservation_date: null
 reservation_url: https://www.blm.gov/
 official_url: https://www.blm.gov/
 quality_score: 80
+season:
+  type: year_round
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 Dispersed camping in Columbia Plateau; excellent stargazing

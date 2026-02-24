@@ -22,7 +22,7 @@ def calculate_score(fm: dict) -> int:
         score += 10
         
     # Seasonality (10pts)
-    if fm.get("year_round") or fm.get("open_date"):
+    if fm.get("season"):
         score += 10
         
     # Official URL (10pts)

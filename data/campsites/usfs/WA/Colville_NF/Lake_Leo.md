@@ -6,14 +6,19 @@ state: WA
 lat: 48.6418
 lng: -118.6907
 sites: 8
-types: [tent]
+types:
+- tent
 reservable: false
-year_round: false
-open_date: "June 1"
-first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
+season:
+  type: seasonal
+  start: 06-01
+  end: 09-30
+booking:
+  type: rolling
+  window_days: 180
 ---
 
 Small alpine lake campground; hike-in only
