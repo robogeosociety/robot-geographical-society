@@ -12,7 +12,7 @@ path = "campsites/usfs/WA/ColvilleNF/Beaver_Lake.md"
 
 [[campsites]]
 name = "Beckler River"
-path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Beckler_River.md"
+path = "campsites/usfs/WA/MtBaker-SnoqualmieNF/Beckler_River.md"
 
 [[campsites]]
 name = "Blue Lake Creek"
@@ -32,7 +32,7 @@ path = "campsites/wa-state-parks/WA/Bruceport_County_Park.md"
 
 [[campsites]]
 name = "Buck Creek"
-path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Buck_Creek.md"
+path = "campsites/usfs/WA/MtBaker-SnoqualmieNF/Buck_Creek.md"
 
 [[campsites]]
 name = "Bumping Lake"
@@ -48,7 +48,7 @@ path = "campsites/usfs/WA/Okanogan-WenatcheeNF/Chiwawa_Horse_Camp.md"
 
 [[campsites]]
 name = "Clear Creek"
-path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Clear_Creek.md"
+path = "campsites/usfs/WA/MtBaker-SnoqualmieNF/Clear_Creek.md"
 
 [[campsites]]
 name = "Coho"
@@ -68,7 +68,7 @@ path = "campsites/usfs/WA/Okanogan-WenatcheeNF/Cottonwood.md"
 
 [[campsites]]
 name = "Cougar Rock"
-path = "campsites/nps/WA/Mt.RainierNP/Cougar_Rock.md"
+path = "campsites/nps/WA/MtRainierNP/Cougar_Rock.md"
 
 [[campsites]]
 name = "Curlew Lake State Park"
@@ -84,7 +84,7 @@ path = "campsites/nps/WA/OlympicNP/Deer_Park.md"
 
 [[campsites]]
 name = "Denny Creek"
-path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Denny_Creek.md"
+path = "campsites/usfs/WA/MtBaker-SnoqualmieNF/Denny_Creek.md"
 
 [[campsites]]
 name = "Dosewallips State Park"
@@ -92,7 +92,7 @@ path = "campsites/wa-state-parks/WA/Dosewallips_State_Park.md"
 
 [[campsites]]
 name = "Douglas Fir"
-path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Douglas_Fir.md"
+path = "campsites/usfs/WA/MtBaker-SnoqualmieNF/Douglas_Fir.md"
 
 [[campsites]]
 name = "Fairholme"
@@ -176,7 +176,7 @@ path = "campsites/wa-state-parks/WA/Moran_State_Park_(Orcas_Island).md"
 
 [[campsites]]
 name = "Mowich Lake"
-path = "campsites/nps/WA/Mt.RainierNP/Mowich_Lake.md"
+path = "campsites/nps/WA/MtRainierNP/Mowich_Lake.md"
 
 [[campsites]]
 name = "Newhalem Creek"
@@ -192,7 +192,7 @@ path = "campsites/wa-state-parks/WA/Ocean_City_State_Park.md"
 
 [[campsites]]
 name = "Ohanapecosh"
-path = "campsites/nps/WA/Mt.RainierNP/Ohanapecosh.md"
+path = "campsites/nps/WA/MtRainierNP/Ohanapecosh.md"
 
 [[campsites]]
 name = "Osoyoos Lake State Park"
@@ -288,7 +288,7 @@ path = "campsites/usfs/WA/GiffordPinchotNF/Walupt_Lake.md"
 
 [[campsites]]
 name = "White River"
-path = "campsites/nps/WA/Mt.RainierNP/White_River.md"
+path = "campsites/nps/WA/MtRainierNP/White_River.md"
 
 [[campsites]]
 name = "Wynoochee Lake"
