@@ -1,300 +1,300 @@
 [[campsites]]
 name = "Battle Ground Lake State Park"
-path = "campsites/wa-state-parks/WA/Battle_Ground_Lake_State_Park"
+path = "campsites/wa-state-parks/WA/Battle_Ground_Lake_State_Park.md"
 
 [[campsites]]
 name = "Beacon Rock State Park"
-path = "campsites/wa-state-parks/WA/Beacon_Rock_State_Park"
-
-[[campsites]]
-name = "Bogachiel State Park"
-path = "campsites/wa-state-parks/WA/Bogachiel_State_Park"
-
-[[campsites]]
-name = "Bruceport County Park"
-path = "campsites/wa-state-parks/WA/Bruceport_County_Park"
-
-[[campsites]]
-name = "Cape Disappointment State Park"
-path = "campsites/wa-state-parks/WA/Cape_Disappointment_State_Park"
-
-[[campsites]]
-name = "Curlew Lake State Park"
-path = "campsites/wa-state-parks/WA/Curlew_Lake_State_Park"
-
-[[campsites]]
-name = "Deception Pass State Park"
-path = "campsites/wa-state-parks/WA/Deception_Pass_State_Park"
-
-[[campsites]]
-name = "Dosewallips State Park"
-path = "campsites/wa-state-parks/WA/Dosewallips_State_Park"
-
-[[campsites]]
-name = "Fort Flagler State Park"
-path = "campsites/wa-state-parks/WA/Fort_Flagler_State_Park"
-
-[[campsites]]
-name = "Fort Worden State Park"
-path = "campsites/wa-state-parks/WA/Fort_Worden_State_Park"
-
-[[campsites]]
-name = "Grayland Beach State Park"
-path = "campsites/wa-state-parks/WA/Grayland_Beach_State_Park"
-
-[[campsites]]
-name = "Kitsap Memorial State Park"
-path = "campsites/wa-state-parks/WA/Kitsap_Memorial_State_Park"
-
-[[campsites]]
-name = "Larrabee State Park"
-path = "campsites/wa-state-parks/WA/Larrabee_State_Park"
-
-[[campsites]]
-name = "Moran State Park (Orcas Island)"
-path = "campsites/wa-state-parks/WA/Moran_State_Park_(Orcas_Island)"
-
-[[campsites]]
-name = "Ocean City State Park"
-path = "campsites/wa-state-parks/WA/Ocean_City_State_Park"
-
-[[campsites]]
-name = "Osoyoos Lake State Park"
-path = "campsites/wa-state-parks/WA/Osoyoos_Lake_State_Park"
-
-[[campsites]]
-name = "Pacific Beach State Park"
-path = "campsites/wa-state-parks/WA/Pacific_Beach_State_Park"
-
-[[campsites]]
-name = "Palouse Falls State Park"
-path = "campsites/wa-state-parks/WA/Palouse_Falls_State_Park"
-
-[[campsites]]
-name = "Paradise Point State Park"
-path = "campsites/wa-state-parks/WA/Paradise_Point_State_Park"
-
-[[campsites]]
-name = "Potlatch State Park"
-path = "campsites/wa-state-parks/WA/Potlatch_State_Park"
-
-[[campsites]]
-name = "Riverside State Park"
-path = "campsites/wa-state-parks/WA/Riverside_State_Park"
-
-[[campsites]]
-name = "Seaquest State Park"
-path = "campsites/wa-state-parks/WA/Seaquest_State_Park"
-
-[[campsites]]
-name = "Sequim Bay State Park"
-path = "campsites/wa-state-parks/WA/Sequim_Bay_State_Park"
-
-[[campsites]]
-name = "Steamboat Rock State Park"
-path = "campsites/wa-state-parks/WA/Steamboat_Rock_State_Park"
-
-[[campsites]]
-name = "Sun Lakes-Dry Falls State Park"
-path = "campsites/wa-state-parks/WA/Sun_Lakes-Dry_Falls_State_Park"
-
-[[campsites]]
-name = "Fishtrap Recreation Area"
-path = "campsites/blm/WA/Fishtrap_Recreation_Area"
-
-[[campsites]]
-name = "Juniper Dunes Wilderness"
-path = "campsites/blm/WA/Juniper_Dunes_Wilderness"
-
-[[campsites]]
-name = "Liberty Recreation Site"
-path = "campsites/blm/WA/Liberty_Recreation_Site"
-
-[[campsites]]
-name = "Taunton Dispersed Area"
-path = "campsites/blm/WA/Taunton_Dispersed_Area"
-
-[[campsites]]
-name = "Yakima River Canyon"
-path = "campsites/blm/WA/Yakima_River_Canyon"
+path = "campsites/wa-state-parks/WA/Beacon_Rock_State_Park.md"
 
 [[campsites]]
 name = "Beaver Lake"
-path = "campsites/usfs/WA/Colville NF/Beaver_Lake"
-
-[[campsites]]
-name = "Bonaparte Lake"
-path = "campsites/usfs/WA/Colville NF/Bonaparte_Lake"
-
-[[campsites]]
-name = "Lake Leo"
-path = "campsites/usfs/WA/Colville NF/Lake_Leo"
-
-[[campsites]]
-name = "Blue Lake Creek"
-path = "campsites/usfs/WA/Gifford Pinchot NF/Blue_Lake_Creek"
-
-[[campsites]]
-name = "Steamboat Creek (Iron Creek)"
-path = "campsites/usfs/WA/Gifford Pinchot NF/Steamboat_Creek_(Iron_Creek)"
-
-[[campsites]]
-name = "Takhlakh Lake"
-path = "campsites/usfs/WA/Gifford Pinchot NF/Takhlakh_Lake"
-
-[[campsites]]
-name = "Trout Lake Creek"
-path = "campsites/usfs/WA/Gifford Pinchot NF/Trout_Lake_Creek"
-
-[[campsites]]
-name = "Walupt Lake"
-path = "campsites/usfs/WA/Gifford Pinchot NF/Walupt_Lake"
+path = "campsites/usfs/WA/ColvilleNF/Beaver_Lake.md"
 
 [[campsites]]
 name = "Beckler River"
-path = "campsites/usfs/WA/Mt. Baker-Snoqualmie NF/Beckler_River"
+path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Beckler_River.md"
+
+[[campsites]]
+name = "Blue Lake Creek"
+path = "campsites/usfs/WA/GiffordPinchotNF/Blue_Lake_Creek.md"
+
+[[campsites]]
+name = "Bogachiel State Park"
+path = "campsites/wa-state-parks/WA/Bogachiel_State_Park.md"
+
+[[campsites]]
+name = "Bonaparte Lake"
+path = "campsites/usfs/WA/ColvilleNF/Bonaparte_Lake.md"
+
+[[campsites]]
+name = "Bruceport County Park"
+path = "campsites/wa-state-parks/WA/Bruceport_County_Park.md"
 
 [[campsites]]
 name = "Buck Creek"
-path = "campsites/usfs/WA/Mt. Baker-Snoqualmie NF/Buck_Creek"
-
-[[campsites]]
-name = "Clear Creek"
-path = "campsites/usfs/WA/Mt. Baker-Snoqualmie NF/Clear_Creek"
-
-[[campsites]]
-name = "Denny Creek"
-path = "campsites/usfs/WA/Mt. Baker-Snoqualmie NF/Denny_Creek"
-
-[[campsites]]
-name = "Douglas Fir"
-path = "campsites/usfs/WA/Mt. Baker-Snoqualmie NF/Douglas_Fir"
+path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Buck_Creek.md"
 
 [[campsites]]
 name = "Bumping Lake"
-path = "campsites/usfs/WA/Okanogan-Wenatchee NF/Bumping_Lake"
+path = "campsites/usfs/WA/Okanogan-WenatcheeNF/Bumping_Lake.md"
+
+[[campsites]]
+name = "Cape Disappointment State Park"
+path = "campsites/wa-state-parks/WA/Cape_Disappointment_State_Park.md"
 
 [[campsites]]
 name = "Chiwawa Horse Camp"
-path = "campsites/usfs/WA/Okanogan-Wenatchee NF/Chiwawa_Horse_Camp"
+path = "campsites/usfs/WA/Okanogan-WenatcheeNF/Chiwawa_Horse_Camp.md"
 
 [[campsites]]
-name = "Cottonwood"
-path = "campsites/usfs/WA/Okanogan-Wenatchee NF/Cottonwood"
-
-[[campsites]]
-name = "Rimrock Lake (Indian Creek)"
-path = "campsites/usfs/WA/Okanogan-Wenatchee NF/Rimrock_Lake_(Indian_Creek)"
-
-[[campsites]]
-name = "Soda Springs"
-path = "campsites/usfs/WA/Okanogan-Wenatchee NF/Soda_Springs"
+name = "Clear Creek"
+path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Clear_Creek.md"
 
 [[campsites]]
 name = "Coho"
-path = "campsites/usfs/WA/Olympic NF/Coho"
-
-[[campsites]]
-name = "Falls Creek"
-path = "campsites/usfs/WA/Olympic NF/Falls_Creek"
-
-[[campsites]]
-name = "Wynoochee Lake"
-path = "campsites/usfs/WA/Olympic NF/Wynoochee_Lake"
-
-[[campsites]]
-name = "Kettle Falls"
-path = "campsites/nps/WA/Lake Roosevelt NRA/Kettle_Falls"
-
-[[campsites]]
-name = "Snag Cove"
-path = "campsites/nps/WA/Lake Roosevelt NRA/Snag_Cove"
-
-[[campsites]]
-name = "Spring Canyon"
-path = "campsites/nps/WA/Lake Roosevelt NRA/Spring_Canyon"
-
-[[campsites]]
-name = "Cougar Rock"
-path = "campsites/nps/WA/Mt. Rainier NP/Cougar_Rock"
-
-[[campsites]]
-name = "Mowich Lake"
-path = "campsites/nps/WA/Mt. Rainier NP/Mowich_Lake"
-
-[[campsites]]
-name = "Ohanapecosh"
-path = "campsites/nps/WA/Mt. Rainier NP/Ohanapecosh"
-
-[[campsites]]
-name = "White River"
-path = "campsites/nps/WA/Mt. Rainier NP/White_River"
+path = "campsites/usfs/WA/OlympicNF/Coho.md"
 
 [[campsites]]
 name = "Colonial Creek North"
-path = "campsites/nps/WA/North Cascades NP/Colonial_Creek_North"
+path = "campsites/nps/WA/NorthCascadesNP/Colonial_Creek_North.md"
 
 [[campsites]]
 name = "Colonial Creek South"
-path = "campsites/nps/WA/North Cascades NP/Colonial_Creek_South"
+path = "campsites/nps/WA/NorthCascadesNP/Colonial_Creek_South.md"
 
 [[campsites]]
-name = "Goodell Creek"
-path = "campsites/nps/WA/North Cascades NP/Goodell_Creek"
+name = "Cottonwood"
+path = "campsites/usfs/WA/Okanogan-WenatcheeNF/Cottonwood.md"
 
 [[campsites]]
-name = "Gorge Lake"
-path = "campsites/nps/WA/North Cascades NP/Gorge_Lake"
+name = "Cougar Rock"
+path = "campsites/nps/WA/Mt.RainierNP/Cougar_Rock.md"
 
 [[campsites]]
-name = "Newhalem Creek"
-path = "campsites/nps/WA/North Cascades NP/Newhalem_Creek"
+name = "Curlew Lake State Park"
+path = "campsites/wa-state-parks/WA/Curlew_Lake_State_Park.md"
+
+[[campsites]]
+name = "Deception Pass State Park"
+path = "campsites/wa-state-parks/WA/Deception_Pass_State_Park.md"
 
 [[campsites]]
 name = "Deer Park"
-path = "campsites/nps/WA/Olympic NP/Deer_Park"
+path = "campsites/nps/WA/OlympicNP/Deer_Park.md"
+
+[[campsites]]
+name = "Denny Creek"
+path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Denny_Creek.md"
+
+[[campsites]]
+name = "Dosewallips State Park"
+path = "campsites/wa-state-parks/WA/Dosewallips_State_Park.md"
+
+[[campsites]]
+name = "Douglas Fir"
+path = "campsites/usfs/WA/Mt.Baker-SnoqualmieNF/Douglas_Fir.md"
 
 [[campsites]]
 name = "Fairholme"
-path = "campsites/nps/WA/Olympic NP/Fairholme"
+path = "campsites/nps/WA/OlympicNP/Fairholme.md"
+
+[[campsites]]
+name = "Falls Creek"
+path = "campsites/usfs/WA/OlympicNF/Falls_Creek.md"
+
+[[campsites]]
+name = "Fishtrap Recreation Area"
+path = "campsites/blm/WA/Fishtrap_Recreation_Area.md"
+
+[[campsites]]
+name = "Fort Flagler State Park"
+path = "campsites/wa-state-parks/WA/Fort_Flagler_State_Park.md"
+
+[[campsites]]
+name = "Fort Worden State Park"
+path = "campsites/wa-state-parks/WA/Fort_Worden_State_Park.md"
+
+[[campsites]]
+name = "Goodell Creek"
+path = "campsites/nps/WA/NorthCascadesNP/Goodell_Creek.md"
+
+[[campsites]]
+name = "Gorge Lake"
+path = "campsites/nps/WA/NorthCascadesNP/Gorge_Lake.md"
 
 [[campsites]]
 name = "Graves Creek"
-path = "campsites/nps/WA/Olympic NP/Graves_Creek"
+path = "campsites/nps/WA/OlympicNP/Graves_Creek.md"
+
+[[campsites]]
+name = "Grayland Beach State Park"
+path = "campsites/wa-state-parks/WA/Grayland_Beach_State_Park.md"
 
 [[campsites]]
 name = "Heart O' the Hills"
-path = "campsites/nps/WA/Olympic NP/Heart_O'_the_Hills"
+path = "campsites/nps/WA/OlympicNP/Heart_O'_the_Hills.md"
 
 [[campsites]]
 name = "Hoh Rain Forest"
-path = "campsites/nps/WA/Olympic NP/Hoh_Rain_Forest"
+path = "campsites/nps/WA/OlympicNP/Hoh_Rain_Forest.md"
+
+[[campsites]]
+name = "Juniper Dunes Wilderness"
+path = "campsites/blm/WA/Juniper_Dunes_Wilderness.md"
 
 [[campsites]]
 name = "Kalaloch"
-path = "campsites/nps/WA/Olympic NP/Kalaloch"
+path = "campsites/nps/WA/OlympicNP/Kalaloch.md"
+
+[[campsites]]
+name = "Kettle Falls"
+path = "campsites/nps/WA/LakeRooseveltNRA/Kettle_Falls.md"
+
+[[campsites]]
+name = "Kitsap Memorial State Park"
+path = "campsites/wa-state-parks/WA/Kitsap_Memorial_State_Park.md"
+
+[[campsites]]
+name = "Lake Leo"
+path = "campsites/usfs/WA/ColvilleNF/Lake_Leo.md"
+
+[[campsites]]
+name = "Larrabee State Park"
+path = "campsites/wa-state-parks/WA/Larrabee_State_Park.md"
+
+[[campsites]]
+name = "Liberty Recreation Site"
+path = "campsites/blm/WA/Liberty_Recreation_Site.md"
 
 [[campsites]]
 name = "Mora"
-path = "campsites/nps/WA/Olympic NP/Mora"
+path = "campsites/nps/WA/OlympicNP/Mora.md"
+
+[[campsites]]
+name = "Moran State Park (Orcas Island)"
+path = "campsites/wa-state-parks/WA/Moran_State_Park_(Orcas_Island).md"
+
+[[campsites]]
+name = "Mowich Lake"
+path = "campsites/nps/WA/Mt.RainierNP/Mowich_Lake.md"
+
+[[campsites]]
+name = "Newhalem Creek"
+path = "campsites/nps/WA/NorthCascadesNP/Newhalem_Creek.md"
 
 [[campsites]]
 name = "North Fork"
-path = "campsites/nps/WA/Olympic NP/North_Fork"
+path = "campsites/nps/WA/OlympicNP/North_Fork.md"
+
+[[campsites]]
+name = "Ocean City State Park"
+path = "campsites/wa-state-parks/WA/Ocean_City_State_Park.md"
+
+[[campsites]]
+name = "Ohanapecosh"
+path = "campsites/nps/WA/Mt.RainierNP/Ohanapecosh.md"
+
+[[campsites]]
+name = "Osoyoos Lake State Park"
+path = "campsites/wa-state-parks/WA/Osoyoos_Lake_State_Park.md"
+
+[[campsites]]
+name = "Pacific Beach State Park"
+path = "campsites/wa-state-parks/WA/Pacific_Beach_State_Park.md"
+
+[[campsites]]
+name = "Palouse Falls State Park"
+path = "campsites/wa-state-parks/WA/Palouse_Falls_State_Park.md"
+
+[[campsites]]
+name = "Paradise Point State Park"
+path = "campsites/wa-state-parks/WA/Paradise_Point_State_Park.md"
+
+[[campsites]]
+name = "Potlatch State Park"
+path = "campsites/wa-state-parks/WA/Potlatch_State_Park.md"
 
 [[campsites]]
 name = "Queets"
-path = "campsites/nps/WA/Olympic NP/Queets"
+path = "campsites/nps/WA/OlympicNP/Queets.md"
+
+[[campsites]]
+name = "Rimrock Lake (Indian Creek)"
+path = "campsites/usfs/WA/Okanogan-WenatcheeNF/Rimrock_Lake_(Indian_Creek).md"
+
+[[campsites]]
+name = "Riverside State Park"
+path = "campsites/wa-state-parks/WA/Riverside_State_Park.md"
+
+[[campsites]]
+name = "Seaquest State Park"
+path = "campsites/wa-state-parks/WA/Seaquest_State_Park.md"
+
+[[campsites]]
+name = "Sequim Bay State Park"
+path = "campsites/wa-state-parks/WA/Sequim_Bay_State_Park.md"
+
+[[campsites]]
+name = "Snag Cove"
+path = "campsites/nps/WA/LakeRooseveltNRA/Snag_Cove.md"
+
+[[campsites]]
+name = "Soda Springs"
+path = "campsites/usfs/WA/Okanogan-WenatcheeNF/Soda_Springs.md"
 
 [[campsites]]
 name = "Sol Duc"
-path = "campsites/nps/WA/Olympic NP/Sol_Duc"
+path = "campsites/nps/WA/OlympicNP/Sol_Duc.md"
 
 [[campsites]]
 name = "South Beach"
-path = "campsites/nps/WA/Olympic NP/South_Beach"
+path = "campsites/nps/WA/OlympicNP/South_Beach.md"
+
+[[campsites]]
+name = "Spring Canyon"
+path = "campsites/nps/WA/LakeRooseveltNRA/Spring_Canyon.md"
 
 [[campsites]]
 name = "Staircase"
-path = "campsites/nps/WA/Olympic NP/Staircase"
+path = "campsites/nps/WA/OlympicNP/Staircase.md"
+
+[[campsites]]
+name = "Steamboat Creek (Iron Creek)"
+path = "campsites/usfs/WA/GiffordPinchotNF/Steamboat_Creek_(Iron_Creek).md"
+
+[[campsites]]
+name = "Steamboat Rock State Park"
+path = "campsites/wa-state-parks/WA/Steamboat_Rock_State_Park.md"
+
+[[campsites]]
+name = "Sun Lakes-Dry Falls State Park"
+path = "campsites/wa-state-parks/WA/Sun_Lakes-Dry_Falls_State_Park.md"
+
+[[campsites]]
+name = "Takhlakh Lake"
+path = "campsites/usfs/WA/GiffordPinchotNF/Takhlakh_Lake.md"
+
+[[campsites]]
+name = "Taunton Dispersed Area"
+path = "campsites/blm/WA/Taunton_Dispersed_Area.md"
+
+[[campsites]]
+name = "Trout Lake Creek"
+path = "campsites/usfs/WA/GiffordPinchotNF/Trout_Lake_Creek.md"
+
+[[campsites]]
+name = "Walupt Lake"
+path = "campsites/usfs/WA/GiffordPinchotNF/Walupt_Lake.md"
+
+[[campsites]]
+name = "White River"
+path = "campsites/nps/WA/Mt.RainierNP/White_River.md"
+
+[[campsites]]
+name = "Wynoochee Lake"
+path = "campsites/usfs/WA/OlympicNF/Wynoochee_Lake.md"
+
+[[campsites]]
+name = "Yakima River Canyon"
+path = "campsites/blm/WA/Yakima_River_Canyon.md"
 

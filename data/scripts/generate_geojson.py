@@ -157,7 +157,7 @@ def main():
         if not rel_path:
             continue
         
-        path = Path(rel_path) / "index.md"
+        path = Path(rel_path)
         if not path.exists():
             validation_errors[str(path)] = ["File not found"]
             continue

@@ -160,7 +160,7 @@ def main():
         if not rel_path:
             continue
             
-        path = Path(rel_path) / "index.md"
+        path = Path(rel_path)
         total += 1
         
         if update_file(path, wa_cookies, verbose=args.verbose):
