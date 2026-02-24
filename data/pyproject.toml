@@ -15,7 +15,7 @@ dependencies = [
 
 [project.scripts]
 update = "scripts.update_campsites:main"
-generate = "scripts.update_geojson:main"
+generate = "scripts.generate_geojson:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["campsite_sync", "scripts"]

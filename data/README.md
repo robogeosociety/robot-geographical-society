@@ -31,7 +31,7 @@ graph TD
     end
 
     subgraph GenerateWorkflow["Generate Workflow"]
-        Sync["update_geojson.py"]
+        Sync["generate_geojson.py"]
         TOML -->|Reads Paths| Sync
         Sync -->|Reads| MD
         Sync -->|Generates| JSON["campsites.json<br/>(Base GeoJSON)"]
