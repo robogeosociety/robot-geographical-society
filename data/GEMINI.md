@@ -4,14 +4,14 @@ This directory serves as the source of truth for campsite information across Was
 
 ## 🏗️ Architecture
 
-- **Source of Truth**: Individual Markdown files (`data/{agency}/WA/{name}/index.md`).
+- **Source of Truth**: Individual Markdown files (`data/campsites/{agency}/WA/{name}/index.md`).
 - **Derived Artifact**: `data/campsites.json` (GeoJSON).
 - **Automation**: Jupyter notebook (`sync_campsites.ipynb`) for validation and GeoJSON generation.
 
 ## 🚀 Key Workflows
 
 ### 1. Adding a Campsite
-- Create directory: `data/{agency_short}/WA/{optional-park}/{Campsite Name}/`.
+- Create directory: `data/campsites/{agency_short}/WA/{optional-park}/{Campsite Name}/`.
 - Create `index.md` with YAML frontmatter (see [CLAUDE.md](./CLAUDE.md) for schema).
 - Run sync command (see below).
 
@@ -22,7 +22,7 @@ This directory serves as the source of truth for campsite information across Was
 ### 3. Syncing GeoJSON
 Run the following command to validate markdown files and update the GeoJSON:
 ```bash
-uv run --project data jupyter nbconvert --to notebook --inplace --execute data/sync_campsites.ipynb
+uv run generate
 ```
 
 ## 📋 Schema Highlights

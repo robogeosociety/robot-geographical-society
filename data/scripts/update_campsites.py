@@ -149,7 +149,7 @@ def main():
     print(f"Scanning {base_path}...")
     
     for agency in AGENCIES:
-        agency_dir = base_path / agency / "WA"
+        agency_dir = base_path / "campsites" / agency / "WA"
         if not agency_dir.is_dir():
             continue
             

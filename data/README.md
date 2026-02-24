@@ -9,7 +9,7 @@ The data pipeline consists of two main stages: **Update** (enrichment) and **Gen
 ```mermaid
 graph TD
     subgraph Source["Source of Truth"]
-        MD["Markdown Files<br/>(data/{agency}/WA/.../index.md)"]
+        MD["Markdown Files<br/>(data/campsites/{agency}/WA/.../index.md)"]
     end
 
     subgraph UpdateWorkflow["Update Workflow"]

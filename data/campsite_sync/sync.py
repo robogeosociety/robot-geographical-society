@@ -165,7 +165,7 @@ def sync(
     # --- Collect files ---
     all_files: list[Path] = []
     for agency in AGENCIES:
-        agency_dir = base_path / agency / "WA"
+        agency_dir = base_path / "campsites" / agency / "WA"
         if agency_dir.is_dir():
             all_files.extend(sorted(agency_dir.rglob("index.md")))
 
