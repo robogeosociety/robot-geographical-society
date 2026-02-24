@@ -1,10 +1,9 @@
 """
-Tests for data validation logic in campsite_sync.sync.
+Tests for data validation logic in scripts.generate_geojson.
 """
 
 from pathlib import Path
-
-from campsite_sync.sync import validate
+from scripts.generate_geojson import validate
 
 def test_validate_valid_minimal():
     fm = {
@@ -16,7 +15,7 @@ def test_validate_valid_minimal():
         "sites": 10,
         "types": ["tent"],
         "reservable": True,
-        "year_round": True,
+        "availability_windows": [{"start": "01-01", "end": "12-31"}]
     }
     path = Path("test.md")
     errors = validate(fm, path)
@@ -32,7 +31,7 @@ def test_validate_invalid_coords():
         "sites": 10,
         "types": ["tent"],
         "reservable": True,
-        "year_round": True,
+        "availability_windows": [{"start": "01-01", "end": "12-31"}]
     }
     path = Path("test.md")
     errors = validate(fm, path)
@@ -49,23 +48,19 @@ def test_validate_rec_gov_id():
         "sites": 10,
         "types": ["tent"],
         "reservable": True,
-        "year_round": True,
+        "availability_windows": [{"start": "01-01", "end": "12-31"}],
         "rec_gov_id": "abc"  # Invalid
     }
     errors = validate(fm, Path("test.md"))
-    assert any("rec_gov_id 'abc' must be a numeric string" in e for e in errors)
+    assert any("rec_gov_id 'abc' must be a numeric string or integer" in e for e in errors)
 
-    fm["rec_gov_id"] = "123"  # Valid
+    fm["rec_gov_id"] = "123"  # Valid string
     errors = validate(fm, Path("test.md"))
     assert errors == []
 
-    # The new PyYAML parser will parse 123 as an int automatically.
-    # Our validation logic should probably accept int OR numeric string, 
-    # but currently strict on string.
-    # fm["rec_gov_id"] = 123 
-    # errors = validate(fm, Path("test.md"))
-    # assert any("rec_gov_id '123' must be a numeric string" in e for e in errors)
-
+    fm["rec_gov_id"] = 123  # Valid int
+    errors = validate(fm, Path("test.md"))
+    assert errors == []
 
 
 def test_validate_resource_location_id():
@@ -78,11 +73,10 @@ def test_validate_resource_location_id():
         "sites": 10,
         "types": ["tent"],
         "reservable": True,
-        "year_round": True,
+        "availability_windows": [{"start": "01-01", "end": "12-31"}],
         "resource_location_id": "not-an-int"  # Invalid
     }
     errors = validate(fm, Path("test.md"))
-    # In parse_frontmatter, strings stay strings if not parseable as int.
     assert any("resource_location_id 'not-an-int' must be an integer" in e for e in errors)
 
     fm["resource_location_id"] = -123  # Valid
