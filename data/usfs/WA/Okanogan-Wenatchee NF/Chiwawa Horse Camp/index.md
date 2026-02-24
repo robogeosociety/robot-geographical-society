@@ -13,6 +13,7 @@ open_date: "June 1"
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 Horse camp in the Chiwawa River corridor; Glacier Peak Wilderness access

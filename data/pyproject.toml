@@ -1,11 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "campsite-sync"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
+    "ipyfilechooser>=0.6.0",
     "jupyter",
     "nbconvert",
 ]
 
-[tool.uv]
-dev-dependencies = []
+[project.scripts]
+fetch-rec-gov-calendar = "scripts.fetch_rec_gov_calendar:main"
+fetch-wa-state-parks = "scripts.fetch_wa_state_parks:main"
+sync-to-geojson = "scripts.sync_to_geojson:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["campsite_sync", "scripts"]
+
+[dependency-groups]
+dev = [
+    "playwright>=1.40",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]

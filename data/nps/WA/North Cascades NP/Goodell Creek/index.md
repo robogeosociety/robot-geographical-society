@@ -13,6 +13,7 @@ open_date: null
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 Year-round campground; popular for whitewater kayaking put-in

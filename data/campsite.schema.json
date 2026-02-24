@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Campsite",
+  "description": "A loose schema for campsite data with focus on availability.",
+  "type": "object",
+  "required": [
+    "name",
+    "agency",
+    "lat",
+    "lng",
+    "reservation_url"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the campsite"
+    },
+    "agency": {
+      "type": "string",
+      "description": "Managing agency (e.g. National Park Service)"
+    },
+    "agency_short": {
+      "type": "string",
+      "description": "Short code for agency (e.g. nps)"
+    },
+    "state": {
+      "type": "string",
+      "pattern": "^WA$"
+    },
+    "lat": {
+      "type": "number",
+      "minimum": 45.0,
+      "maximum": 49.5
+    },
+    "lng": {
+      "type": "number",
+      "minimum": -125.0,
+      "maximum": -116.0
+    },
+    "sites": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["tent", "rv", "walk-in", "cabin", "bike-in", "parking", "boat-in", "group"]
+      }
+    },
+    "reservable": {
+      "type": "boolean"
+    },
+    "reservation_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "official_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "year_round": {
+      "type": "boolean"
+    },
+    "open_date": {
+      "type": ["string", "null"],
+      "description": "Opening date string (e.g. 'May 15')"
+    },
+    "close_date": {
+      "type": ["string", "null"]
+    },
+    "rec_gov_id": {
+      "type": ["string", "null"],
+      "pattern": "^\d+$"
+    },
+    "resource_location_id": {
+      "type": ["integer", "null"]
+    },
+    "quality_score": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 100
+    }
+  },
+  "oneOf": [
+    {
+      "properties": { "year_round": { "const": true } },
+      "required": ["year_round"]
+    },
+    {
+      "required": ["open_date"]
+    }
+  ]
+}

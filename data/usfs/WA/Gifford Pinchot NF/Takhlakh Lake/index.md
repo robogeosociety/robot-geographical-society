@@ -13,6 +13,7 @@ open_date: "July 1"
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 Stunning views of Mt. Adams from the lake; high-elevation campground

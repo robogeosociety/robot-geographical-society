@@ -13,6 +13,7 @@ open_date: "May 1"
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 In old-growth forest on the SE side of Rainier; Grove of the Patriarchs nearby

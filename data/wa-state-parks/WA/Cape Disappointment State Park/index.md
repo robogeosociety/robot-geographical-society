@@ -13,6 +13,7 @@ open_date: null
 first_reservation_date: null
 reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
+quality_score: 80
 ---
 
 Where the Columbia River meets the Pacific; two historic lighthouses

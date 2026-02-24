@@ -13,6 +13,7 @@ open_date: null
 first_reservation_date: null
 reservation_url: https://www.blm.gov/
 official_url: https://www.blm.gov/
+quality_score: 80
 ---
 
 Dispersed camping in Columbia Plateau; excellent stargazing

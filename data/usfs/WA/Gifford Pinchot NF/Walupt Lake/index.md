@@ -13,6 +13,7 @@ open_date: "July 1"
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 Remote lake near the Goat Rocks Wilderness; excellent fishing

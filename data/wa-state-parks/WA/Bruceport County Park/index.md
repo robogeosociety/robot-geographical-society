@@ -13,6 +13,7 @@ open_date: "May 1"
 first_reservation_date: null
 reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
+quality_score: 80
 ---
 
 On Willapa Bay near South Bend

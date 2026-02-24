@@ -9,10 +9,12 @@ sites: 310
 types: [tent,rv,walk-in]
 reservable: true
 year_round: false
+resource_location_id: -2147483624
 open_date: "March 1"
 first_reservation_date: null
 reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
+quality_score: 100
 ---
 
 Largest state park campground; Cranberry Lake and North Beach loops

@@ -13,6 +13,7 @@ open_date: "May 1"
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 Near Trout Lake; gateway to Mt. Adams Wilderness trails

@@ -13,6 +13,7 @@ open_date: "July 1"
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 High alpine meadow campground; no RVs; stunning views of the Strait of Juan de Fuca

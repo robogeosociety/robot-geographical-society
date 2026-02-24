@@ -13,6 +13,7 @@ open_date: "July 1"
 first_reservation_date: null
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
+quality_score: 80
 ---
 
 Walk-in only; on the remote NW side of Rainier; no RVs or trailers
