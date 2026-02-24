@@ -13,11 +13,10 @@ reservable: true
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
-season:
-  type: year_round
-booking:
-  type: rolling
-  window_days: 180
+availability_windows:
+- start: 01-01
+  end: 12-31
+  booking_advance_days: 180
 ---
 
 In the heart of the temperate rain forest; Hall of Mosses trailhead

@@ -13,13 +13,10 @@ reservable: true
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
-season:
-  type: seasonal
-  start: 05-01
+availability_windows:
+- start: 05-01
   end: 09-30
-booking:
-  type: rolling
-  window_days: 180
+  booking_advance_days: 180
 ---
 
 Main campground at the Ross Lake NRA gateway town of Newhalem

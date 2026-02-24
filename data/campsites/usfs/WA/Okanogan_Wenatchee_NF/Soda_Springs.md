@@ -13,13 +13,10 @@ reservable: false
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
-season:
-  type: seasonal
-  start: 06-01
+availability_windows:
+- start: 06-01
   end: 09-30
-booking:
-  type: rolling
-  window_days: 180
+  booking_advance_days: 180
 ---
 
 Along Bumping River; natural carbonated spring nearby

@@ -47,7 +47,7 @@ def validate(fm: dict, path: Path) -> list[str]:
     errors = []
 
     for field in ["name", "agency", "agency_short", "lat", "lng",
-                  "sites", "types", "reservable", "season"]:
+                  "sites", "types", "reservable", "availability_windows"]:
         if fm.get(field) is None:
             errors.append(f"missing required field: {field}")
 
@@ -57,13 +57,13 @@ def validate(fm: dict, path: Path) -> list[str]:
     if lng is not None and not (WA_LNG[0] <= lng <= WA_LNG[1]):
         errors.append(f"lng {lng} outside WA range {WA_LNG}")
 
-    season = fm.get("season")
-    if season:
-        if "type" not in season:
-            errors.append("season missing 'type'")
-        elif season["type"] == "seasonal":
-            if not season.get("start") or not season.get("end"):
-                errors.append("seasonal type requires 'start' and 'end' dates")
+    windows = fm.get("availability_windows")
+    if isinstance(windows, list):
+        for i, w in enumerate(windows):
+            if not w.get("start") or not w.get("end"):
+                errors.append(f"availability_windows[{i}] requires 'start' and 'end' dates")
+    elif windows is not None:
+        errors.append("availability_windows must be a list")
 
     for t in fm.get("types") or []:
         if t not in VALID_TYPES:
@@ -93,19 +93,18 @@ def build_feature(fm: dict) -> dict:
             "coordinates": [fm["lng"], fm["lat"]],
         },
         "properties": {
-            "name":             fm["name"],
-            "agency":           fm["agency"],
-            "agency_short":     fm["agency_short"],
-            "sites":            fm["sites"],
-            "types":            fm["types"],
-            "reservable":       fm["reservable"],
-            "season":           fm.get("season"),
-            "booking":          fm.get("booking"),
-            "reservation_url":  fm.get("reservation_url"),
-            "rec_gov_id":       fm.get("rec_gov_id"),
-            "wa_park_id":       fm.get("resource_location_id"),
-            "availability":     fm.get("availability"),
-            "notes":            fm.get("_notes"),
+            "name":                 fm["name"],
+            "agency":               fm["agency"],
+            "agency_short":         fm["agency_short"],
+            "sites":                fm["sites"],
+            "types":                fm["types"],
+            "reservable":           fm["reservable"],
+            "availability_windows": fm.get("availability_windows"),
+            "reservation_url":      fm.get("reservation_url"),
+            "rec_gov_id":           fm.get("rec_gov_id"),
+            "wa_park_id":           fm.get("resource_location_id"),
+            "availability":         fm.get("availability"),
+            "notes":                fm.get("_notes"),
         },
     }
 

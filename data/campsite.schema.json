@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Campsite",
-  "description": "A loose schema for campsite data with focus on availability.",
+  "description": "A simplified schema for campsite data with focus on availability windows.",
   "type": "object",
   "required": [
     "name",
@@ -9,20 +9,17 @@
     "lat",
     "lng",
     "reservation_url",
-    "season"
+    "availability_windows"
   ],
   "properties": {
     "name": {
-      "type": "string",
-      "description": "Name of the campsite"
+      "type": "string"
     },
     "agency": {
-      "type": "string",
-      "description": "Managing agency (e.g. National Park Service)"
+      "type": "string"
     },
     "agency_short": {
-      "type": "string",
-      "description": "Short code for agency (e.g. nps)"
+      "type": "string"
     },
     "state": {
       "type": "string",
@@ -60,21 +57,16 @@
       "type": "string",
       "format": "uri"
     },
-    "season": {
-      "type": "object",
-      "properties": {
-        "type": { "enum": ["year_round", "seasonal"] },
-        "start": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" },
-        "end": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" }
-      },
-      "required": ["type"]
-    },
-    "booking": {
-      "type": "object",
-      "properties": {
-        "type": { "enum": ["rolling", "fixed"] },
-        "window_days": { "type": "integer" },
-        "opens_at": { "type": "string" }
+    "availability_windows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" },
+          "end": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" },
+          "booking_advance_days": { "type": "integer" }
+        },
+        "required": ["start", "end"]
       }
     },
     "rec_gov_id": {

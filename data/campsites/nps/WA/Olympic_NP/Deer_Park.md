@@ -12,13 +12,10 @@ reservable: false
 reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
-season:
-  type: seasonal
-  start: 07-01
+availability_windows:
+- start: 07-01
   end: 09-30
-booking:
-  type: rolling
-  window_days: 180
+  booking_advance_days: 180
 ---
 
 High alpine meadow campground; no RVs; stunning views of the Strait of Juan de Fuca

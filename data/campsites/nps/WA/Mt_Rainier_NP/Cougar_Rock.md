@@ -21,13 +21,10 @@ availability:
     first_available: '2026-07-20'
     season_open: '2026-06-23'
     season_close: '2026-07-31'
-season:
-  type: seasonal
-  start: 06-23
+availability_windows:
+- start: 06-23
   end: 07-31
-booking:
-  type: rolling
-  window_days: 180
+  booking_advance_days: 180
 ---
 
 Near the Paradise area; excellent views of the Tatoosh Range

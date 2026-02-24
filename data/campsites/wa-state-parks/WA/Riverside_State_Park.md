@@ -13,11 +13,10 @@ reservable: true
 reservation_url: https://washington.goingtocamp.com/
 official_url: https://washington.goingtocamp.com/
 quality_score: 80
-season:
-  type: year_round
-booking:
-  type: rolling
-  window_days: 270
+availability_windows:
+- start: 01-01
+  end: 12-31
+  booking_advance_days: 270
 ---
 
 Along the Spokane River near Spokane; Bowl and Pitcher area

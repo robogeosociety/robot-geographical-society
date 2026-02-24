@@ -53,7 +53,7 @@ def validate(fm: dict, path: Path) -> list[str]:
     errors = []
 
     for field in ["name", "agency", "agency_short", "lat", "lng",
-                  "sites", "types", "reservable", "season"]:
+                  "sites", "types", "reservable", "availability_windows"]:
         if fm.get(field) is None:
             errors.append(f"missing required field: {field}")
 
@@ -63,13 +63,13 @@ def validate(fm: dict, path: Path) -> list[str]:
     if lng is not None and not (WA_LNG[0] <= lng <= WA_LNG[1]):
         errors.append(f"lng {lng} outside WA range {WA_LNG}")
 
-    season = fm.get("season")
-    if season:
-        if "type" not in season:
-            errors.append("season missing 'type'")
-        elif season["type"] == "seasonal":
-            if not season.get("start") or not season.get("end"):
-                errors.append("seasonal type requires 'start' and 'end' dates")
+    windows = fm.get("availability_windows")
+    if isinstance(windows, list):
+        for i, w in enumerate(windows):
+            if not w.get("start") or not w.get("end"):
+                errors.append(f"availability_windows[{i}] requires 'start' and 'end' dates")
+    elif windows is not None:
+        errors.append("availability_windows must be a list")
 
     for t in fm.get("types") or []:
         if t not in VALID_TYPES:

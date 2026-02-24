@@ -20,13 +20,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -52,13 +52,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -85,13 +85,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -118,13 +118,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -151,13 +151,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -184,15 +184,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -219,15 +217,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -254,15 +250,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "06-23",
-          "end": "07-31"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "06-23",
+            "end": "07-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": "232466",
         "wa_park_id": null,
@@ -296,15 +290,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "07-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "07-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -331,15 +323,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -366,13 +356,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -398,15 +388,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -433,15 +421,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -468,15 +454,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -503,13 +487,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -537,13 +521,13 @@
           "cabin"
         ],
         "reservable": true,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -570,15 +554,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -605,13 +587,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -637,15 +619,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "07-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "07-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -672,15 +652,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -706,15 +684,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -741,15 +717,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -775,15 +749,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -809,15 +781,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -844,15 +814,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -879,15 +847,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -914,15 +880,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -949,15 +913,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -984,15 +946,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "07-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "07-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1019,15 +979,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1054,15 +1012,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1088,15 +1044,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1123,15 +1077,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1158,15 +1110,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "06-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1193,15 +1143,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "06-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1228,15 +1176,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "06-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1263,15 +1209,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1298,15 +1242,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1333,15 +1275,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1368,15 +1308,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1403,15 +1341,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/camping/campgrounds/232038",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1438,15 +1374,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1472,15 +1406,13 @@
           "tent"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "06-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1507,15 +1439,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1542,15 +1472,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "06-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "06-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1577,15 +1505,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1612,15 +1538,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "07-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "07-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1647,15 +1571,13 @@
           "rv"
         ],
         "reservable": false,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1682,15 +1604,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "07-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "07-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1717,15 +1637,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 180
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180
+          }
+        ],
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1752,15 +1670,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1787,15 +1703,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1822,15 +1736,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1857,15 +1769,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "05-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1893,13 +1803,13 @@
           "cabin"
         ],
         "reservable": true,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1926,15 +1836,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -1962,15 +1870,13 @@
           "walk-in"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "02-01",
-          "end": "07-01"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "02-01",
+            "end": "07-01",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": -2147483624,
@@ -2005,15 +1911,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2040,15 +1944,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2075,13 +1977,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2108,15 +2010,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2143,15 +2043,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2178,15 +2076,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2214,15 +2110,13 @@
           "walk-in"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2249,15 +2143,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2284,15 +2176,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2319,15 +2209,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2353,15 +2241,13 @@
           "tent"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2388,15 +2274,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2423,15 +2307,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2458,13 +2340,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "year_round"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "01-01",
+            "end": "12-31",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2491,15 +2373,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2526,15 +2406,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2561,15 +2439,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
@@ -2596,15 +2472,13 @@
           "rv"
         ],
         "reservable": true,
-        "season": {
-          "type": "seasonal",
-          "start": "04-01",
-          "end": "09-30"
-        },
-        "booking": {
-          "type": "rolling",
-          "window_days": 270
-        },
+        "availability_windows": [
+          {
+            "start": "04-01",
+            "end": "09-30",
+            "booking_advance_days": 270
+          }
+        ],
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,

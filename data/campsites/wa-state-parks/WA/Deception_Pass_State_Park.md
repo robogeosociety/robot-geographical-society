@@ -22,13 +22,10 @@ availability:
     first_available: '2026-02-01'
     season_open: '2026-02-01'
     season_close: '2026-07-01'
-season:
-  type: seasonal
-  start: 02-01
+availability_windows:
+- start: 02-01
   end: 07-01
-booking:
-  type: rolling
-  window_days: 270
+  booking_advance_days: 270
 ---
 
 Largest state park campground; Cranberry Lake and North Beach loops
