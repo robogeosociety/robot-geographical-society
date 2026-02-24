@@ -28,4 +28,29 @@ test.describe('Robot Geographical Society - Integration', () => {
     const title = await page.title();
     expect(title).toBe('Robot Geographical Society');
   });
+
+  test('all four agency toggle buttons are visible and active by default', async ({ page }) => {
+    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.controls');
+    for (const label of ['WA State Parks', 'National Park Service', 'US Forest Service', 'Bureau of Land Management']) {
+      const btn = page.getByRole('button', { name: new RegExp(label, 'i') });
+      await expect(btn).toBeVisible();
+      await expect(btn).toHaveAttribute('aria-pressed', 'true');
+    }
+  });
+
+  test('map container element is present', async ({ page }) => {
+    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.map-container');
+    await expect(page.locator('.map-container')).toBeVisible();
+  });
+
+  test('toggling an agency button deactivates it', async ({ page }) => {
+    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.controls');
+    const btn = page.getByRole('button', { name: /WA State Parks/i });
+    await expect(btn).toHaveAttribute('aria-pressed', 'true');
+    await btn.click();
+    await expect(btn).toHaveAttribute('aria-pressed', 'false');
+  });
 });

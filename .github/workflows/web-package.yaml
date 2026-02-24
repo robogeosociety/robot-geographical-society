@@ -1,0 +1,54 @@
+name: Web Package
+
+on:
+  push:
+    branches:
+      - feat/web-package
+  workflow_dispatch:
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm install
+
+      - name: Sync GeoJSON data
+        run: node scripts/sync-geojson.js
+
+      - name: Lint
+        working-directory: web
+        run: npm run lint
+
+      - name: Unit tests
+        working-directory: web
+        run: npm test -- --run
+
+      - name: Build (standalone, skip postbuild E2E)
+        working-directory: web
+        env:
+          VITE_STANDALONE: 'true'
+          VITE_MAPBOX_ACCESS_TOKEN: ${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }}
+        run: npm run build --ignore-scripts
+
+      - name: Assemble artifact
+        run: |
+          mkdir -p artifact/.github/workflows
+          cp -r web/dist artifact/dist
+          cp web/package-templates/deploy-pages.yml artifact/.github/workflows/deploy-pages.yml
+          cp web/package-templates/DEPLOY.md artifact/DEPLOY.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-package
+          path: artifact/
+          retention-days: 90

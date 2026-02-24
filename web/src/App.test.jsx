@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import mapboxgl from 'mapbox-gl';
 import App from './App.jsx';
 
 // Provide a fake VITE_MAPBOX_ACCESS_TOKEN so the map initializes without error
@@ -49,5 +50,63 @@ describe('App smoke tests', () => {
     // The map container div is rendered inside map-wrapper
     const wrapper = document.querySelector('.map-container');
     expect(wrapper).not.toBeNull();
+  });
+});
+
+describe('Standalone mode (VITE_STANDALONE=true)', () => {
+  let fetchSpy;
+
+  const fakeCampsite = {
+    id: 'test-site',
+    name: 'Rainier Base Camp',
+    agency_short: 'nps',
+    sites: 30,
+    types: '["tent"]',
+    year_round: false,
+    open_month: 5,
+    reservable: true,
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    import.meta.env.VITE_STANDALONE = 'true';
+    import.meta.env.VITE_MAPBOX_ACCESS_TOKEN = 'pk.test_token';
+    fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
+    });
+  });
+
+  afterEach(() => {
+    delete import.meta.env.VITE_STANDALONE;
+    fetchSpy.mockRestore();
+  });
+
+  function selectCampsite(campsite) {
+    const mapInstance = mapboxgl.Map.mock.results.at(-1).value;
+    const clickHandler = mapInstance.on.mock.calls.find(
+      ([event, layer]) => event === 'click' && layer === 'campsite-circles'
+    )?.[2];
+    act(() => {
+      clickHandler({ features: [{ properties: campsite }] });
+    });
+  }
+
+  it('does not call fetch when a campsite is selected', async () => {
+    render(<App />);
+    selectCampsite(fakeCampsite);
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('detail panel renders campsite info from GeoJSON properties', async () => {
+    render(<App />);
+    selectCampsite(fakeCampsite);
+    await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+    const panel = screen.getByRole('dialog');
+    expect(within(panel).getByText('Rainier Base Camp')).toBeInTheDocument();
+    expect(within(panel).getByText(/30/)).toBeInTheDocument();
+    expect(within(panel).getByText(/National Park Service/i)).toBeInTheDocument();
+    expect(within(panel).queryByText(/Loading additional details/i)).not.toBeInTheDocument();
   });
 });

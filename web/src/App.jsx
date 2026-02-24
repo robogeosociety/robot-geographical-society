@@ -62,13 +62,19 @@ export default function App() {
 
     mapboxgl.accessToken = token;
 
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: MAP_STYLE,
-      bounds: WA_BOUNDS,
-      fitBoundsOptions: { padding: 40 },
-      failIfMajorPerformanceCaveat: false,
-    });
+    let map;
+    try {
+      map = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: MAP_STYLE,
+        bounds: WA_BOUNDS,
+        fitBoundsOptions: { padding: 40 },
+        failIfMajorPerformanceCaveat: false,
+      });
+    } catch (e) {
+      setMapError(`Map failed to load: ${e.message}`);
+      return;
+    }
 
     mapRef.current = map;
 
@@ -204,6 +210,11 @@ export default function App() {
   useEffect(() => {
     if (!selectedCampsite) {
       setCampsiteDetails(null);
+      return;
+    }
+
+    // Standalone mode: all data is embedded in GeoJSON, no backend needed
+    if (import.meta.env.VITE_STANDALONE === 'true') {
       return;
     }
 

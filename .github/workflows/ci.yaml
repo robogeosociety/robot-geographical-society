@@ -3,8 +3,12 @@ name: CI
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'data/**'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'data/**'
 
 jobs:
   lint-test-build:
@@ -19,7 +23,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
-      - name: Install dependencies
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+- name: Install dependencies
         run: |
           npm install -g wrangler
           cd backend && npm install

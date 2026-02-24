@@ -1,0 +1,22 @@
+---
+name: Bruceport County Park
+agency: Washington State Parks
+agency_short: wa-state-parks
+state: WA
+lat: 46.6157
+lng: -123.8234
+sites: 30
+types:
+- tent
+- rv
+reservable: true
+reservation_url: https://washington.goingtocamp.com/
+official_url: https://washington.goingtocamp.com/
+quality_score: 80
+availability_windows:
+- start: 05-01
+  end: 09-30
+  booking_advance_days: 270
+---
+
+On Willapa Bay near South Bend

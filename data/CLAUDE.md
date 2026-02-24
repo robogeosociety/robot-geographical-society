@@ -2,6 +2,8 @@
 
 This file instructs Claude Code on how to work with campsite data in this project.
 
+> **Also read:** [`NOTEBOOKS.md`](./NOTEBOOKS.md) — Jupyter server setup, access URLs, passwords, and notebook cell reference.
+
 ## Source of truth
 
 Individual campsite files (`data/{agency}/WA/{name}/index.md` or `data/{agency}/WA/{park}/{name}/index.md`) are the **source of truth**. The GeoJSON (`data/campsites.json`) is a **derived artifact** — regenerate it from the markdown files, never edit it directly.
