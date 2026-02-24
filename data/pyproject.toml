@@ -13,9 +13,8 @@ dependencies = [
 ]
 
 [project.scripts]
-fetch-rec-gov-calendar = "scripts.fetch_rec_gov_calendar:main"
-fetch-wa-state-parks = "scripts.fetch_wa_state_parks:main"
-sync-to-geojson = "scripts.sync_to_geojson:main"
+update = "scripts.update_campsites:main"
+generate = "scripts.sync_to_geojson:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["campsite_sync", "scripts"]

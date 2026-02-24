@@ -3,9 +3,9 @@
 CLI entry point — validate index.md files and rebuild campsites.json.
 
 Usage (from data/):
-    uv run sync-to-geojson
-    uv run sync-to-geojson --output /path/to/output.json
-    uv run sync-to-geojson --base /path/to/data --output /path/to/output.json
+    uv run generate
+    uv run generate --output /path/to/output.json
+    uv run generate --base /path/to/data --output /path/to/output.json
     uv run python scripts/sync_to_geojson.py [--base DIR] [--output FILE]
 """
 

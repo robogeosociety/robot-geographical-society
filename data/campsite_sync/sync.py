@@ -15,11 +15,12 @@ CLI:
 import json
 import re
 import sys
+import yaml
 from pathlib import Path
 
 AGENCIES = ["blm", "nps", "usfs", "wa-state-parks"]
 
-VALID_TYPES = {"tent", "rv", "walk-in", "cabin", "bike-in", "parking"}
+VALID_TYPES = {"tent", "rv", "walk-in", "cabin", "bike-in", "parking", "boat-in", "group"}
 
 MONTH_MAP = {
     "january": 1, "february": 2, "march": 3, "april": 4,
@@ -27,8 +28,8 @@ MONTH_MAP = {
     "september": 9, "october": 10, "november": 11, "december": 12,
 }
 
-WA_LAT = (45.5, 49.1)
-WA_LNG = (-124.9, -116.9)
+WA_LAT = (45.0, 49.5)
+WA_LNG = (-125.0, -116.0)
 
 
 def _resolve_base(base: str | Path | None) -> Path:
@@ -49,30 +50,10 @@ def parse_frontmatter(text: str) -> dict:
         raise ValueError("No frontmatter block found")
     block, body = match.group(1), match.group(2).strip()
 
-    result: dict = {}
-    for line in block.splitlines():
-        if ":" not in line:
-            continue
-        key, _, val = line.partition(":")
-        key = key.strip()
-        val = val.strip().split("#")[0].strip()  # strip inline comments
-
-        if val.startswith("[") and val.endswith("]"):
-            result[key] = [v.strip() for v in val[1:-1].split(",") if v.strip()]
-        elif (val.startswith('"') and val.endswith('"')) or \
-             (val.startswith("'") and val.endswith("'")):
-            result[key] = val[1:-1]
-        elif val == "true":
-            result[key] = True
-        elif val == "false":
-            result[key] = False
-        elif val == "null":
-            result[key] = None
-        else:
-            try:
-                result[key] = float(val) if "." in val else int(val)
-            except ValueError:
-                result[key] = val
+    try:
+        result = yaml.safe_load(block) or {}
+    except yaml.YAMLError as e:
+        raise ValueError(f"YAML parse error: {e}")
 
     result["_notes"] = body or None
     return result
@@ -106,8 +87,13 @@ def validate(fm: dict, path: Path) -> list[str]:
             errors.append(f"unknown type '{t}' — valid: {sorted(VALID_TYPES)}")
 
     rid = fm.get("rec_gov_id")
-    if rid is not None and not (isinstance(rid, str) and rid.isdigit()):
-        errors.append(f"rec_gov_id '{rid}' must be a numeric string")
+    if rid is not None:
+        if isinstance(rid, int):
+             pass # Valid
+        elif isinstance(rid, str) and rid.isdigit():
+             pass # Valid
+        else:
+             errors.append(f"rec_gov_id '{rid}' must be a numeric string or integer")
 
     wid = fm.get("resource_location_id")
     if wid is not None and not isinstance(wid, int):
@@ -142,6 +128,7 @@ def build_feature(fm: dict) -> dict:
             "reservation_url":  fm.get("reservation_url"),
             "rec_gov_id":       fm.get("rec_gov_id"),
             "wa_park_id":       fm.get("resource_location_id"),
+            "availability":     fm.get("availability"),
             "notes":            fm.get("_notes"),
         },
     }

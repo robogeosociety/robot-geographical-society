@@ -25,6 +25,7 @@
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Fishtrap Lake near Sprague; wildlife-rich shrub-steppe environment"
       }
     },
@@ -51,6 +52,7 @@
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Primitive camping near the largest natural juniper forest in WA; no facilities"
       }
     },
@@ -78,6 +80,7 @@
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Near the historic gold mining town of Liberty; dispersed camping area"
       }
     },
@@ -105,6 +108,7 @@
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Dispersed camping in Columbia Plateau; excellent stargazing"
       }
     },
@@ -132,6 +136,7 @@
         "reservation_url": "https://www.blm.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Along the Yakima River between Ellensburg and Yakima; popular for fly fishing"
       }
     },
@@ -159,6 +164,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On the north shore of Diablo Lake; stunning turquoise waters"
       }
     },
@@ -186,6 +192,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Walk-in sites on south shore of Diablo Lake"
       }
     },
@@ -213,444 +220,16 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": "232466",
         "wa_park_id": null,
-        "notes": "Near the Paradise area; excellent views of the Tatoosh Range",
         "availability": {
-          "last_updated": "2026-02-23T22:12:53.935902",
+          "last_updated": "2026-02-23T22:26:43.365631",
           "source": "RecGov",
           "summary": {
             "first_available": "2026-07-20",
             "season_open": "2026-06-23",
             "season_close": "2026-07-31"
-          },
-          "by_date": {
-            "2026-05-22": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-23": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-24": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-25": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-26": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-27": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-28": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-29": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-30": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-05-31": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-01": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-02": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-03": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-04": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-05": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-06": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-07": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-08": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-09": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-10": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-11": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-12": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-13": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-14": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-15": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-16": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-17": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-18": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-19": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-20": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-21": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-22": {
-              "available": 0,
-              "reserved": 0,
-              "not_available": 0,
-              "other": 176
-            },
-            "2026-06-23": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-06-24": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-06-25": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-06-26": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-06-27": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-06-28": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-06-29": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-06-30": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-01": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-02": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-03": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-04": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-05": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-06": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-07": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-08": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-09": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-10": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-11": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-12": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-13": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-14": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-15": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-16": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-17": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-18": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-19": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-20": {
-              "available": 1,
-              "reserved": 65,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-21": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-22": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-23": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-24": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-25": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-26": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-27": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-28": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-29": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-30": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            },
-            "2026-07-31": {
-              "available": 0,
-              "reserved": 66,
-              "not_available": 0,
-              "other": 110
-            }
           }
-        }
+        },
+        "notes": "Near the Paradise area; excellent views of the Tatoosh Range"
       }
     },
     {
@@ -676,6 +255,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "High alpine meadow campground; no RVs; stunning views of the Strait of Juan de Fuca"
       }
     },
@@ -703,6 +283,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On the west end of Lake Crescent; boat launch access"
       }
     },
@@ -730,6 +311,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Year-round campground; popular for whitewater kayaking put-in"
       }
     },
@@ -756,6 +338,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Small primitive campground on Gorge Lake; walk-in sites"
       }
     },
@@ -783,6 +366,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "In the Quinault Rain Forest; trailhead for Enchanted Valley hike"
       }
     },
@@ -810,6 +394,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Main campground for Hurricane Ridge area access"
       }
     },
@@ -837,6 +422,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "In the heart of the temperate rain forest; Hall of Mosses trailhead"
       }
     },
@@ -865,6 +451,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On coastal bluffs above the Pacific; beach access and tide pools"
       }
     },
@@ -892,6 +479,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On the upper Columbia/Lake Roosevelt; near historic Kettle Falls"
       }
     },
@@ -919,6 +507,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Near Rialto Beach; old-growth forest along Quillayute River"
       }
     },
@@ -945,6 +534,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Walk-in only; on the remote NW side of Rainier; no RVs or trailers"
       }
     },
@@ -972,6 +562,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Main campground at the Ross Lake NRA gateway town of Newhalem"
       }
     },
@@ -998,6 +589,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Small primitive campground in Quinault Valley"
       }
     },
@@ -1025,6 +617,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "In old-growth forest on the SE side of Rainier; Grove of the Patriarchs nearby"
       }
     },
@@ -1051,6 +644,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Remote campground in the Queets River valley; old-growth rainforest"
       }
     },
@@ -1077,6 +671,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Small boat-in or hike-in campground on Lake Roosevelt"
       }
     },
@@ -1104,6 +699,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Along the Sol Duc River; hot springs resort nearby"
       }
     },
@@ -1131,6 +727,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Primitive coastal campground just south of Kalaloch"
       }
     },
@@ -1158,6 +755,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Near the town of Grand Coulee; swimming beach on Lake Roosevelt"
       }
     },
@@ -1185,6 +783,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "At the foot of the North Fork Skokomish River; gateway to the Olympics"
       }
     },
@@ -1212,6 +811,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Trailhead for Sunrise area and Emmons Glacier route"
       }
     },
@@ -1239,6 +839,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Remote lake in the Colville NF; wildlife viewing and fishing"
       }
     },
@@ -1266,6 +867,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Along the Beckler River near Skykomish; popular for families"
       }
     },
@@ -1292,6 +894,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Small creek-side campground near Trout Lake"
       }
     },
@@ -1319,6 +922,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Scenic lake in northeast WA near Tonasket; good fishing"
       }
     },
@@ -1346,6 +950,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On the Suiattle River; access to Glacier Peak Wilderness"
       }
     },
@@ -1373,6 +978,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Bumping Lake reservoir; excellent hiking into the Norse Peak Wilderness"
       }
     },
@@ -1400,6 +1006,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Horse camp in the Chiwawa River corridor; Glacier Peak Wilderness access"
       }
     },
@@ -1427,6 +1034,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Small campground on the Sauk River near Darrington"
       }
     },
@@ -1454,6 +1062,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Lake Cushman in Hood Canal area"
       }
     },
@@ -1481,6 +1090,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On the Entiat River near Lake Chelan NRA; remote and uncrowded"
       }
     },
@@ -1508,6 +1118,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Near Snoqualmie Pass; access to Franklin Falls and Alpine Lakes Wilderness"
       }
     },
@@ -1535,6 +1146,7 @@
         "reservation_url": "https://www.recreation.gov/camping/campgrounds/232038",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On the North Fork Nooksack River; gateway to Mt. Baker"
       }
     },
@@ -1562,6 +1174,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "In the Quinault Valley; access to Lake Quinault and rainforest trails"
       }
     },
@@ -1588,6 +1201,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Small alpine lake campground; hike-in only"
       }
     },
@@ -1615,6 +1229,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Rimrock Lake reservoir; fishing and swimming"
       }
     },
@@ -1642,6 +1257,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Along Bumping River; natural carbonated spring nearby"
       }
     },
@@ -1669,6 +1285,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Near Mt. St. Helens; along Cispus River corridor"
       }
     },
@@ -1696,6 +1313,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Stunning views of Mt. Adams from the lake; high-elevation campground"
       }
     },
@@ -1723,6 +1341,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Near Trout Lake; gateway to Mt. Adams Wilderness trails"
       }
     },
@@ -1750,6 +1369,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Remote lake near the Goat Rocks Wilderness; excellent fishing"
       }
     },
@@ -1777,6 +1397,7 @@
         "reservation_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Wynoochee Lake reservoir; swimming, fishing, and boating"
       }
     },
@@ -1804,6 +1425,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Volcanic lake in Clark County; swimming and fishing"
       }
     },
@@ -1831,6 +1453,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Below the famous basalt monolith in the Columbia River Gorge"
       }
     },
@@ -1858,6 +1481,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Along the Bogachiel River near Forks; gateway to Olympic backcountry"
       }
     },
@@ -1885,6 +1509,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Willapa Bay near South Bend"
       }
     },
@@ -1913,6 +1538,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Where the Columbia River meets the Pacific; two historic lighthouses"
       }
     },
@@ -1940,6 +1566,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Scenic lake in Ferry County near Republic"
       }
     },
@@ -1968,54 +1595,16 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": -2147483624,
-        "notes": "Largest state park campground; Cranberry Lake and North Beach loops",
         "availability": {
-          "last_updated": "2026-02-23T22:13:13.488968",
+          "last_updated": "2026-02-23T22:27:03.667153",
           "source": "WA Parks",
           "summary": {
             "first_available": "2026-02-01",
             "season_open": "2026-02-01",
             "season_close": "2026-07-01"
-          },
-          "by_date": {
-            "2026-02-01": {
-              "available": 14,
-              "reserved": 1,
-              "not_available": 283,
-              "other": 56
-            },
-            "2026-03-01": {
-              "available": 39,
-              "reserved": 0,
-              "not_available": 216,
-              "other": 99
-            },
-            "2026-04-01": {
-              "available": 63,
-              "reserved": 2,
-              "not_available": 70,
-              "other": 219
-            },
-            "2026-05-01": {
-              "available": 18,
-              "reserved": 3,
-              "not_available": 68,
-              "other": 265
-            },
-            "2026-06-01": {
-              "available": 18,
-              "reserved": 4,
-              "not_available": 40,
-              "other": 292
-            },
-            "2026-07-01": {
-              "available": 18,
-              "reserved": 19,
-              "not_available": 40,
-              "other": 277
-            }
           }
-        }
+        },
+        "notes": "Largest state park campground; Cranberry Lake and North Beach loops"
       }
     },
     {
@@ -2042,6 +1631,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "At the confluence of the Dosewallips River and Hood Canal"
       }
     },
@@ -2069,6 +1659,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Former military fort on Marrowstone Island; panoramic views of Puget Sound"
       }
     },
@@ -2096,6 +1687,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Historic fort on Port Townsend Bay; year-round camping available"
       }
     },
@@ -2123,6 +1715,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Ocean beach camping near cranberry bogs"
       }
     },
@@ -2150,6 +1743,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Wooded park on Hood Canal near Poulsbo"
       }
     },
@@ -2177,6 +1771,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "First state park in WA; saltwater access on Samish Bay"
       }
     },
@@ -2205,6 +1800,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Four campgrounds near Summit Lake and Cascade Lake on Orcas Island"
       }
     },
@@ -2232,6 +1828,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On the Long Beach Peninsula; vast sandy beach access"
       }
     },
@@ -2259,6 +1856,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Warmest lake in WA on the Canadian border; excellent swimming"
       }
     },
@@ -2286,6 +1884,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Right on the Pacific Ocean; popular for razor clam season"
       }
     },
@@ -2312,6 +1911,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Washington State waterfall; 198-ft drop into the Palouse River canyon"
       }
     },
@@ -2339,6 +1939,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Along the East Fork Lewis River near Ridgefield"
       }
     },
@@ -2366,6 +1967,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Hood Canal; excellent oyster and shellfish harvesting"
       }
     },
@@ -2393,6 +1995,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Along the Spokane River near Spokane; Bowl and Pitcher area"
       }
     },
@@ -2420,6 +2023,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Adjacent to Mount St. Helens National Volcanic Monument; views of the volcano"
       }
     },
@@ -2447,6 +2051,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Protected bay in the Olympic rain shadow; calm waters for boating"
       }
     },
@@ -2474,6 +2079,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "On Banks Lake in the Grand Coulee area; massive basalt butte"
       }
     },
@@ -2501,6 +2107,7 @@
         "reservation_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
+        "availability": null,
         "notes": "Near the world's largest prehistoric waterfall; coulees and lakes"
       }
     }
