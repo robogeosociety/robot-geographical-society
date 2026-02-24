@@ -221,7 +221,7 @@
         "rec_gov_id": "232466",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-23T22:26:43.365631",
+          "last_updated": "2026-02-23T22:39:18.447566",
           "source": "RecGov",
           "summary": {
             "first_available": "2026-07-20",
@@ -1596,7 +1596,7 @@
         "rec_gov_id": null,
         "wa_park_id": -2147483624,
         "availability": {
-          "last_updated": "2026-02-23T22:27:03.667153",
+          "last_updated": "2026-02-23T22:39:17.780420",
           "source": "WA Parks",
           "summary": {
             "first_available": "2026-02-01",

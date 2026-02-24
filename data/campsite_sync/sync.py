@@ -32,17 +32,6 @@ WA_LAT = (45.0, 49.5)
 WA_LNG = (-125.0, -116.0)
 
 
-def _resolve_base(base: str | Path | None) -> Path:
-    """Resolve the data/ base directory from an explicit path or by auto-detection."""
-    if base is not None:
-        return Path(base).resolve()
-    # Works whether invoked from project root or from data/
-    candidate = Path("data")
-    if (candidate / "campsites.json").exists():
-        return candidate.resolve()
-    return Path(".").resolve()
-
-
 def parse_frontmatter(text: str) -> dict:
     """Parse YAML frontmatter + plain-text body from an index.md."""
     match = re.match(r"^---\n(.*?)\n---\n?(.*)", text, re.DOTALL)
@@ -131,98 +120,4 @@ def build_feature(fm: dict) -> dict:
             "availability":     fm.get("availability"),
             "notes":            fm.get("_notes"),
         },
-    }
-
-
-def sync(
-    base: str | Path | None = None,
-    output: str | Path | None = None,
-) -> dict:
-    """
-    Parse, validate, and rebuild campsites.json from all index.md files.
-
-    Args:
-        base:   Root data directory containing agency sub-folders. Auto-detected
-                from cwd if omitted.
-        output: Destination file path for the GeoJSON output. Defaults to
-                campsites.json inside `base`. Any parent directories must exist.
-
-    Returns a result dict:
-        {
-            "base":     Path,
-            "output":   Path,
-            "total":    int,
-            "written":  int,
-            "errors":   {path_str: [error_str, ...]},
-            "by_agency": {agency_short: count},
-        }
-
-    Raises RuntimeError if any validation errors are found (matching notebook behaviour).
-    """
-    base_path = _resolve_base(base)
-    output = Path(output).resolve() if output is not None else base_path / "campsites.json"
-
-    # --- Collect files ---
-    all_files: list[Path] = []
-    for agency in AGENCIES:
-        agency_dir = base_path / "campsites" / agency / "WA"
-        if agency_dir.is_dir():
-            all_files.extend(sorted(agency_dir.rglob("index.md")))
-
-    print(f"Base directory : {base_path}")
-    print(f"Output         : {output}")
-    print(f"Found {len(all_files)} campsite files\n")
-
-    # --- Parse & validate ---
-    validation_errors: dict[str, list[str]] = {}
-    parsed: dict[Path, dict] = {}
-
-    for path in all_files:
-        try:
-            fm = parse_frontmatter(path.read_text())
-            errs = validate(fm, path)
-            if errs:
-                validation_errors[str(path)] = errs
-            else:
-                parsed[path] = fm
-        except Exception as exc:
-            validation_errors[str(path)] = [f"parse error: {exc}"]
-
-    if validation_errors:
-        print(f"✗ {len(validation_errors)} file(s) with errors:\n", file=sys.stderr)
-        for p, errs in validation_errors.items():
-            print(f"  {p}", file=sys.stderr)
-            for e in errs:
-                print(f"    · {e}", file=sys.stderr)
-        raise RuntimeError(
-            f"{len(validation_errors)} validation error(s) — fix before syncing."
-        )
-
-    print(f"✓ All {len(all_files)} files passed validation")
-
-    # --- Build & write GeoJSON ---
-    features = sorted(
-        [build_feature(fm) for fm in parsed.values()],
-        key=lambda f: (f["properties"]["agency_short"], f["properties"]["name"]),
-    )
-
-    geojson = {"type": "FeatureCollection", "features": features}
-    output.write_text(json.dumps(geojson, indent=2) + "\n")
-
-    by_agency: dict[str, int] = {}
-    for f in features:
-        a = f["properties"]["agency_short"]
-        by_agency[a] = by_agency.get(a, 0) + 1
-
-    print(f"\n✓ {len(features)} campsites written to {output}\n")
-    for agency, count in sorted(by_agency.items()):
-        print(f"  {agency:20s} {count}")
-
-    return {
-        "base": base_path,
-        "output": output,
-        "total": len(all_files),
-        "written": len(features),
-        "errors": validation_errors,
-        "by_agency": by_agency,
     }

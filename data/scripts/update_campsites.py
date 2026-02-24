@@ -3,7 +3,7 @@
 Update campsite data (MD files) with live availability and quality metrics.
 
 Workflow:
-1. Iterate all index.md files.
+1. Read campsites.toml to find active campsites.
 2. Fetch live availability if `rec_gov_id` or `resource_location_id` is present.
 3. Inject `availability` data into frontmatter.
 4. Calculate and update `quality_score`.
@@ -17,6 +17,7 @@ Usage:
 import argparse
 import sys
 import re
+import toml
 from datetime import datetime
 from pathlib import Path
 import yaml
@@ -28,6 +29,11 @@ from campsite_sync.wa_state_parks import get_session_cookies
 from campsite_sync.quality import calculate_score
 
 def update_file(path: Path, wa_cookies: str | None, verbose: bool = False) -> bool:
+    if not path.exists():
+        if verbose:
+            print(f"Skipping {path}: File not found")
+        return False
+
     content = path.read_text()
     
     # Extract existing frontmatter/body
@@ -50,10 +56,6 @@ def update_file(path: Path, wa_cookies: str | None, verbose: bool = False) -> bo
     updated = False
     
     # --- Quality Score (Initial check) ---
-    # Need to pass fm with _notes for calculation.
-    # We parse the body again or just pass it through.
-    # calculate_score expects `_notes` key if checking description.
-    # Let's ensure `fm` has it temporarily.
     calc_fm = fm.copy()
     calc_fm["_notes"] = body
     current_score = calculate_score(calc_fm)
@@ -88,9 +90,6 @@ def update_file(path: Path, wa_cookies: str | None, verbose: bool = False) -> bo
                     print(f"Skipping {fm.get('name')}: No WA cookies", file=sys.stderr)
 
             if avail_data:
-                # Update 'availability' field with a summary
-                # We can store the full by_date if we want, but user requested "latest availability info"
-                # which implies actionable data.
                 summary = {
                      "first_available": avail_data.get("first_available"),
                      "season_open": avail_data.get("season_open"),
@@ -103,8 +102,6 @@ def update_file(path: Path, wa_cookies: str | None, verbose: bool = False) -> bo
                     "summary": summary
                 }
                 
-                # Check if changed (ignoring timestamp for diff check would be ideal, but simple is ok)
-                # Actually, since timestamp changes, file always updates. That's fine for "update" workflow.
                 fm["availability"] = new_avail
                 updated = True
 
@@ -116,8 +113,6 @@ def update_file(path: Path, wa_cookies: str | None, verbose: bool = False) -> bo
         return False
 
     # --- Write Back ---
-    # Dump YAML with block style to be readable
-    # sort_keys=False to preserve order (if python dict preserves it, typically yes in 3.7+)
     new_fm_block = yaml.dump(fm, sort_keys=False, allow_unicode=True, width=1000).strip()
     new_content = f"---\n{new_fm_block}\n---\n{body}"
     path.write_text(new_content)
@@ -129,36 +124,48 @@ def main():
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
     args = parser.parse_args()
     
-    # Base detection
-    base_path = Path("data") if Path("data").is_dir() else Path(".")
-    
+    toml_path = Path("campsites.toml")
+    if not toml_path.exists():
+        print("Error: campsites.toml not found.", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Reading {toml_path}...")
+    try:
+        config = toml.load(toml_path)
+    except Exception as e:
+        print(f"Error parsing campsites.toml: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    campsites = config.get("campsites", [])
+    if not campsites:
+        print("No campsites found in campsites.toml", file=sys.stderr)
+        sys.exit(0)
+
     # Pre-fetch WA cookies if needed
     wa_cookies = None
     try:
-        # Only fetch if we see WA parks? Or just try.
-        # It spins up a browser, so maybe only do it if we encounter WA parks.
-        # But for batch script, doing it once at start is better.
-        print("Initializing WA State Parks session...")
-        wa_cookies = get_session_cookies()
+        # Check if we have any WA parks
+        if any("wa-state-parks" in c.get("path", "") for c in campsites):
+            print("Initializing WA State Parks session...")
+            wa_cookies = get_session_cookies()
     except Exception as e:
         print(f"Warning: Failed to get WA cookies: {e}", file=sys.stderr)
 
     total = 0
     updated_count = 0
     
-    print(f"Scanning {base_path}...")
-    
-    for agency in AGENCIES:
-        agency_dir = base_path / "campsites" / agency / "WA"
-        if not agency_dir.is_dir():
+    for entry in campsites:
+        rel_path = entry.get("path")
+        if not rel_path:
             continue
             
-        for path in sorted(agency_dir.rglob("index.md")):
-            total += 1
-            if update_file(path, wa_cookies, verbose=args.verbose):
-                updated_count += 1
-                if args.verbose:
-                    print(f"Updated {path.parent.name}")
+        path = Path(rel_path) / "index.md"
+        total += 1
+        
+        if update_file(path, wa_cookies, verbose=args.verbose):
+            updated_count += 1
+            if args.verbose:
+                print(f"Updated {entry['name']}")
 
     print(f"\nProcessed {total} files.")
     print(f"Updated {updated_count} files.")
