@@ -10,13 +10,16 @@ types:
 - tent
 - rv
 reservable: false
-reservation_url: https://www.recreation.gov/
-official_url: https://www.recreation.gov/
+rec_gov_id: '233865'
+reservation_url: https://www.recreation.gov/camping/campgrounds/233865
+official_url: https://www.recreation.gov/camping/campgrounds/233865
 quality_score: 80
 availability_windows:
-- start: 05-01
-  end: 09-30
+- start: 05-15
+  end: 09-15
   booking_advance_days: 180
+  site_total_count: 12
+  reserved_count: 0
 ---
 
 Small campground on the Sauk River near Darrington

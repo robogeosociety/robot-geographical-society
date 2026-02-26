@@ -10,13 +10,23 @@ types:
 - tent
 - rv
 reservable: true
-reservation_url: https://www.recreation.gov/
-official_url: https://www.recreation.gov/
-quality_score: 80
+rec_gov_id: '232135'
+reservation_url: https://www.recreation.gov/camping/campgrounds/232135
+official_url: https://www.recreation.gov/camping/campgrounds/232135
+quality_score: 100
 availability_windows:
 - start: 06-01
-  end: 09-30
+  end: 09-15
   booking_advance_days: 180
+  site_total_count: 29
+  reserved_count: 0
+availability:
+  last_updated: '2026-02-24T20:17:10.415068'
+  source: RecGov
+  summary:
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 On the Suiattle River; access to Glacier Peak Wilderness

@@ -64,7 +64,9 @@
         "properties": {
           "start": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" },
           "end": { "type": "string", "pattern": "^\\d{2}-\\d{2}$" },
-          "booking_advance_days": { "type": "integer" }
+          "booking_advance_days": { "type": "integer" },
+          "site_total_count": { "type": "integer", "minimum": 0 },
+          "reserved_count": { "type": "integer", "minimum": 0 }
         },
         "required": ["start", "end"]
       }

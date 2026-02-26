@@ -10,13 +10,16 @@ types:
 - tent
 - rv
 reservable: true
-reservation_url: https://washington.goingtocamp.com/
-official_url: https://washington.goingtocamp.com/
+resource_location_id: -2147483612
+reservation_url: https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483612
+official_url: https://parks.wa.gov/find-parks/state-parks/fort-worden-historical-state-park
 quality_score: 80
 availability_windows:
 - start: 01-01
   end: 12-31
   booking_advance_days: 270
+  site_total_count: 80
+  reserved_count: 0
 ---
 
 Historic fort on Port Townsend Bay; year-round camping available

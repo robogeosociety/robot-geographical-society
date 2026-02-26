@@ -14,9 +14,11 @@ reservation_url: https://www.recreation.gov/
 official_url: https://www.recreation.gov/
 quality_score: 80
 availability_windows:
-- start: 05-01
-  end: 09-30
+- start: 05-15
+  end: 09-15
   booking_advance_days: 180
+  site_total_count: 24
+  reserved_count: 0
 ---
 
 Remote lake in the Colville NF; wildlife viewing and fishing

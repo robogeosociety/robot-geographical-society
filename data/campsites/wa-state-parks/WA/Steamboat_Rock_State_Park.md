@@ -10,13 +10,16 @@ types:
 - tent
 - rv
 reservable: true
-reservation_url: https://washington.goingtocamp.com/
-official_url: https://washington.goingtocamp.com/
+resource_location_id: -2147483552
+reservation_url: https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483552
+official_url: https://parks.wa.gov/find-parks/state-parks/steamboat-rock-state-park
 quality_score: 80
 availability_windows:
 - start: 04-01
   end: 09-30
   booking_advance_days: 270
+  site_total_count: 213
+  reserved_count: 0
 ---
 
 On Banks Lake in the Grand Coulee area; massive basalt butte

@@ -10,13 +10,16 @@ types:
 - tent
 - rv
 reservable: false
-reservation_url: https://www.recreation.gov/
-official_url: https://www.recreation.gov/
+rec_gov_id: '10352186'
+reservation_url: https://www.recreation.gov/camping/campgrounds/10352186
+official_url: https://www.recreation.gov/camping/campgrounds/10352186
 quality_score: 80
 availability_windows:
-- start: 05-01
-  end: 09-30
+- start: 05-15
+  end: 09-15
   booking_advance_days: 180
+  site_total_count: 21
+  reserved_count: 0
 ---
 
 Near Trout Lake; gateway to Mt. Adams Wilderness trails

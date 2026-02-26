@@ -17,6 +17,8 @@ availability_windows:
 - start: 05-01
   end: 09-30
   booking_advance_days: 270
+  site_total_count: 30
+  reserved_count: 0
 ---
 
 On Willapa Bay near South Bend

@@ -11,13 +11,16 @@ types:
 - rv
 - cabin
 reservable: true
-reservation_url: https://washington.goingtocamp.com/
-official_url: https://washington.goingtocamp.com/
+resource_location_id: -2147483633
+reservation_url: https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483633
+official_url: https://parks.wa.gov/find-parks/state-parks/cape-disappointment-state-park
 quality_score: 80
 availability_windows:
 - start: 01-01
   end: 12-31
   booking_advance_days: 270
+  site_total_count: 250
+  reserved_count: 0
 ---
 
 Where the Columbia River meets the Pacific; two historic lighthouses

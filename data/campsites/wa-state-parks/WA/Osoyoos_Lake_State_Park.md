@@ -17,6 +17,8 @@ availability_windows:
 - start: 04-01
   end: 09-30
   booking_advance_days: 270
+  site_total_count: 86
+  reserved_count: 0
 ---
 
 Warmest lake in WA on the Canadian border; excellent swimming

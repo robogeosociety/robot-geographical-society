@@ -10,13 +10,23 @@ types:
 - tent
 - rv
 reservable: true
-reservation_url: https://www.recreation.gov/
-official_url: https://www.recreation.gov/
-quality_score: 80
+rec_gov_id: '247586'
+reservation_url: https://www.recreation.gov/camping/campgrounds/247586
+official_url: https://www.recreation.gov/camping/campgrounds/247586
+quality_score: 100
 availability_windows:
-- start: 05-01
-  end: 09-30
+- start: 01-01
+  end: 12-31
   booking_advance_days: 180
+  site_total_count: 47
+  reserved_count: 0
+availability:
+  last_updated: '2026-02-24T20:17:51.348575'
+  source: RecGov
+  summary:
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 At the foot of the North Fork Skokomish River; gateway to the Olympics
