@@ -10,13 +10,15 @@ types:
 - tent
 - rv
 reservable: false
-reservation_url: https://www.recreation.gov/
-official_url: https://www.recreation.gov/
+reservation_url: https://www.recreation.gov/camping/poi/259085
+official_url: https://www.recreation.gov/camping/poi/259085
 quality_score: 80
 availability_windows:
 - start: 05-01
   end: 09-30
   booking_advance_days: 180
+  site_total_count: 30
+  reserved_count: 0
 ---
 
 In the Quinault Rain Forest; trailhead for Enchanted Valley hike

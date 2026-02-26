@@ -72,6 +72,14 @@ def update_availability(
                     continue
 
             if avail_data:
+                by_date = avail_data.get("by_date", {})
+                
+                # Try to find a representative reserved count (first date with any data)
+                sample_reserved = 0
+                if by_date:
+                    first_date = sorted(by_date.keys())[0]
+                    sample_reserved = by_date[first_date].get("reserved", 0)
+
                 # Inject into properties
                 props["availability"] = {
                     "last_updated": datetime.now().isoformat(),
@@ -81,8 +89,14 @@ def update_availability(
                         "season_open": avail_data.get("season_open"),
                         "season_close": avail_data.get("season_close"),
                     },
-                    "by_date": avail_data.get("by_date")
+                    "by_date": by_date
                 }
+
+                # Also update the windows with summary counts
+                for window in props.get("availability_windows", []):
+                    window["site_total_count"] = props.get("sites", 0)
+                    window["reserved_count"] = sample_reserved
+
                 updated_count += 1
 
         except Exception as e:

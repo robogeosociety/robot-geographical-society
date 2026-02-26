@@ -207,6 +207,10 @@ name = "Palouse Falls State Park"
 path = "campsites/wa-state-parks/WA/Palouse_Falls_State_Park.md"
 
 [[campsites]]
+name = "Panorama Point"
+path = "campsites/usfs/WA/Mt_Baker_Snoqualmie_NF/Panorama_Point.md"
+
+[[campsites]]
 name = "Paradise Point State Park"
 path = "campsites/wa-state-parks/WA/Paradise_Point_State_Park.md"
 

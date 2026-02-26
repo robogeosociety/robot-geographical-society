@@ -14,8 +14,10 @@ official_url: https://www.recreation.gov/
 quality_score: 80
 availability_windows:
 - start: 06-01
-  end: 09-30
+  end: 09-15
   booking_advance_days: 180
+  site_total_count: 8
+  reserved_count: 0
 ---
 
 Small alpine lake campground; hike-in only

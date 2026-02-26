@@ -86,6 +86,13 @@ def validate(fm: dict, path: Path) -> list[str]:
 
 def build_feature(fm: dict) -> dict:
     """Build a GeoJSON Feature from parsed frontmatter."""
+    windows = fm.get("availability_windows") or []
+    for w in windows:
+        if "site_total_count" not in w:
+            w["site_total_count"] = fm.get("sites", 0)
+        if "reserved_count" not in w:
+            w["reserved_count"] = 0
+
     return {
         "type": "Feature",
         "geometry": {
@@ -99,8 +106,9 @@ def build_feature(fm: dict) -> dict:
             "sites":                fm["sites"],
             "types":                fm["types"],
             "reservable":           fm["reservable"],
-            "availability_windows": fm.get("availability_windows"),
+            "availability_windows": windows,
             "reservation_url":      fm.get("reservation_url"),
+            "official_url":         fm.get("official_url"),
             "rec_gov_id":           fm.get("rec_gov_id"),
             "wa_park_id":           fm.get("resource_location_id"),
             "availability":         fm.get("availability"),
@@ -117,6 +125,11 @@ def main():
         metavar="FILE",
         default="campsites.json",
         help="Output GeoJSON path (default: campsites.json)",
+    )
+    parser.add_argument(
+        "--out_dir",
+        metavar="DIR",
+        help="Output directory (if specified, output is written to DIR/campsites.json)",
     )
     args = parser.parse_args()
 
@@ -138,7 +151,12 @@ def main():
         print("No campsites found in campsites.toml", file=sys.stderr)
         sys.exit(1)
 
-    output = Path(args.output).resolve()
+    if args.out_dir:
+        out_dir = Path(args.out_dir).resolve()
+        out_dir.mkdir(parents=True, exist_ok=True)
+        output = out_dir / "campsites.json"
+    else:
+        output = Path(args.output).resolve()
 
     print(f"Found {len(campsites_list)} entries in campsites.toml\n")
 

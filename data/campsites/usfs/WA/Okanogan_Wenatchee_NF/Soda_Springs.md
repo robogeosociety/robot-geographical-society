@@ -10,13 +10,16 @@ types:
 - tent
 - rv
 reservable: false
-reservation_url: https://www.recreation.gov/
-official_url: https://www.recreation.gov/
+rec_gov_id: '234024'
+reservation_url: https://www.recreation.gov/camping/campgrounds/234024
+official_url: https://www.recreation.gov/camping/campgrounds/234024
 quality_score: 80
 availability_windows:
 - start: 06-01
-  end: 09-30
+  end: 09-15
   booking_advance_days: 180
+  site_total_count: 26
+  reserved_count: 0
 ---
 
 Along Bumping River; natural carbonated spring nearby

@@ -10,13 +10,16 @@ types:
 - tent
 - rv
 reservable: false
-reservation_url: https://www.recreation.gov/
-official_url: https://www.recreation.gov/
+rec_gov_id: '234016'
+reservation_url: https://www.recreation.gov/camping/campgrounds/234016
+official_url: https://www.recreation.gov/camping/campgrounds/234016
 quality_score: 80
 availability_windows:
-- start: 05-01
-  end: 09-30
+- start: 05-15
+  end: 09-15
   booking_advance_days: 180
+  site_total_count: 25
+  reserved_count: 0
 ---
 
 On the Entiat River near Lake Chelan NRA; remote and uncrowded

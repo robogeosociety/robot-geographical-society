@@ -16,6 +16,8 @@ availability_windows:
 - start: 04-01
   end: 09-30
   booking_advance_days: 270
+  site_total_count: 10
+  reserved_count: 0
 ---
 
 Washington State waterfall; 198-ft drop into the Palouse River canyon

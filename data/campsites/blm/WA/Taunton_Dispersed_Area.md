@@ -10,13 +10,15 @@ types:
 - tent
 - rv
 reservable: false
-reservation_url: https://www.blm.gov/
-official_url: https://www.blm.gov/
+reservation_url: https://www.blm.gov/visit/taunton-recreation-site
+official_url: https://www.blm.gov/visit/taunton-recreation-site
 quality_score: 80
 availability_windows:
 - start: 01-01
   end: 12-31
   booking_advance_days: 180
+  site_total_count: 15
+  reserved_count: 0
 ---
 
 Dispersed camping in Columbia Plateau; excellent stargazing
