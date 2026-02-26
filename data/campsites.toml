@@ -15,6 +15,10 @@ name = "Beckler River"
 path = "campsites/usfs/WA/Mt_Baker_Snoqualmie_NF/Beckler_River.md"
 
 [[campsites]]
+name = "Bedal Campground"
+path = "campsites/usfs/WA/Mt_Baker_Snoqualmie_NF/Bedal_Campground.md"
+
+[[campsites]]
 name = "Blue Lake Creek"
 path = "campsites/usfs/WA/Gifford_Pinchot_NF/Blue_Lake_Creek.md"
 
@@ -301,4 +305,3 @@ path = "campsites/usfs/WA/Olympic_NF/Wynoochee_Lake.md"
 [[campsites]]
 name = "Yakima River Canyon"
 path = "campsites/blm/WA/Yakima_River_Canyon.md"
-

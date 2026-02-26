@@ -16,6 +16,7 @@ dependencies = [
 [project.scripts]
 update = "scripts.update_campsites:main"
 generate = "scripts.generate_geojson:main"
+crawl = "scripts.crawl_rec_gov:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["campsite_sync", "scripts"]
@@ -25,4 +26,9 @@ dev = [
     "playwright>=1.40",
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests that make real network requests (deselect with -m 'not slow')",
 ]
