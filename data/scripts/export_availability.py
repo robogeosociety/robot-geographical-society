@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Export SQLite availability data to web/public/availability.json.
+Export SQLite data to web assets.
 
-The JSON structure is:
-    {campsite_id: {date: available_count, ...}, ...}
-
-where campsite_id is the rec_gov_id or wa_park_id (as a string).
+Outputs two files:
+  --out       availability.json  {campsite_id: {date: available_count}}
+  --geojson   campsites.json     GeoJSON FeatureCollection joining
+                                 campsites + availability tables
 
 Usage (from data/):
     uv run export
     uv run export --db availability.db --out ../web/public/availability.json
+    uv run export --geojson ../web/public/campsites-live.json
 """
 
 import argparse
@@ -17,12 +18,12 @@ import json
 import sys
 from pathlib import Path
 
-from campsite_sync.db import export_all
+from campsite_sync.db import export_all, export_geojson
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Export SQLite availability data to availability.json for the frontend."
+        description="Export SQLite campsite + availability data to JSON for the frontend."
     )
     parser.add_argument(
         "--db",
@@ -34,29 +35,45 @@ def main():
         "--out",
         default="../web/public/availability.json",
         metavar="FILE",
-        help="Output JSON path (default: ../web/public/availability.json)",
+        help="Output availability JSON path (default: ../web/public/availability.json)",
+    )
+    parser.add_argument(
+        "--geojson",
+        metavar="FILE",
+        help="Also export a full GeoJSON FeatureCollection with availability embedded",
     )
     args = parser.parse_args()
 
     db_path = Path(args.db)
     if not db_path.exists():
         print(f"Error: database not found at {db_path}", file=sys.stderr)
-        print("Run 'uv run update' first to populate it.", file=sys.stderr)
+        print("Run 'uv run generate' then 'uv run update' to populate it.", file=sys.stderr)
         sys.exit(1)
 
+    # --- availability.json ---
     print(f"Reading {db_path}...")
     data = export_all(db_path)
 
-    if not data:
-        print("No availability data found in database.", file=sys.stderr)
-        sys.exit(1)
+    if data:
+        out_path = Path(args.out)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(data, separators=(",", ":")) + "\n")
+        total_dates = sum(len(v) for v in data.values())
+        print(f"Exported {len(data)} campsites, {total_dates} date entries → {out_path}")
+    else:
+        print("No availability data in database (run 'uv run update' to fetch it).")
 
-    out_path = Path(args.out)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(data, separators=(",", ":")) + "\n")
-
-    total_dates = sum(len(v) for v in data.values())
-    print(f"Exported {len(data)} campsites, {total_dates} date entries → {out_path}")
+    # --- optional GeoJSON export ---
+    if args.geojson:
+        geojson = export_geojson(db_path)
+        n = len(geojson["features"])
+        if n == 0:
+            print("No campsite rows found (run 'uv run generate' first).", file=sys.stderr)
+        else:
+            geo_path = Path(args.geojson)
+            geo_path.parent.mkdir(parents=True, exist_ok=True)
+            geo_path.write_text(json.dumps(geojson, indent=2) + "\n")
+            print(f"Exported {n} features (with availability) → {geo_path}")
 
 
 if __name__ == "__main__":

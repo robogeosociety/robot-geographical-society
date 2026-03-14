@@ -15,6 +15,10 @@ import re
 import tomllib
 from pathlib import Path
 
+from campsite_sync.db import write_campsite, campsite_id_for, clear_campsites
+
+DB_PATH = Path("availability.db")
+
 AGENCIES = ["blm", "nps", "usfs", "wa-state-parks"]
 VALID_TYPES = {"tent", "rv", "walk-in", "cabin", "bike-in", "parking", "boat-in", "group"}
 
@@ -193,6 +197,13 @@ def main():
         sys.exit(1)
 
     print(f"✓ All {len(campsites_list)} files passed validation")
+
+    # --- Populate SQLite campsites table ---
+    clear_campsites(DB_PATH)
+    for fm in parsed.values():
+        cid = campsite_id_for(fm)
+        write_campsite(DB_PATH, cid, fm)
+    print(f"✓ {len(parsed)} campsites written to {DB_PATH}")
 
     # --- Build & write GeoJSON ---
     features = sorted(
