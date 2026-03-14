@@ -19,6 +19,14 @@ availability_windows:
   booking_advance_days: 180
   site_total_count: 23
   reserved_count: 0
+quality_score: 100
+availability:
+  last_updated: '2026-03-14T09:46:10.570569'
+  source: RecGov
+  summary:
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 Recreation.gov campground in Mt. Baker-Snoqualmie National Forest.

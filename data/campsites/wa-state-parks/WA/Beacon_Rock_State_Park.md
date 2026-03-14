@@ -13,7 +13,7 @@ reservable: true
 resource_location_id: -2147483644
 reservation_url: https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483644
 official_url: https://parks.wa.gov/find-parks/state-parks/beacon-rock-state-park
-quality_score: 80
+quality_score: 100
 availability_windows:
 - start: 04-01
   end: 09-30

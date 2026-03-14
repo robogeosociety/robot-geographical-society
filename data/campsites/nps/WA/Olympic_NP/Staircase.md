@@ -21,7 +21,7 @@ availability_windows:
   site_total_count: 47
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:51.348575'
+  last_updated: '2026-03-14T10:48:27.619368'
   source: RecGov
   summary:
     first_available: null

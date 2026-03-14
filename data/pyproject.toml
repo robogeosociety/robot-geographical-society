@@ -17,6 +17,7 @@ dependencies = [
 update = "scripts.update_campsites:main"
 generate = "scripts.generate_geojson:main"
 crawl = "scripts.crawl_rec_gov:main"
+export = "scripts.export_availability:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["campsite_sync", "scripts"]

@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 111
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:45.724797'
+  last_updated: '2026-03-14T10:32:23.105856'
   source: RecGov
   summary:
-    first_available: '2026-05-18'
-    season_open: '2026-05-18'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 Main campground at the Ross Lake NRA gateway town of Newhalem

@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 28
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:09.759846'
+  last_updated: '2026-03-14T09:50:11.661162'
   source: RecGov
   summary:
-    first_available: '2026-05-14'
-    season_open: '2026-05-14'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 Scenic lake in northeast WA near Tonasket; good fishing

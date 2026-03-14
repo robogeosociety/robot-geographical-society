@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 54
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:52.482199'
+  last_updated: '2026-03-14T10:52:28.875023'
   source: RecGov
   summary:
-    first_available: '2026-05-22'
-    season_open: '2026-05-22'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 Stunning views of Mt. Adams from the lake; high-elevation campground
