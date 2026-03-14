@@ -27,6 +27,9 @@ from campsite_sync.rec_gov import fetch_availability as fetch_rec_gov
 from campsite_sync.wa_state_parks import fetch_availability as fetch_wa_parks
 from campsite_sync.wa_state_parks import get_session_cookies
 from campsite_sync.quality import calculate_score
+from campsite_sync.db import write_availability
+
+DB_PATH = Path("availability.db")
 
 def update_file(path: Path, wa_cookies: str | None, verbose: bool = False) -> bool:
     if not path.exists():
@@ -95,15 +98,21 @@ def update_file(path: Path, wa_cookies: str | None, verbose: bool = False) -> bo
                      "season_open": avail_data.get("season_open"),
                      "season_close": avail_data.get("season_close")
                 }
-                
+
                 new_avail = {
                     "last_updated": datetime.now().isoformat(),
                     "source": source,
                     "summary": summary
                 }
-                
+
                 fm["availability"] = new_avail
                 updated = True
+
+                # Persist per-date availability to SQLite
+                by_date = avail_data.get("by_date", {})
+                if by_date:
+                    db_id = str(rec_gov_id or wa_park_id)
+                    write_availability(DB_PATH, db_id, by_date)
 
         except Exception as e:
             if verbose:
