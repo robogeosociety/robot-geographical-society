@@ -13,7 +13,7 @@ reservable: true
 resource_location_id: -2147483639
 reservation_url: https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483639
 official_url: https://parks.wa.gov/find-parks/state-parks/bogachiel-state-park
-quality_score: 80
+quality_score: 100
 availability_windows:
 - start: 04-01
   end: 09-30

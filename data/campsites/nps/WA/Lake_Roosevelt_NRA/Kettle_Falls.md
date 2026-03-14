@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 76
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:44.515542'
+  last_updated: '2026-03-14T10:28:21.994270'
   source: RecGov
   summary:
-    first_available: '2026-02-24'
-    season_open: '2026-02-01'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 On the upper Columbia/Lake Roosevelt; near historic Kettle Falls

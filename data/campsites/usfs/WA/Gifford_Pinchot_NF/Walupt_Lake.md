@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 44
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:53.086122'
+  last_updated: '2026-03-14T10:56:30.053222'
   source: RecGov
   summary:
-    first_available: '2026-05-15'
-    season_open: '2026-05-15'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 Remote lake near the Goat Rocks Wilderness; excellent fishing

@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 88
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:40.798275'
+  last_updated: '2026-03-14T10:14:18.193017'
   source: RecGov
   summary:
-    first_available: '2026-05-15'
-    season_open: '2026-05-15'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 On the west end of Lake Crescent; boat launch access

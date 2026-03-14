@@ -213,12 +213,12 @@
         "rec_gov_id": "246855",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:14.523553",
+          "last_updated": "2026-03-14T10:02:14.911162",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-18",
-            "season_open": "2026-05-18",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On the north shore of Diablo Lake; stunning turquoise waters"
@@ -257,12 +257,12 @@
         "rec_gov_id": "255201",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:15.231814",
+          "last_updated": "2026-03-14T10:04:15.468494",
           "source": "RecGov",
           "summary": {
             "first_available": null,
-            "season_open": "2026-05-18",
-            "season_close": "2026-07-31"
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Walk-in sites on south shore of Diablo Lake"
@@ -301,12 +301,12 @@
         "rec_gov_id": "232466",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:15.883956",
+          "last_updated": "2026-03-14T10:08:16.571724",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-07-20",
-            "season_open": "2026-06-23",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Near the Paradise area; excellent views of the Tatoosh Range"
@@ -380,12 +380,12 @@
         "rec_gov_id": "259084",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:40.798275",
+          "last_updated": "2026-03-14T10:14:18.193017",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-15",
-            "season_open": "2026-05-15",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On the west end of Lake Crescent; boat launch access"
@@ -424,12 +424,12 @@
         "rec_gov_id": "246852",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:41.623503",
+          "last_updated": "2026-03-14T10:18:19.278960",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-18",
-            "season_open": "2026-05-18",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Year-round campground; popular for whitewater kayaking put-in"
@@ -467,7 +467,7 @@
         "rec_gov_id": "10004932",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:42.132772",
+          "last_updated": "2026-03-14T10:20:19.832511",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -547,7 +547,7 @@
         "rec_gov_id": "247585",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:42.617612",
+          "last_updated": "2026-03-14T10:22:20.394914",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -591,12 +591,12 @@
         "rec_gov_id": "247592",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:43.113192",
+          "last_updated": "2026-03-14T10:24:20.935712",
           "source": "RecGov",
           "summary": {
             "first_available": null,
-            "season_open": "2026-06-12",
-            "season_close": "2026-07-31"
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "In the heart of the temperate rain forest; Hall of Mosses trailhead"
@@ -636,12 +636,12 @@
         "rec_gov_id": "232464",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:43.795653",
+          "last_updated": "2026-03-14T10:26:21.470279",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-15",
-            "season_open": "2026-05-15",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On coastal bluffs above the Pacific; beach access and tide pools"
@@ -680,12 +680,12 @@
         "rec_gov_id": "234061",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:44.515542",
+          "last_updated": "2026-03-14T10:28:21.994270",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-02-24",
-            "season_open": "2026-02-01",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On the upper Columbia/Lake Roosevelt; near historic Kettle Falls"
@@ -724,12 +724,12 @@
         "rec_gov_id": "247591",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:45.079285",
+          "last_updated": "2026-03-14T10:30:22.538412",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-06-01",
-            "season_open": "2026-06-01",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Near Rialto Beach; old-growth forest along Quillayute River"
@@ -803,12 +803,12 @@
         "rec_gov_id": "234060",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:45.724797",
+          "last_updated": "2026-03-14T10:32:23.105856",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-18",
-            "season_open": "2026-05-18",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Main campground at the Ross Lake NRA gateway town of Newhalem"
@@ -882,7 +882,7 @@
         "rec_gov_id": "232465",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:46.273942",
+          "last_updated": "2026-03-14T10:34:23.638307",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -960,12 +960,12 @@
         "rec_gov_id": "275027",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:49.161941",
+          "last_updated": "2026-03-14T10:40:25.406459",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-04-01",
-            "season_open": "2026-04-01",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Small boat-in or hike-in campground on Lake Roosevelt"
@@ -1004,12 +1004,12 @@
         "rec_gov_id": "251906",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:50.128222",
+          "last_updated": "2026-03-14T10:44:26.502510",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-03-20",
-            "season_open": "2026-03-20",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Along the Sol Duc River; hot springs resort nearby"
@@ -1084,12 +1084,12 @@
         "rec_gov_id": "234064",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:50.865584",
+          "last_updated": "2026-03-14T10:46:27.071002",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-02-24",
-            "season_open": "2026-02-01",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Near the town of Grand Coulee; swimming beach on Lake Roosevelt"
@@ -1128,7 +1128,7 @@
         "rec_gov_id": "247586",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:51.348575",
+          "last_updated": "2026-03-14T10:48:27.619368",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -1172,7 +1172,7 @@
         "rec_gov_id": "259031",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:53.633731",
+          "last_updated": "2026-03-14T10:58:30.628957",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -1252,15 +1252,59 @@
         "rec_gov_id": "232018",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:08.607991",
+          "last_updated": "2026-03-14T09:44:10.018573",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-15",
-            "season_open": "2026-05-15",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Along the Beckler River near Skykomish; popular for families"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.3869,
+          48.0968
+        ]
+      },
+      "properties": {
+        "name": "Bedal Campground",
+        "agency": "US Forest Service",
+        "agency_short": "usfs",
+        "sites": 23,
+        "types": [
+          "tent",
+          "rv"
+        ],
+        "reservable": true,
+        "availability_windows": [
+          {
+            "start": "05-01",
+            "end": "09-30",
+            "booking_advance_days": 180,
+            "site_total_count": 23,
+            "reserved_count": 0
+          }
+        ],
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233864",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/233864",
+        "rec_gov_id": "233864",
+        "wa_park_id": null,
+        "availability": {
+          "last_updated": "2026-03-14T09:46:10.570569",
+          "source": "RecGov",
+          "summary": {
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
+          }
+        },
+        "notes": "Recreation.gov campground in Mt. Baker-Snoqualmie National Forest."
       }
     },
     {
@@ -1294,7 +1338,15 @@
         "official_url": "https://www.recreation.gov/camping/campgrounds/233713",
         "rec_gov_id": "233713",
         "wa_park_id": null,
-        "availability": null,
+        "availability": {
+          "last_updated": "2026-03-14T09:48:11.096273",
+          "source": "RecGov",
+          "summary": {
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
+          }
+        },
         "notes": "Small creek-side campground near Trout Lake"
       }
     },
@@ -1331,12 +1383,12 @@
         "rec_gov_id": "252036",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:09.759846",
+          "last_updated": "2026-03-14T09:50:11.661162",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-14",
-            "season_open": "2026-05-14",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Scenic lake in northeast WA near Tonasket; good fishing"
@@ -1375,7 +1427,7 @@
         "rec_gov_id": "232135",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:10.415068",
+          "last_updated": "2026-03-14T09:52:12.189777",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -1419,12 +1471,12 @@
         "rec_gov_id": "232230",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:11.434692",
+          "last_updated": "2026-03-14T09:54:12.718367",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-31",
-            "season_open": "2026-05-29",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On Bumping Lake reservoir; excellent hiking into the Norse Peak Wilderness"
@@ -1463,7 +1515,7 @@
         "rec_gov_id": "10250504",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:12.527049",
+          "last_updated": "2026-03-14T09:56:13.250711",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -1506,7 +1558,15 @@
         "official_url": "https://www.recreation.gov/camping/campgrounds/233865",
         "rec_gov_id": "233865",
         "wa_park_id": null,
-        "availability": null,
+        "availability": {
+          "last_updated": "2026-03-14T09:58:13.781570",
+          "source": "RecGov",
+          "summary": {
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
+          }
+        },
         "notes": "Small campground on the Sauk River near Darrington"
       }
     },
@@ -1543,12 +1603,12 @@
         "rec_gov_id": "233384",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:13.808358",
+          "last_updated": "2026-03-14T10:00:14.336627",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-04-23",
-            "season_open": "2026-04-23",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On the west shore of Wynoochee Lake reservoir; swimming, fishing, and boating"
@@ -1586,7 +1646,15 @@
         "official_url": "https://www.recreation.gov/camping/campgrounds/234016",
         "rec_gov_id": "234016",
         "wa_park_id": null,
-        "availability": null,
+        "availability": {
+          "last_updated": "2026-03-14T10:06:16.034690",
+          "source": "RecGov",
+          "summary": {
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
+          }
+        },
         "notes": "On the Entiat River near Lake Chelan NRA; remote and uncrowded"
       }
     },
@@ -1623,12 +1691,12 @@
         "rec_gov_id": "232320",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:38.759141",
+          "last_updated": "2026-03-14T10:10:17.140234",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-04-12",
-            "season_open": "2026-04-10",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Near Snoqualmie Pass; access to Franklin Falls and Alpine Lakes Wilderness"
@@ -1667,12 +1735,12 @@
         "rec_gov_id": "232038",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:40.039846",
+          "last_updated": "2026-03-14T10:12:17.667887",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-15",
-            "season_open": "2026-05-15",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On the North Fork Nooksack River; gateway to Mt. Baker"
@@ -1710,7 +1778,15 @@
         "official_url": "https://www.recreation.gov/camping/campgrounds/251365",
         "rec_gov_id": "251365",
         "wa_park_id": null,
-        "availability": null,
+        "availability": {
+          "last_updated": "2026-03-14T10:16:18.734699",
+          "source": "RecGov",
+          "summary": {
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
+          }
+        },
         "notes": "In the Quinault Valley; access to Lake Quinault and rainforest trails"
       }
     },
@@ -1782,12 +1858,12 @@
         "rec_gov_id": "232081",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:46.844530",
+          "last_updated": "2026-03-14T10:36:24.190734",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-15",
-            "season_open": "2026-05-15",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On the western shore of Baker Lake; stunning views of Mt. Baker and Mt. Shuksan"
@@ -1826,12 +1902,12 @@
         "rec_gov_id": "232204",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:48.365130",
+          "last_updated": "2026-03-14T10:38:24.744735",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-22",
-            "season_open": "2026-05-22",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On Rimrock Lake reservoir; fishing and swimming"
@@ -1869,7 +1945,15 @@
         "official_url": "https://www.recreation.gov/camping/campgrounds/234024",
         "rec_gov_id": "234024",
         "wa_park_id": null,
-        "availability": null,
+        "availability": {
+          "last_updated": "2026-03-14T10:42:25.946669",
+          "source": "RecGov",
+          "summary": {
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
+          }
+        },
         "notes": "Along Bumping River; natural carbonated spring nearby"
       }
     },
@@ -1906,7 +1990,7 @@
         "rec_gov_id": "232328",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:51.880972",
+          "last_updated": "2026-03-14T10:50:28.189631",
           "source": "RecGov",
           "summary": {
             "first_available": null,
@@ -1950,12 +2034,12 @@
         "rec_gov_id": "232252",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:52.482199",
+          "last_updated": "2026-03-14T10:52:28.875023",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-22",
-            "season_open": "2026-05-22",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Stunning views of Mt. Adams from the lake; high-elevation campground"
@@ -1993,7 +2077,15 @@
         "official_url": "https://www.recreation.gov/camping/campgrounds/10352186",
         "rec_gov_id": "10352186",
         "wa_park_id": null,
-        "availability": null,
+        "availability": {
+          "last_updated": "2026-03-14T10:54:29.443474",
+          "source": "RecGov",
+          "summary": {
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
+          }
+        },
         "notes": "Near Trout Lake; gateway to Mt. Adams Wilderness trails"
       }
     },
@@ -2030,12 +2122,12 @@
         "rec_gov_id": "232247",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:53.086122",
+          "last_updated": "2026-03-14T10:56:30.053222",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-05-15",
-            "season_open": "2026-05-15",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "Remote lake near the Goat Rocks Wilderness; excellent fishing"
@@ -2074,12 +2166,12 @@
         "rec_gov_id": "233384",
         "wa_park_id": null,
         "availability": {
-          "last_updated": "2026-02-24T20:17:54.217958",
+          "last_updated": "2026-03-14T11:00:31.159823",
           "source": "RecGov",
           "summary": {
-            "first_available": "2026-04-23",
-            "season_open": "2026-04-23",
-            "season_close": "2026-07-31"
+            "first_available": null,
+            "season_open": null,
+            "season_close": null
           }
         },
         "notes": "On Wynoochee Lake reservoir; swimming, fishing, and boating"

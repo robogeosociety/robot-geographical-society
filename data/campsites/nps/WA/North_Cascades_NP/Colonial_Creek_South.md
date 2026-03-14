@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 32
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:15.231814'
+  last_updated: '2026-03-14T10:04:15.468494'
   source: RecGov
   summary:
     first_available: null
-    season_open: '2026-05-18'
-    season_close: '2026-07-31'
+    season_open: null
+    season_close: null
 ---
 
 Walk-in sites on south shore of Diablo Lake

@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 45
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:11.434692'
+  last_updated: '2026-03-14T09:54:12.718367'
   source: RecGov
   summary:
-    first_available: '2026-05-31'
-    season_open: '2026-05-29'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 On Bumping Lake reservoir; excellent hiking into the Norse Peak Wilderness

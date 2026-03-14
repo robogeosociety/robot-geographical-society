@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 82
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:50.128222'
+  last_updated: '2026-03-14T10:44:26.502510'
   source: RecGov
   summary:
-    first_available: '2026-03-20'
-    season_open: '2026-03-20'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 Along the Sol Duc River; hot springs resort nearby

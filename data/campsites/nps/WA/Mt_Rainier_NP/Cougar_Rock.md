@@ -15,12 +15,12 @@ reservation_url: https://www.recreation.gov/camping/campgrounds/232466
 official_url: https://www.recreation.gov/camping/campgrounds/232466
 quality_score: 100
 availability:
-  last_updated: '2026-02-24T20:17:15.883956'
+  last_updated: '2026-03-14T10:08:16.571724'
   source: RecGov
   summary:
-    first_available: '2026-07-20'
-    season_open: '2026-06-23'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 availability_windows:
 - start: 05-22
   end: 10-12

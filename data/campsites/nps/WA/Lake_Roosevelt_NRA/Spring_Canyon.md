@@ -21,12 +21,12 @@ availability_windows:
   site_total_count: 87
   reserved_count: 0
 availability:
-  last_updated: '2026-02-24T20:17:50.865584'
+  last_updated: '2026-03-14T10:46:27.071002'
   source: RecGov
   summary:
-    first_available: '2026-02-24'
-    season_open: '2026-02-01'
-    season_close: '2026-07-31'
+    first_available: null
+    season_open: null
+    season_close: null
 ---
 
 Near the town of Grand Coulee; swimming beach on Lake Roosevelt
