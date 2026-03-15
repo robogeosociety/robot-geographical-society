@@ -80,11 +80,3 @@ export function getServerByPort(port) {
     running: entry.pid ? isProcessAlive(entry.pid) : false,
   };
 }
-
-export function isProtectedPort(port) {
-  const state = loadState();
-  const portStr = String(port);
-  if (state.servers[portStr]?.managed === false) return true;
-  const protectedPorts = state.protected_ports || [8080];
-  return protectedPorts.includes(Number(port));
-}

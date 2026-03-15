@@ -15,10 +15,9 @@ import {
   startVite,
   startJupyter,
   startPython,
-  registerExternal,
 } from './lib/servers.js';
-import { getServers, removeServer, getServerByPort } from './lib/state.js';
-import { getTailscaleUrl, removeTailscaleServe } from './lib/tailscale.js';
+import { getServers, removeServer } from './lib/state.js';
+import { getTailscaleUrl } from './lib/tailscale.js';
 
 const server = new Server(
   {
@@ -62,10 +61,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             tailscale_path: {
               type: 'string',
               description: 'Path to expose via Tailscale Serve (e.g. \'/my-app\'). Omit to skip Tailscale.',
-            },
-            command: {
-              type: 'string',
-              description: 'Custom shell command to start the server (e.g. "transit-tracker web"). Overrides auto-detection for python type.',
             },
           },
           required: ['type', 'project_dir'],
@@ -125,36 +120,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['port'],
         },
       },
-      {
-        name: 'dev_server_register',
-        description: 'Register an already-running external service so it appears on the dashboard. Does NOT start or kill anything. Use dev_server_stop to unregister.',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            port: {
-              type: 'number',
-              description: 'Port the service is listening on',
-            },
-            name: {
-              type: 'string',
-              description: 'Display name (e.g. "Transit Tracker API")',
-            },
-            url_path: {
-              type: 'string',
-              description: 'URL path on the service (e.g. "/api/spec"). Defaults to "/".',
-            },
-            project_dir: {
-              type: 'string',
-              description: 'Project directory (optional, for dashboard grouping)',
-            },
-            tailscale_path: {
-              type: 'string',
-              description: 'Tailscale serve path to set up (e.g. "/tt-api"). Omit to skip.',
-            },
-          },
-          required: ['port', 'name'],
-        },
-      },
     ],
   };
 });
@@ -179,28 +144,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'dev_server_stop': {
-        const { port } = args;
-        const result = { port, stopped: false, tailscale_removed: false, unregistered: false };
-
-        const entry = getServerByPort(port);
-        if (entry?.managed === false) {
-          // External service: unregister only, do not kill
-          removeServer(port);
-          result.unregistered = true;
-          if (entry.tailscale_path) {
-            await removeTailscaleServe(entry.tailscale_path).catch(() => {});
-            result.tailscale_removed = true;
-          }
-          result.message = `External service "${entry.name}" on port ${port} unregistered (process not killed).`;
-        } else {
-          try {
-            await killProcessOnPort(port);
-            result.stopped = true;
-          } catch (e) {
-            // ignore
-          }
-          removeServer(port);
+        const { port, tailscale_path } = args;
+        const result = { port, stopped: false, tailscale_removed: false };
+        
+        try {
+          await killProcessOnPort(port);
+          result.stopped = true;
+        } catch (e) {
+          // ignore
         }
+        removeServer(port);
 
         return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
       }
@@ -224,10 +177,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
         const info = await getProcessOnPort(port);
         return { content: [{ type: 'text', text: JSON.stringify({ port, status: 'in_use', ...info }, null, 2) }] };
-      }
-
-      case 'dev_server_register': {
-        return { content: [{ type: 'text', text: JSON.stringify(await registerExternal(args), null, 2) }] };
       }
 
       default:

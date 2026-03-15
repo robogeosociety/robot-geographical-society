@@ -40,11 +40,10 @@ describe('MCP server', () => {
 
     assert.equal(response.id, 1);
     assert.ok(response.result.tools);
-    assert.equal(response.result.tools.length, 6);
+    assert.equal(response.result.tools.length, 5);
 
     const names = response.result.tools.map((t) => t.name).sort();
     assert.deepEqual(names, [
-      'dev_server_register',
       'dev_server_start',
       'dev_server_status',
       'dev_server_stop',
@@ -94,7 +93,7 @@ describe('MCP server', () => {
     });
 
     const result = JSON.parse(response.result.content[0].text);
-    assert.ok(result.servers !== null && typeof result.servers === 'object');
+    assert.ok(Array.isArray(result.servers));
   });
 
   it('dev_server_urls reports not listening for unused port', async () => {
@@ -106,7 +105,7 @@ describe('MCP server', () => {
     });
 
     const result = JSON.parse(response.result.content[0].text);
-    assert.equal(result.tailscaleUrl, null);
+    assert.equal(result.listening, false);
   });
 
   it('returns error for unknown tool', async () => {
@@ -133,6 +132,6 @@ describe('MCP server', () => {
     });
 
     assert.ok(response.result.isError);
-    assert.ok(response.result.content[0].text.includes('Unknown type'));
+    assert.ok(response.result.content[0].text.includes('Unknown server type'));
   });
 });

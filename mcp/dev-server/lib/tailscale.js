@@ -29,7 +29,7 @@ export async function setupTailscaleServe(tsPath, localPort, viteBase = "/") {
   await exec('tailscale', [
     'serve', '--bg',
     '--set-path', tsPath,
-    `http://127.0.0.1:${localPort}${tsPath}/`,
+    `https+insecure://127.0.0.1:${localPort}${viteBase}`,
   ]);
 
   return `https://${status.hostname}${tsPath}`;
@@ -44,10 +44,10 @@ export async function removeTailscaleServe(tsPath) {
   }
 }
 
-export async function setupTailscaleHttpProxy(tsPath, localPort, localPath = '/') {
+export async function setupTailscaleHttpProxy(tsPath, localPort) {
   const status = await getTailscaleStatus();
   if (!status.available) throw new Error('Tailscale not available');
-  await exec('tailscale', ['serve', '--bg', '--set-path', tsPath, `http://127.0.0.1:${localPort}${localPath}`]);
+  await exec('tailscale', ['serve', '--bg', '--set-path', tsPath, `http://127.0.0.1:${localPort}`]);
   return `https://${status.hostname}${tsPath}`;
 }
 
