@@ -47,7 +47,7 @@ export async function removeTailscaleServe(tsPath) {
 export async function setupTailscaleHttpProxy(tsPath, localPort) {
   const status = await getTailscaleStatus();
   if (!status.available) throw new Error('Tailscale not available');
-  await exec('tailscale', ['serve', '--bg', '--set-path', tsPath, `http://127.0.0.1:${localPort}`]);
+  await exec('tailscale', ['serve', '--bg', '--set-path', tsPath, `http://127.0.0.1:${localPort}/`]);
   return `https://${status.hostname}${tsPath}`;
 }
 
