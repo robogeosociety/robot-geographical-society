@@ -31,7 +31,8 @@
     async function render() {
       let data;
       try {
-        const res = await fetch('./dev-servers.json?t=' + Date.now());
+        const base = location.pathname.endsWith('/') ? location.pathname : location.pathname + '/';
+      const res = await fetch(base + 'dev-servers.json?t=' + Date.now());
         data = await res.json();
       } catch {
         document.getElementById('app').innerHTML = '<p class="empty">could not load dev-servers.json</p>';
