@@ -29,7 +29,7 @@ export async function setupTailscaleServe(tsPath, localPort, viteBase = "/") {
   await exec('tailscale', [
     'serve', '--bg',
     '--set-path', tsPath,
-    `https+insecure://127.0.0.1:${localPort}${viteBase}`,
+    `http://127.0.0.1:${localPort}${tsPath}/`,
   ]);
 
   return `https://${status.hostname}${tsPath}`;
