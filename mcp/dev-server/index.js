@@ -165,7 +165,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'dev_server_urls': {
         const { port } = args;
-        const localUrl = \`http://tommys-mac-mini.local:\${port}\`;
+        const localUrl = `http://tommys-mac-mini.local:${port}`;
         const tailscaleUrl = await getTailscaleUrl(port);
         return { content: [{ type: 'text', text: JSON.stringify({ port, localUrl, tailscaleUrl }, null, 2) }] };
       }
@@ -173,18 +173,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case 'port_check': {
         const { port } = args;
         if (await isPortFree(port)) {
-          return { content: [{ type: 'text', text: JSON.stringify({ port, status: 'free', message: \`Port \${port} is available\` }, null, 2) }] };
+          return { content: [{ type: 'text', text: JSON.stringify({ port, status: 'free', message: `Port ${port} is available` }, null, 2) }] };
         }
         const info = await getProcessOnPort(port);
         return { content: [{ type: 'text', text: JSON.stringify({ port, status: 'in_use', ...info }, null, 2) }] };
       }
 
       default:
-        throw new Error(\`Unknown tool: \${name}\`);
+        throw new Error(`Unknown tool: ${name}`);
     }
   } catch (e) {
     return {
-      content: [{ type: 'text', text: \`Error: \${e.message}\` }],
+      content: [{ type: 'text', text: `Error: ${e.message}` }],
       isError: true,
     };
   }

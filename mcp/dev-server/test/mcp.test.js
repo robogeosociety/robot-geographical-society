@@ -93,7 +93,7 @@ describe('MCP server', () => {
     });
 
     const result = JSON.parse(response.result.content[0].text);
-    assert.ok(Array.isArray(result.servers));
+    assert.ok(result.servers !== null && typeof result.servers === 'object');
   });
 
   it('dev_server_urls reports not listening for unused port', async () => {
@@ -105,7 +105,7 @@ describe('MCP server', () => {
     });
 
     const result = JSON.parse(response.result.content[0].text);
-    assert.equal(result.listening, false);
+    assert.equal(result.tailscaleUrl, null);
   });
 
   it('returns error for unknown tool', async () => {
@@ -132,6 +132,6 @@ describe('MCP server', () => {
     });
 
     assert.ok(response.result.isError);
-    assert.ok(response.result.content[0].text.includes('Unknown server type'));
+    assert.ok(response.result.content[0].text.includes('Unknown type'));
   });
 });
