@@ -5,8 +5,8 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { killProcessOnPort, isPortFree, waitForPort } from './process.js';
-import { addServer } from './state.js';
-import { getTailscaleStatus, setupTailscaleServe } from './tailscale.js';
+import { addServer, isProtectedPort } from './state.js';
+import { getTailscaleStatus, setupTailscaleServe, setupTailscaleHttpProxy } from './tailscale.js';
 import { ensureTailscaleDashboard } from './dashboard.js';
 
 export function allocatePort(projectDir) {
@@ -49,6 +49,7 @@ async function startViteInternal({ projectDir, port: requestedPort, background =
 
   // Kill anything on the port first
   if (!(await isPortFree(port))) {
+    if (isProtectedPort(port)) throw new Error(`Port ${port} is a protected or external service. Stop it first.`);
     await killProcessOnPort(port);
   }
 
@@ -109,6 +110,7 @@ export async function startJupyter({ projectDir, port: requestedPort, background
   const port = await resolvePort(projectDir, requestedPort);
 
   if (!(await isPortFree(port))) {
+    if (isProtectedPort(port)) throw new Error(`Port ${port} is a protected or external service. Stop it first.`);
     await killProcessOnPort(port);
   }
 
@@ -169,15 +171,27 @@ export async function startJupyter({ projectDir, port: requestedPort, background
   return result;
 }
 
-export async function startPython({ projectDir, port: requestedPort, tailscalePath }) {
+export async function startPython({ projectDir, port: requestedPort, tailscalePath, command }) {
   const port = await resolvePort(projectDir, requestedPort);
-  if (!(await isPortFree(port))) await killProcessOnPort(port);
-  const entry = findPythonEntry(projectDir);
-  if (!entry) throw new Error(`No common Python entry point found in ${projectDir}`);
-  const pythonBin = getPythonBinary(projectDir);
+  if (!(await isPortFree(port))) {
+    if (isProtectedPort(port)) throw new Error(`Port ${port} is a protected or external service. Stop it first.`);
+    await killProcessOnPort(port);
+  }
+
+  let spawnCmd, spawnArgs;
+  if (command) {
+    spawnCmd = 'sh';
+    spawnArgs = ['-c', command];
+  } else {
+    const entry = findPythonEntry(projectDir);
+    if (!entry) throw new Error(`No common Python entry point found in ${projectDir}`);
+    spawnCmd = getPythonBinary(projectDir);
+    spawnArgs = [entry];
+  }
+
   const logFile = `/tmp/dev-server-${port}.log`;
   const logFd = fs.openSync(logFile, 'w');
-  const child = spawn(pythonBin, [entry], {
+  const child = spawn(spawnCmd, spawnArgs, {
     cwd: projectDir,
     detached: true,
     stdio: ['ignore', logFd, logFd],
@@ -202,6 +216,35 @@ export async function startPython({ projectDir, port: requestedPort, tailscalePa
       result.tailscale_path = tailscalePath;
     } catch (e) { }
   }
+  addServer(result);
+  ensureTailscaleDashboard().catch(() => {});
+  return result;
+}
+
+export async function registerExternal({ port, name, url_path = '/', project_dir, tailscale_path }) {
+  if (await isPortFree(port)) {
+    throw new Error(`Port ${port} is not in use. The service must be running before registering.`);
+  }
+  const localUrl = `http://tommys-mac-mini.local:${port}${url_path}`;
+  let tailscaleUrl = null;
+  if (tailscale_path) {
+    try {
+      tailscaleUrl = await setupTailscaleHttpProxy(tailscale_path, port, url_path);
+    } catch {
+      // Tailscale unavailable
+    }
+  }
+  const result = {
+    type: 'external',
+    managed: false,
+    port,
+    name,
+    url_path,
+    project_dir: project_dir || null,
+    localUrl,
+    tailscaleUrl,
+    tailscale_path: tailscale_path || null,
+  };
   addServer(result);
   ensureTailscaleDashboard().catch(() => {});
   return result;

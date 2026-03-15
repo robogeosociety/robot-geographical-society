@@ -18,8 +18,9 @@ export function writeDashboard(servers) {
     updated: new Date().toISOString(),
     servers: Object.fromEntries(
       Object.entries(servers || {}).map(([port, s]) => [port, {
-        project: s.project_dir ? path.basename(s.project_dir) : '?',
+        project: s.name || (s.project_dir ? path.basename(s.project_dir) : '?'),
         type: s.type || '?',
+        managed: s.managed !== false,
         port: s.port,
         localUrl: s.localUrl || null,
         tailscaleUrl: s.tailscaleUrl || null,

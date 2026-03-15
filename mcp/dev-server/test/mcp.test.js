@@ -40,10 +40,11 @@ describe('MCP server', () => {
 
     assert.equal(response.id, 1);
     assert.ok(response.result.tools);
-    assert.equal(response.result.tools.length, 5);
+    assert.equal(response.result.tools.length, 6);
 
     const names = response.result.tools.map((t) => t.name).sort();
     assert.deepEqual(names, [
+      'dev_server_register',
       'dev_server_start',
       'dev_server_status',
       'dev_server_stop',

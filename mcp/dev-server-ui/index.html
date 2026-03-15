@@ -22,6 +22,7 @@
     .empty { color: #444; margin-top: 1rem; }
     .updated { color: #333; margin-top: 1.5rem; }
     .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #2a2; margin-right: 0.5rem; vertical-align: middle; }
+    .dot.external { background: #a62; }
   </style>
 </head>
 <body>
@@ -60,7 +61,7 @@
           <tbody>
             ${entries.map(s => `
               <tr>
-                <td><span class="dot"></span>${s.project}</td>
+                <td><span class="dot${s.managed === false ? ' external' : ''}"></span>${s.project}</td>
                 <td>${s.type}</td>
                 <td>${s.port}</td>
                 <td><a href="${s.localUrl}" target="_blank">${s.localUrl}</a></td>
