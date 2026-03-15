@@ -51,7 +51,7 @@ export async function ensureTailscaleDashboard() {
   const status = await getTailscaleStatus();
   if (!status.available) return;
   try {
-    await setupTailscaleHttpProxy(DASHBOARD_TS_PATH, DASHBOARD_PORT);
+    await setupTailscaleHttpProxy(DASHBOARD_TS_PATH, DASHBOARD_PORT, '/servers/');
   } catch {
     // Already configured or unavailable
   }
