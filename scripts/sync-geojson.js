@@ -10,7 +10,7 @@ const DATA_DIR = path.join(__dirname, '..', 'data');
 try {
   console.log('Running python data generator via uv...');
   // Ensure we are in the data directory where pyproject.toml is
-  execSync('uv run generate', { stdio: 'inherit', cwd: DATA_DIR });
+  execSync('uv run refresh --skip-availability', { stdio: 'inherit', cwd: DATA_DIR });
 } catch (err) {
   console.error('Data generation failed:', err.message);
   process.exit(1);

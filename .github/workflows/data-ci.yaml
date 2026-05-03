@@ -30,9 +30,9 @@ jobs:
         
       - name: Install Playwright Browsers
         run: uv run playwright install --with-deps chromium
-        
-      - name: Generate GeoJSON
-        run: uv run generate
-        
+
+      - name: Generate GeoJSON (validate + STAC-shaped FeatureCollection)
+        run: USER=ci uv run refresh --skip-availability
+
       - name: Run Tests
         run: uv run pytest

@@ -119,6 +119,7 @@ def fetch_availability(
         start = date.today()
 
     all_counts: dict[str, dict] = {}
+    site_count_seen = 0
 
     with sync_playwright() as p:
         ctx = _new_context(p)
@@ -132,6 +133,9 @@ def fetch_availability(
                 try:
                     data = fetch_month(campground_id, y, m, context=ctx)
                     all_counts.update(summarize_month(data))
+                    site_count_seen = max(
+                        site_count_seen, len(data.get("campsites", {}) or {})
+                    )
                 except Exception as exc:
                     if verbose:
                         print(f"  Warning: failed for {y}-{m:02d}: {exc}", file=sys.stderr)
@@ -153,5 +157,6 @@ def fetch_availability(
         "first_available": first_available,
         "season_open": open_dates[0] if open_dates else None,
         "season_close": open_dates[-1] if open_dates else None,
+        "total_sites": site_count_seen or None,
         "by_date": all_counts,
     }

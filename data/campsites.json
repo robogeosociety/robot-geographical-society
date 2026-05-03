@@ -3,6 +3,7 @@
   "features": [
     {
       "type": "Feature",
+      "id": "blm/fishtrap-recreation-area",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -11,15 +12,20 @@
         ]
       },
       "properties": {
+        "id": "blm/fishtrap-recreation-area",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Fishtrap Recreation Area",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
+        "provider": "Bureau of Land Management",
         "sites": 20,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -29,16 +35,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.blm.gov/visit/fishtrap-recreation-area",
-        "official_url": "https://www.blm.gov/visit/fishtrap-recreation-area",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "On Fishtrap Lake near Sprague; wildlife-rich shrub-steppe environment"
-      }
+        "notes": "On Fishtrap Lake near Sprague; wildlife-rich shrub-steppe environment",
+        "reservation_url": "https://www.blm.gov/visit/fishtrap-recreation-area",
+        "official_url": "https://www.blm.gov/visit/fishtrap-recreation-area"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.blm.gov/visit/fishtrap-recreation-area",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.blm.gov/visit/fishtrap-recreation-area",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "blm/juniper-dunes-wilderness",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -47,14 +68,19 @@
         ]
       },
       "properties": {
+        "id": "blm/juniper-dunes-wilderness",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Juniper Dunes Wilderness",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
+        "provider": "Bureau of Land Management",
         "sites": 10,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -64,16 +90,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.blm.gov/visit/juniper-dunes-wilderness",
-        "official_url": "https://www.blm.gov/visit/juniper-dunes-wilderness",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Primitive camping near the largest natural juniper forest in WA; no facilities"
-      }
+        "notes": "Primitive camping near the largest natural juniper forest in WA; no facilities",
+        "reservation_url": "https://www.blm.gov/visit/juniper-dunes-wilderness",
+        "official_url": "https://www.blm.gov/visit/juniper-dunes-wilderness"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.blm.gov/visit/juniper-dunes-wilderness",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.blm.gov/visit/juniper-dunes-wilderness",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "blm/liberty-recreation-site",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -82,15 +123,20 @@
         ]
       },
       "properties": {
+        "id": "blm/liberty-recreation-site",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Liberty Recreation Site",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
+        "provider": "Bureau of Land Management",
         "sites": 18,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -100,16 +146,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.blm.gov/visit/liberty-recreation-site",
-        "official_url": "https://www.blm.gov/visit/liberty-recreation-site",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Near the historic gold mining town of Liberty; dispersed camping area"
-      }
+        "notes": "Near the historic gold mining town of Liberty; dispersed camping area",
+        "reservation_url": "https://www.blm.gov/visit/liberty-recreation-site",
+        "official_url": "https://www.blm.gov/visit/liberty-recreation-site"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.blm.gov/visit/liberty-recreation-site",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.blm.gov/visit/liberty-recreation-site",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "blm/taunton-dispersed-area",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -118,15 +179,20 @@
         ]
       },
       "properties": {
+        "id": "blm/taunton-dispersed-area",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Taunton Dispersed Area",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
+        "provider": "Bureau of Land Management",
         "sites": 15,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -136,16 +202,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.blm.gov/visit/taunton-recreation-site",
-        "official_url": "https://www.blm.gov/visit/taunton-recreation-site",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Dispersed camping in Columbia Plateau; excellent stargazing"
-      }
+        "notes": "Dispersed camping in Columbia Plateau; excellent stargazing",
+        "reservation_url": "https://www.blm.gov/visit/taunton-recreation-site",
+        "official_url": "https://www.blm.gov/visit/taunton-recreation-site"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.blm.gov/visit/taunton-recreation-site",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.blm.gov/visit/taunton-recreation-site",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "blm/yakima-river-canyon",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -154,15 +235,20 @@
         ]
       },
       "properties": {
+        "id": "blm/yakima-river-canyon",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Yakima River Canyon",
         "agency": "Bureau of Land Management",
         "agency_short": "blm",
+        "provider": "Bureau of Land Management",
         "sites": 25,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -172,16 +258,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.blm.gov/visit/yakima-river-canyon",
-        "official_url": "https://www.blm.gov/visit/yakima-river-canyon",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Along the Yakima River between Ellensburg and Yakima; popular for fly fishing"
-      }
+        "notes": "Along the Yakima River between Ellensburg and Yakima; popular for fly fishing",
+        "reservation_url": "https://www.blm.gov/visit/yakima-river-canyon",
+        "official_url": "https://www.blm.gov/visit/yakima-river-canyon"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.blm.gov/visit/yakima-river-canyon",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.blm.gov/visit/yakima-river-canyon",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/colonial-creek-north",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -190,15 +291,20 @@
         ]
       },
       "properties": {
+        "id": "nps/colonial-creek-north",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Colonial Creek North",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 60,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-18",
@@ -208,24 +314,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/246855",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/246855",
         "rec_gov_id": "246855",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:02:14.911162",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the north shore of Diablo Lake; stunning turquoise waters",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/246855",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/246855"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/246855",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the north shore of Diablo Lake; stunning turquoise waters"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/246855",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/colonial-creek-south",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -234,15 +347,20 @@
         ]
       },
       "properties": {
+        "id": "nps/colonial-creek-south",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Colonial Creek South",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 32,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-18",
@@ -252,24 +370,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/255201",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/255201",
         "rec_gov_id": "255201",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:04:15.468494",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Walk-in sites on south shore of Diablo Lake",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/255201",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/255201"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/255201",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Walk-in sites on south shore of Diablo Lake"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/255201",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/cougar-rock",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -278,15 +403,20 @@
         ]
       },
       "properties": {
+        "id": "nps/cougar-rock",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Cougar Rock",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 173,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-22",
@@ -296,24 +426,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232466",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232466",
         "rec_gov_id": "232466",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:08:16.571724",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Near the Paradise area; excellent views of the Tatoosh Range",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232466",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232466"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232466",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Near the Paradise area; excellent views of the Tatoosh Range"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232466",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/deer-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -322,14 +459,19 @@
         ]
       },
       "properties": {
+        "id": "nps/deer-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Deer Park",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 14,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "07-01",
@@ -339,16 +481,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/poi/10300477",
-        "official_url": "https://www.recreation.gov/camping/poi/10300477",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "High alpine meadow campground; no RVs; stunning views of the Strait of Juan de Fuca"
-      }
+        "notes": "High alpine meadow campground; no RVs; stunning views of the Strait of Juan de Fuca",
+        "reservation_url": "https://www.recreation.gov/camping/poi/10300477",
+        "official_url": "https://www.recreation.gov/camping/poi/10300477"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/poi/10300477",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/poi/10300477",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/fairholme",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -357,15 +514,20 @@
         ]
       },
       "properties": {
+        "id": "nps/fairholme",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Fairholme",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 88,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -375,24 +537,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/259084",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/259084",
         "rec_gov_id": "259084",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:14:18.193017",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the west end of Lake Crescent; boat launch access",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/259084",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/259084"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/259084",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the west end of Lake Crescent; boat launch access"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/259084",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/goodell-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -401,15 +570,20 @@
         ]
       },
       "properties": {
+        "id": "nps/goodell-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Goodell Creek",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 21,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-18",
@@ -419,24 +593,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/246852",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/246852",
         "rec_gov_id": "246852",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:18:19.278960",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Year-round campground; popular for whitewater kayaking put-in",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/246852",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/246852"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/246852",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Year-round campground; popular for whitewater kayaking put-in"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/246852",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/gorge-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -445,14 +626,19 @@
         ]
       },
       "properties": {
+        "id": "nps/gorge-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Gorge Lake",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 6,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -462,24 +648,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/10004932",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/10004932",
         "rec_gov_id": "10004932",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:20:19.832511",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Small primitive campground on Gorge Lake; walk-in sites",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/10004932",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/10004932"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/10004932",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Small primitive campground on Gorge Lake; walk-in sites"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/10004932",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/graves-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -488,15 +681,20 @@
         ]
       },
       "properties": {
+        "id": "nps/graves-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Graves Creek",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 30,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -506,16 +704,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/poi/259085",
-        "official_url": "https://www.recreation.gov/camping/poi/259085",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "In the Quinault Rain Forest; trailhead for Enchanted Valley hike"
-      }
+        "notes": "In the Quinault Rain Forest; trailhead for Enchanted Valley hike",
+        "reservation_url": "https://www.recreation.gov/camping/poi/259085",
+        "official_url": "https://www.recreation.gov/camping/poi/259085"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/poi/259085",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/poi/259085",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/heart-o-the-hills",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -524,15 +737,20 @@
         ]
       },
       "properties": {
+        "id": "nps/heart-o-the-hills",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Heart O' the Hills",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 105,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -542,24 +760,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247585",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/247585",
         "rec_gov_id": "247585",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:22:20.394914",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Main campground for Hurricane Ridge area access",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247585",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/247585"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/247585",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Main campground for Hurricane Ridge area access"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/247585",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/hoh-rain-forest",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -568,15 +793,20 @@
         ]
       },
       "properties": {
+        "id": "nps/hoh-rain-forest",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Hoh Rain Forest",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 88,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "06-12",
@@ -586,24 +816,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247592",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/247592",
         "rec_gov_id": "247592",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:24:20.935712",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "In the heart of the temperate rain forest; Hall of Mosses trailhead",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247592",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/247592"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/247592",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "In the heart of the temperate rain forest; Hall of Mosses trailhead"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/247592",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/kalaloch",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -612,9 +849,12 @@
         ]
       },
       "properties": {
+        "id": "nps/kalaloch",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Kalaloch",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 170,
         "types": [
           "tent",
@@ -622,6 +862,8 @@
           "cabin"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -631,24 +873,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232464",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232464",
         "rec_gov_id": "232464",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:26:21.470279",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On coastal bluffs above the Pacific; beach access and tide pools",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232464",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232464"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232464",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On coastal bluffs above the Pacific; beach access and tide pools"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232464",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/kettle-falls",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -657,15 +906,20 @@
         ]
       },
       "properties": {
+        "id": "nps/kettle-falls",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Kettle Falls",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 76,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -675,24 +929,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234061",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/234061",
         "rec_gov_id": "234061",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:28:21.994270",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the upper Columbia/Lake Roosevelt; near historic Kettle Falls",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234061",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/234061"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/234061",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the upper Columbia/Lake Roosevelt; near historic Kettle Falls"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/234061",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/mora",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -701,15 +962,20 @@
         ]
       },
       "properties": {
+        "id": "nps/mora",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Mora",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 94,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -719,24 +985,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247591",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/247591",
         "rec_gov_id": "247591",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:30:22.538412",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Near Rialto Beach; old-growth forest along Quillayute River",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247591",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/247591"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/247591",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Near Rialto Beach; old-growth forest along Quillayute River"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/247591",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/mowich-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -745,14 +1018,19 @@
         ]
       },
       "properties": {
+        "id": "nps/mowich-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Mowich Lake",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 30,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "07-01",
@@ -762,16 +1040,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.nps.gov/mora/planyourvisit/camping.htm",
-        "official_url": "https://www.nps.gov/mora/planyourvisit/camping.htm",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Walk-in only; on the remote NW side of Rainier; no RVs or trailers"
-      }
+        "notes": "Walk-in only; on the remote NW side of Rainier; no RVs or trailers",
+        "reservation_url": "https://www.nps.gov/mora/planyourvisit/camping.htm",
+        "official_url": "https://www.nps.gov/mora/planyourvisit/camping.htm"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.nps.gov/mora/planyourvisit/camping.htm",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.nps.gov/mora/planyourvisit/camping.htm",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/newhalem-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -780,15 +1073,20 @@
         ]
       },
       "properties": {
+        "id": "nps/newhalem-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Newhalem Creek",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 111,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-18",
@@ -798,24 +1096,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234060",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/234060",
         "rec_gov_id": "234060",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:32:23.105856",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Main campground at the Ross Lake NRA gateway town of Newhalem",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234060",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/234060"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/234060",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Main campground at the Ross Lake NRA gateway town of Newhalem"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/234060",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/north-fork",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -824,14 +1129,19 @@
         ]
       },
       "properties": {
+        "id": "nps/north-fork",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "North Fork",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 9,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -841,16 +1151,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/poi/259086",
-        "official_url": "https://www.recreation.gov/camping/poi/259086",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Small primitive campground in Quinault Valley"
-      }
+        "notes": "Small primitive campground in Quinault Valley",
+        "reservation_url": "https://www.recreation.gov/camping/poi/259086",
+        "official_url": "https://www.recreation.gov/camping/poi/259086"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/poi/259086",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/poi/259086",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/ohanapecosh",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -859,15 +1184,20 @@
         ]
       },
       "properties": {
+        "id": "nps/ohanapecosh",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Ohanapecosh",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 188,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-22",
@@ -877,24 +1207,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232465",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232465",
         "rec_gov_id": "232465",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:34:23.638307",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "In old-growth forest on the SE side of Rainier; Grove of the Patriarchs nearby",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232465",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232465"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232465",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "In old-growth forest on the SE side of Rainier; Grove of the Patriarchs nearby"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232465",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/queets",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -903,14 +1240,19 @@
         ]
       },
       "properties": {
+        "id": "nps/queets",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Queets",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 20,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -920,16 +1262,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/poi/259088",
-        "official_url": "https://www.recreation.gov/camping/poi/259088",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Remote campground in the Queets River valley; old-growth rainforest"
-      }
+        "notes": "Remote campground in the Queets River valley; old-growth rainforest",
+        "reservation_url": "https://www.recreation.gov/camping/poi/259088",
+        "official_url": "https://www.recreation.gov/camping/poi/259088"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/poi/259088",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/poi/259088",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/snag-cove",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -938,14 +1295,19 @@
         ]
       },
       "properties": {
+        "id": "nps/snag-cove",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Snag Cove",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 9,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -955,24 +1317,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/275027",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/275027",
         "rec_gov_id": "275027",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:40:25.406459",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Small boat-in or hike-in campground on Lake Roosevelt",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/275027",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/275027"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/275027",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Small boat-in or hike-in campground on Lake Roosevelt"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/275027",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/sol-duc",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -981,15 +1350,20 @@
         ]
       },
       "properties": {
+        "id": "nps/sol-duc",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Sol Duc",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 82,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "03-20",
@@ -999,24 +1373,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/251906",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/251906",
         "rec_gov_id": "251906",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:44:26.502510",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Along the Sol Duc River; hot springs resort nearby",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/251906",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/251906"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/251906",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Along the Sol Duc River; hot springs resort nearby"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/251906",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/south-beach",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1025,15 +1406,20 @@
         ]
       },
       "properties": {
+        "id": "nps/south-beach",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "South Beach",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 55,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -1043,16 +1429,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/poi/259090",
-        "official_url": "https://www.recreation.gov/camping/poi/259090",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Primitive coastal campground just south of Kalaloch"
-      }
+        "notes": "Primitive coastal campground just south of Kalaloch",
+        "reservation_url": "https://www.recreation.gov/camping/poi/259090",
+        "official_url": "https://www.recreation.gov/camping/poi/259090"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/poi/259090",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/poi/259090",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/spring-canyon",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1061,15 +1462,20 @@
         ]
       },
       "properties": {
+        "id": "nps/spring-canyon",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Spring Canyon",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 87,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -1079,24 +1485,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234064",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/234064",
         "rec_gov_id": "234064",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:46:27.071002",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Near the town of Grand Coulee; swimming beach on Lake Roosevelt",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234064",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/234064"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/234064",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Near the town of Grand Coulee; swimming beach on Lake Roosevelt"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/234064",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/staircase",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1105,15 +1518,20 @@
         ]
       },
       "properties": {
+        "id": "nps/staircase",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Staircase",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 47,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -1123,24 +1541,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247586",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/247586",
         "rec_gov_id": "247586",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:48:27.619368",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "At the foot of the North Fork Skokomish River; gateway to the Olympics",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/247586",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/247586"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/247586",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "At the foot of the North Fork Skokomish River; gateway to the Olympics"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/247586",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "nps/white-river",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1149,15 +1574,20 @@
         ]
       },
       "properties": {
+        "id": "nps/white-river",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "White River",
         "agency": "National Park Service",
         "agency_short": "nps",
+        "provider": "National Park Service",
         "sites": 112,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "07-01",
@@ -1167,24 +1597,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/259031",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/259031",
         "rec_gov_id": "259031",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:58:30.628957",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Trailhead for Sunrise area and Emmons Glacier route",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/259031",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/259031"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/259031",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Trailhead for Sunrise area and Emmons Glacier route"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/259031",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/beaver-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1193,15 +1630,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/beaver-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Beaver Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 24,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1211,16 +1653,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/",
-        "official_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Remote lake in the Colville NF; wildlife viewing and fishing"
-      }
+        "notes": "Remote lake in the Colville NF; wildlife viewing and fishing",
+        "reservation_url": "https://www.recreation.gov/",
+        "official_url": "https://www.recreation.gov/"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/beckler-river",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1229,15 +1686,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/beckler-river",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Beckler River",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 27,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1247,24 +1709,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232018",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232018",
         "rec_gov_id": "232018",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:44:10.018573",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Along the Beckler River near Skykomish; popular for families",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232018",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232018"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232018",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Along the Beckler River near Skykomish; popular for families"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232018",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/bedal-campground",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1273,15 +1742,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/bedal-campground",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Bedal Campground",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 23,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -1291,24 +1765,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233864",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/233864",
         "rec_gov_id": "233864",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:46:10.570569",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Recreation.gov campground in Mt. Baker-Snoqualmie National Forest.",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233864",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/233864"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/233864",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Recreation.gov campground in Mt. Baker-Snoqualmie National Forest."
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/233864",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/blue-lake-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1317,14 +1798,19 @@
         ]
       },
       "properties": {
+        "id": "usfs/blue-lake-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Blue Lake Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 11,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1334,24 +1820,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233713",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/233713",
         "rec_gov_id": "233713",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:48:11.096273",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Small creek-side campground near Trout Lake",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233713",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/233713"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/233713",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Small creek-side campground near Trout Lake"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/233713",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/bonaparte-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1360,15 +1853,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/bonaparte-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Bonaparte Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 28,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1378,24 +1876,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/252036",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/252036",
         "rec_gov_id": "252036",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:50:11.661162",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Scenic lake in northeast WA near Tonasket; good fishing",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/252036",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/252036"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/252036",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Scenic lake in northeast WA near Tonasket; good fishing"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/252036",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/buck-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1404,15 +1909,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/buck-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Buck Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 29,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "06-01",
@@ -1422,24 +1932,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232135",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232135",
         "rec_gov_id": "232135",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:52:12.189777",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the Suiattle River; access to Glacier Peak Wilderness",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232135",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232135"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232135",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the Suiattle River; access to Glacier Peak Wilderness"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232135",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/bumping-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1448,15 +1965,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/bumping-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Bumping Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 45,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "06-01",
@@ -1466,24 +1988,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232230",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232230",
         "rec_gov_id": "232230",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:54:12.718367",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On Bumping Lake reservoir; excellent hiking into the Norse Peak Wilderness",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232230",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232230"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232230",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On Bumping Lake reservoir; excellent hiking into the Norse Peak Wilderness"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232230",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/chiwawa-horse-camp",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1492,15 +2021,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/chiwawa-horse-camp",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Chiwawa Horse Camp",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 21,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "06-01",
@@ -1510,24 +2044,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/10250504",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/10250504",
         "rec_gov_id": "10250504",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:56:13.250711",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Horse camp in the Chiwawa River corridor; Glacier Peak Wilderness access",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/10250504",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/10250504"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/10250504",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Horse camp in the Chiwawa River corridor; Glacier Peak Wilderness access"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/10250504",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/clear-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1536,15 +2077,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/clear-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Clear Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 12,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1554,24 +2100,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233865",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/233865",
         "rec_gov_id": "233865",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T09:58:13.781570",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Small campground on the Sauk River near Darrington",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233865",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/233865"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/233865",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Small campground on the Sauk River near Darrington"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/233865",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/coho",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1580,15 +2133,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/coho",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Coho",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 56,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1598,24 +2156,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233384",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/233384",
         "rec_gov_id": "233384",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:00:14.336627",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the west shore of Wynoochee Lake reservoir; swimming, fishing, and boating",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233384",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/233384"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/233384",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the west shore of Wynoochee Lake reservoir; swimming, fishing, and boating"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/233384",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/cottonwood",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1624,15 +2189,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/cottonwood",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Cottonwood",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 25,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1642,24 +2212,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234016",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/234016",
         "rec_gov_id": "234016",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:06:16.034690",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the Entiat River near Lake Chelan NRA; remote and uncrowded",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234016",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/234016"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/234016",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the Entiat River near Lake Chelan NRA; remote and uncrowded"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/234016",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/denny-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1668,15 +2245,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/denny-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Denny Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 33,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1686,24 +2268,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232320",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232320",
         "rec_gov_id": "232320",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:10:17.140234",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Near Snoqualmie Pass; access to Franklin Falls and Alpine Lakes Wilderness",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232320",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232320"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232320",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Near Snoqualmie Pass; access to Franklin Falls and Alpine Lakes Wilderness"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232320",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/douglas-fir",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1712,15 +2301,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/douglas-fir",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Douglas Fir",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 30,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1730,24 +2324,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232038",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232038",
         "rec_gov_id": "232038",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:12:17.667887",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the North Fork Nooksack River; gateway to Mt. Baker",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232038",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232038"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232038",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the North Fork Nooksack River; gateway to Mt. Baker"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232038",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/falls-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1756,15 +2357,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/falls-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Falls Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 31,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1774,24 +2380,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/251365",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/251365",
         "rec_gov_id": "251365",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:16:18.734699",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "In the Quinault Valley; access to Lake Quinault and rainforest trails",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/251365",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/251365"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/251365",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "In the Quinault Valley; access to Lake Quinault and rainforest trails"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/251365",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/lake-leo",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1800,14 +2413,19 @@
         ]
       },
       "properties": {
+        "id": "usfs/lake-leo",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Lake Leo",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 8,
         "types": [
           "tent"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "06-01",
@@ -1817,16 +2435,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/",
-        "official_url": "https://www.recreation.gov/",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Small alpine lake campground; hike-in only"
-      }
+        "notes": "Small alpine lake campground; hike-in only",
+        "reservation_url": "https://www.recreation.gov/",
+        "official_url": "https://www.recreation.gov/"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/panorama-point",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1835,15 +2468,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/panorama-point",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Panorama Point",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 15,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": false,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1853,24 +2491,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232081",
-        "official_url": "https://www.fs.usda.gov/r06/mbs/recreation/panorama-point-campground",
         "rec_gov_id": "232081",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:36:24.190734",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On the western shore of Baker Lake; stunning views of Mt. Baker and Mt. Shuksan",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232081",
+        "official_url": "https://www.fs.usda.gov/r06/mbs/recreation/panorama-point-campground"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232081",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On the western shore of Baker Lake; stunning views of Mt. Baker and Mt. Shuksan"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.fs.usda.gov/r06/mbs/recreation/panorama-point-campground",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/rimrock-lake-indian-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1879,15 +2524,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/rimrock-lake-indian-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Rimrock Lake (Indian Creek)",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 39,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1897,24 +2547,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232204",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232204",
         "rec_gov_id": "232204",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:38:24.744735",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On Rimrock Lake reservoir; fishing and swimming",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232204",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232204"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232204",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On Rimrock Lake reservoir; fishing and swimming"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232204",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/soda-springs",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1923,15 +2580,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/soda-springs",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Soda Springs",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 26,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "06-01",
@@ -1941,24 +2603,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234024",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/234024",
         "rec_gov_id": "234024",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:42:25.946669",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Along Bumping River; natural carbonated spring nearby",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/234024",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/234024"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/234024",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Along Bumping River; natural carbonated spring nearby"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/234024",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/steamboat-creek-iron-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1967,15 +2636,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/steamboat-creek-iron-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Steamboat Creek (Iron Creek)",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 98,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -1985,24 +2659,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232328",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232328",
         "rec_gov_id": "232328",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:50:28.189631",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Near Mt. St. Helens; along Cispus River corridor",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232328",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232328"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232328",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Near Mt. St. Helens; along Cispus River corridor"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232328",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/takhlakh-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2011,15 +2692,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/takhlakh-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Takhlakh Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 54,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "07-01",
@@ -2029,24 +2715,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232252",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232252",
         "rec_gov_id": "232252",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:52:28.875023",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Stunning views of Mt. Adams from the lake; high-elevation campground",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232252",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232252"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232252",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Stunning views of Mt. Adams from the lake; high-elevation campground"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232252",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/trout-lake-creek",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2055,15 +2748,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/trout-lake-creek",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Trout Lake Creek",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 21,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": false,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -2073,24 +2771,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/10352186",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/10352186",
         "rec_gov_id": "10352186",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:54:29.443474",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Near Trout Lake; gateway to Mt. Adams Wilderness trails",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/10352186",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/10352186"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/10352186",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Near Trout Lake; gateway to Mt. Adams Wilderness trails"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/10352186",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/walupt-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2099,15 +2804,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/walupt-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Walupt Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 44,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "07-01",
@@ -2117,24 +2827,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232247",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/232247",
         "rec_gov_id": "232247",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T10:56:30.053222",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "Remote lake near the Goat Rocks Wilderness; excellent fishing",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/232247",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/232247"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/232247",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Remote lake near the Goat Rocks Wilderness; excellent fishing"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/232247",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "usfs/wynoochee-lake",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2143,15 +2860,20 @@
         ]
       },
       "properties": {
+        "id": "usfs/wynoochee-lake",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Wynoochee Lake",
         "agency": "US Forest Service",
         "agency_short": "usfs",
+        "provider": "US Forest Service",
         "sites": 40,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-15",
@@ -2161,24 +2883,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233384",
-        "official_url": "https://www.recreation.gov/camping/campgrounds/233384",
         "rec_gov_id": "233384",
         "wa_park_id": null,
-        "availability": {
-          "last_updated": "2026-03-14T11:00:31.159823",
-          "source": "RecGov",
-          "summary": {
-            "first_available": null,
-            "season_open": null,
-            "season_close": null
-          }
+        "notes": "On Wynoochee Lake reservoir; swimming, fishing, and boating",
+        "reservation_url": "https://www.recreation.gov/camping/campgrounds/233384",
+        "official_url": "https://www.recreation.gov/camping/campgrounds/233384"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://www.recreation.gov/camping/campgrounds/233384",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "On Wynoochee Lake reservoir; swimming, fishing, and boating"
-      }
+        {
+          "rel": "official",
+          "href": "https://www.recreation.gov/camping/campgrounds/233384",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/battle-ground-lake-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2187,15 +2916,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/battle-ground-lake-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Battle Ground Lake State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 50,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2205,16 +2939,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483646",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/battle-ground-lake-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483646,
-        "availability": null,
-        "notes": "Volcanic lake in Clark County; swimming and fishing"
-      }
+        "notes": "Volcanic lake in Clark County; swimming and fishing",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483646",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/battle-ground-lake-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483646",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/battle-ground-lake-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/beacon-rock-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2223,15 +2972,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/beacon-rock-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Beacon Rock State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 35,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2241,16 +2995,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483644",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/beacon-rock-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483644,
-        "availability": null,
-        "notes": "Below the famous basalt monolith in the Columbia River Gorge"
-      }
+        "notes": "Below the famous basalt monolith in the Columbia River Gorge",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483644",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/beacon-rock-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483644",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/beacon-rock-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/bogachiel-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2259,15 +3028,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/bogachiel-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Bogachiel State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 42,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2277,16 +3051,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483639",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/bogachiel-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483639,
-        "availability": null,
-        "notes": "Along the Bogachiel River near Forks; gateway to Olympic backcountry"
-      }
+        "notes": "Along the Bogachiel River near Forks; gateway to Olympic backcountry",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483639",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/bogachiel-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483639",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/bogachiel-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/bruceport-county-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2295,15 +3084,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/bruceport-county-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Bruceport County Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 30,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "05-01",
@@ -2313,16 +3107,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/",
-        "official_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "On Willapa Bay near South Bend"
-      }
+        "notes": "On Willapa Bay near South Bend",
+        "reservation_url": "https://washington.goingtocamp.com/",
+        "official_url": "https://washington.goingtocamp.com/"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://washington.goingtocamp.com/",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/cape-disappointment-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2331,9 +3140,12 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/cape-disappointment-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Cape Disappointment State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 250,
         "types": [
           "tent",
@@ -2341,6 +3153,8 @@
           "cabin"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -2350,16 +3164,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483633",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/cape-disappointment-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483633,
-        "availability": null,
-        "notes": "Where the Columbia River meets the Pacific; two historic lighthouses"
-      }
+        "notes": "Where the Columbia River meets the Pacific; two historic lighthouses",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483633",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/cape-disappointment-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483633",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/cape-disappointment-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/curlew-lake-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2368,15 +3197,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/curlew-lake-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Curlew Lake State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 82,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2386,16 +3220,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483627",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/curlew-lake-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483627,
-        "availability": null,
-        "notes": "Scenic lake in Ferry County near Republic"
-      }
+        "notes": "Scenic lake in Ferry County near Republic",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483627",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/curlew-lake-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483627",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/curlew-lake-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/deception-pass-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2404,9 +3253,12 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/deception-pass-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Deception Pass State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 310,
         "types": [
           "tent",
@@ -2414,6 +3266,8 @@
           "walk-in"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "02-01",
@@ -2423,24 +3277,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483624",
-        "official_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": -2147483624,
-        "availability": {
-          "last_updated": "2026-02-24T20:17:37.853464",
-          "source": "WA Parks",
-          "summary": {
-            "first_available": "2026-02-01",
-            "season_open": "2026-02-01",
-            "season_close": "2026-07-01"
-          }
+        "notes": "Largest state park campground; Cranberry Lake and North Beach loops",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483624",
+        "official_url": "https://washington.goingtocamp.com/"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483624",
+          "type": "text/html",
+          "title": "Reserve"
         },
-        "notes": "Largest state park campground; Cranberry Lake and North Beach loops"
-      }
+        {
+          "rel": "official",
+          "href": "https://washington.goingtocamp.com/",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/dosewallips-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2449,15 +3310,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/dosewallips-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Dosewallips State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 140,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2467,16 +3333,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483622",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/dosewallips-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483622,
-        "availability": null,
-        "notes": "At the confluence of the Dosewallips River and Hood Canal"
-      }
+        "notes": "At the confluence of the Dosewallips River and Hood Canal",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483622",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/dosewallips-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483622",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/dosewallips-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/fort-flagler-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2485,15 +3366,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/fort-flagler-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Fort Flagler State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 116,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2503,16 +3389,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483615",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/fort-flagler-historical-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483615,
-        "availability": null,
-        "notes": "Former military fort on Marrowstone Island; panoramic views of Puget Sound"
-      }
+        "notes": "Former military fort on Marrowstone Island; panoramic views of Puget Sound",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483615",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/fort-flagler-historical-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483615",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/fort-flagler-historical-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/fort-worden-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2521,15 +3422,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/fort-worden-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Fort Worden State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 80,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -2539,16 +3445,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483612",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/fort-worden-historical-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483612,
-        "availability": null,
-        "notes": "Historic fort on Port Townsend Bay; year-round camping available"
-      }
+        "notes": "Historic fort on Port Townsend Bay; year-round camping available",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483612",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/fort-worden-historical-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483612",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/fort-worden-historical-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/grayland-beach-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2557,15 +3478,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/grayland-beach-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Grayland Beach State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 100,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2575,16 +3501,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483610",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/grayland-beach-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483610,
-        "availability": null,
-        "notes": "Ocean beach camping near cranberry bogs"
-      }
+        "notes": "Ocean beach camping near cranberry bogs",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483610",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/grayland-beach-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483610",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/grayland-beach-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/kitsap-memorial-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2593,15 +3534,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/kitsap-memorial-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Kitsap Memorial State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 43,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2611,16 +3557,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483600",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/kitsap-memorial-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483600,
-        "availability": null,
-        "notes": "Wooded park on Hood Canal near Poulsbo"
-      }
+        "notes": "Wooded park on Hood Canal near Poulsbo",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483600",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/kitsap-memorial-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483600",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/kitsap-memorial-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/larrabee-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2629,15 +3590,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/larrabee-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Larrabee State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 87,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2647,16 +3613,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483593",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/larrabee-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483593,
-        "availability": null,
-        "notes": "First state park in WA; saltwater access on Samish Bay"
-      }
+        "notes": "First state park in WA; saltwater access on Samish Bay",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483593",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/larrabee-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483593",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/larrabee-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/moran-state-park-orcas-island",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2665,9 +3646,12 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/moran-state-park-orcas-island",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Moran State Park (Orcas Island)",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 151,
         "types": [
           "tent",
@@ -2675,6 +3659,8 @@
           "walk-in"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2684,16 +3670,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483585",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/moran-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483585,
-        "availability": null,
-        "notes": "Four campgrounds near Summit Lake and Cascade Lake on Orcas Island"
-      }
+        "notes": "Four campgrounds near Summit Lake and Cascade Lake on Orcas Island",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483585",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/moran-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483585",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/moran-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/ocean-city-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2702,15 +3703,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/ocean-city-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Ocean City State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 178,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2720,16 +3726,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483582",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/ocean-city-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483582,
-        "availability": null,
-        "notes": "On the Long Beach Peninsula; vast sandy beach access"
-      }
+        "notes": "On the Long Beach Peninsula; vast sandy beach access",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483582",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/ocean-city-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483582",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/ocean-city-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/osoyoos-lake-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2738,15 +3759,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/osoyoos-lake-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Osoyoos Lake State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 86,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2756,16 +3782,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/",
-        "official_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Warmest lake in WA on the Canadian border; excellent swimming"
-      }
+        "notes": "Warmest lake in WA on the Canadian border; excellent swimming",
+        "reservation_url": "https://washington.goingtocamp.com/",
+        "official_url": "https://washington.goingtocamp.com/"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://washington.goingtocamp.com/",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/pacific-beach-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2774,15 +3815,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/pacific-beach-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Pacific Beach State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 138,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2792,16 +3838,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483577",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/pacific-beach-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483577,
-        "availability": null,
-        "notes": "Right on the Pacific Ocean; popular for razor clam season"
-      }
+        "notes": "Right on the Pacific Ocean; popular for razor clam season",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483577",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/pacific-beach-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483577",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/pacific-beach-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/palouse-falls-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2810,14 +3871,19 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/palouse-falls-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Palouse Falls State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 10,
         "types": [
           "tent"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2827,16 +3893,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/",
-        "official_url": "https://washington.goingtocamp.com/",
         "rec_gov_id": null,
         "wa_park_id": null,
-        "availability": null,
-        "notes": "Washington State waterfall; 198-ft drop into the Palouse River canyon"
-      }
+        "notes": "Washington State waterfall; 198-ft drop into the Palouse River canyon",
+        "reservation_url": "https://washington.goingtocamp.com/",
+        "official_url": "https://washington.goingtocamp.com/"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://washington.goingtocamp.com/",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/paradise-point-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2845,15 +3926,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/paradise-point-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Paradise Point State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 70,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2863,16 +3949,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483576",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/paradise-point-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483576,
-        "availability": null,
-        "notes": "Along the East Fork Lewis River near Ridgefield"
-      }
+        "notes": "Along the East Fork Lewis River near Ridgefield",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483576",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/paradise-point-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483576",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/paradise-point-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/potlatch-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2881,15 +3982,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/potlatch-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Potlatch State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 35,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2899,16 +4005,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483569",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/potlatch-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483569,
-        "availability": null,
-        "notes": "On Hood Canal; excellent oyster and shellfish harvesting"
-      }
+        "notes": "On Hood Canal; excellent oyster and shellfish harvesting",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483569",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/potlatch-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483569",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/potlatch-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/riverside-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2917,15 +4038,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/riverside-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Riverside State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 16,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "01-01",
@@ -2935,16 +4061,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483565",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/riverside-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483565,
-        "availability": null,
-        "notes": "Along the Spokane River near Spokane; Bowl and Pitcher area"
-      }
+        "notes": "Along the Spokane River near Spokane; Bowl and Pitcher area",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483565",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/riverside-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483565",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/riverside-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/seaquest-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2953,15 +4094,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/seaquest-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Seaquest State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 92,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -2971,16 +4117,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483558",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/seaquest-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483558,
-        "availability": null,
-        "notes": "Adjacent to Mount St. Helens National Volcanic Monument; views of the volcano"
-      }
+        "notes": "Adjacent to Mount St. Helens National Volcanic Monument; views of the volcano",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483558",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/seaquest-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483558",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/seaquest-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/sequim-bay-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2989,15 +4150,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/sequim-bay-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Sequim Bay State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 86,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -3007,16 +4173,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483557",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/sequim-bay-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483557,
-        "availability": null,
-        "notes": "Protected bay in the Olympic rain shadow; calm waters for boating"
-      }
+        "notes": "Protected bay in the Olympic rain shadow; calm waters for boating",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483557",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/sequim-bay-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483557",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/sequim-bay-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/steamboat-rock-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3025,15 +4206,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/steamboat-rock-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Steamboat Rock State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 213,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -3043,16 +4229,31 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483552",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/steamboat-rock-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483552,
-        "availability": null,
-        "notes": "On Banks Lake in the Grand Coulee area; massive basalt butte"
-      }
+        "notes": "On Banks Lake in the Grand Coulee area; massive basalt butte",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483552",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/steamboat-rock-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483552",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/steamboat-rock-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     },
     {
       "type": "Feature",
+      "id": "wa-state-parks/sun-lakes-dry-falls-state-park",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3061,15 +4262,20 @@
         ]
       },
       "properties": {
+        "id": "wa-state-parks/sun-lakes-dry-falls-state-park",
+        "datetime": "2026-05-03T01:57:43+00:00",
         "name": "Sun Lakes-Dry Falls State Park",
         "agency": "Washington State Parks",
         "agency_short": "wa-state-parks",
+        "provider": "Washington State Parks",
         "sites": 193,
         "types": [
           "tent",
           "rv"
         ],
         "reservable": true,
+        "year_round": null,
+        "open_month": null,
         "availability_windows": [
           {
             "start": "04-01",
@@ -3079,13 +4285,27 @@
             "reserved_count": 0
           }
         ],
-        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483551",
-        "official_url": "https://parks.wa.gov/find-parks/state-parks/sun-lakes-dry-falls-state-park",
         "rec_gov_id": null,
         "wa_park_id": -2147483551,
-        "availability": null,
-        "notes": "Near the world's largest prehistoric waterfall; coulees and lakes"
-      }
+        "notes": "Near the world's largest prehistoric waterfall; coulees and lakes",
+        "reservation_url": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483551",
+        "official_url": "https://parks.wa.gov/find-parks/state-parks/sun-lakes-dry-falls-state-park"
+      },
+      "links": [
+        {
+          "rel": "reservation",
+          "href": "https://washington.goingtocamp.com/create-booking/results?resourceLocationId=-2147483551",
+          "type": "text/html",
+          "title": "Reserve"
+        },
+        {
+          "rel": "official",
+          "href": "https://parks.wa.gov/find-parks/state-parks/sun-lakes-dry-falls-state-park",
+          "type": "text/html",
+          "title": "Official page"
+        }
+      ],
+      "assets": {}
     }
   ]
 }

@@ -1,9 +1,9 @@
 """
-Tests for data validation logic in scripts.generate_geojson.
+Tests for data validation logic in campsite_sync.registry.
 """
 
 from pathlib import Path
-from scripts.generate_geojson import validate
+from campsite_sync.registry import build_feature, validate
 
 def test_validate_valid_minimal():
     fm = {
@@ -82,3 +82,29 @@ def test_validate_resource_location_id():
     fm["resource_location_id"] = -123  # Valid
     errors = validate(fm, Path("test.md"))
     assert errors == []
+
+
+def test_build_feature_stac_shape():
+    """STAC-Item-style: stable id, datetime, links[], assets{}."""
+    fm = {
+        "name": "Test Site",
+        "agency": "US Forest Service",
+        "agency_short": "usfs",
+        "lat": 47.0,
+        "lng": -120.0,
+        "sites": 10,
+        "types": ["tent"],
+        "reservable": True,
+        "availability_windows": [{"start": "01-01", "end": "12-31"}],
+        "reservation_url": "https://example.com/reserve",
+        "official_url": "https://example.com/info",
+    }
+    feat = build_feature(fm)
+    assert feat["type"] == "Feature"
+    assert feat["id"] == "usfs/test-site"
+    assert feat["properties"]["id"] == "usfs/test-site"
+    assert "datetime" in feat["properties"]
+    assert isinstance(feat["links"], list)
+    assert any(l["rel"] == "reservation" for l in feat["links"])
+    assert any(l["rel"] == "official" for l in feat["links"])
+    assert feat["assets"] == {}
