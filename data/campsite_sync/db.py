@@ -29,6 +29,8 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
+from . import migrations
+
 
 def _connect(db_path: str | Path) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
@@ -64,6 +66,8 @@ def _connect(db_path: str | Path) -> sqlite3.Connection:
             PRIMARY KEY (campsite_id, date)
         )
     """)
+    migrations.ensure_columns(conn)
+    migrations.ensure_tables(conn)
     conn.commit()
     return conn
 
@@ -170,10 +174,21 @@ def write_campsite(db_path: str | Path, campsite_id: str, fm: dict) -> None:
 # Per-date availability
 # ---------------------------------------------------------------------------
 
+def _row_total(counts: dict) -> int:
+    """Sum of all per-status counts on a single date == bookable site count."""
+    return (
+        counts.get("available", 0)
+        + counts.get("reserved", 0)
+        + counts.get("not_available", 0)
+        + counts.get("other", 0)
+    )
+
+
 def write_availability(
     db_path: str | Path,
     campsite_id: str,
     by_date: dict[str, dict],
+    total_sites: int | None = None,
 ) -> int:
     """
     Upsert per-date availability for one campsite.
@@ -181,16 +196,19 @@ def write_availability(
     Parameters
     ----------
     db_path      : path to the SQLite file (created if absent)
-    campsite_id  : string ID — rec_gov_id or str(wa_park_id)
-    by_date      : {date_str: {available: N, ...}} from rec_gov/wa_state_parks
+    campsite_id  : string ID
+    by_date      : {date_str: {available, reserved, not_available, other}}
+    total_sites  : denominator for the percentage. If None, the per-date sum
+                   of all status counts is used as a per-row total.
 
-    Returns the number of rows upserted.
+    available_pct is left NULL here; recalculate_metrics fills it.
     """
     now = datetime.now().isoformat()
-    rows = [
-        (campsite_id, date, counts.get("available", 0), now)
-        for date, counts in by_date.items()
-    ]
+    rows = []
+    for date, counts in by_date.items():
+        available = counts.get("available", 0)
+        total = total_sites if total_sites is not None else _row_total(counts)
+        rows.append((campsite_id, date, available, total, now))
     if not rows:
         return 0
 
@@ -198,10 +216,12 @@ def write_availability(
     with conn:
         conn.executemany(
             """
-            INSERT INTO availability (campsite_id, date, available_count, last_updated)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO availability
+                (campsite_id, date, available_count, total_sites, last_updated)
+            VALUES (?, ?, ?, ?, ?)
             ON CONFLICT (campsite_id, date) DO UPDATE SET
                 available_count = excluded.available_count,
+                total_sites     = excluded.total_sites,
                 last_updated    = excluded.last_updated
             """,
             rows,
@@ -234,9 +254,11 @@ def read_availability(
 # Export helpers
 # ---------------------------------------------------------------------------
 
-def export_all(db_path: str | Path) -> dict[str, dict[str, int]]:
+def export_all(db_path: str | Path) -> dict[str, dict[str, dict]]:
     """
-    Dump availability table as {campsite_id: {date: available_count}}.
+    Dump availability table as
+        {campsite_id: {date: {available, total, pct}}}.
+
     Returns {} if the database doesn't exist.
     """
     path = Path(db_path)
@@ -244,13 +266,18 @@ def export_all(db_path: str | Path) -> dict[str, dict[str, int]]:
         return {}
     conn = sqlite3.connect(path)
     rows = conn.execute(
-        "SELECT campsite_id, date, available_count FROM availability ORDER BY campsite_id, date"
+        "SELECT campsite_id, date, available_count, total_sites, available_pct "
+        "FROM availability ORDER BY campsite_id, date"
     ).fetchall()
     conn.close()
 
-    result: dict[str, dict[str, int]] = {}
-    for campsite_id, date, count in rows:
-        result.setdefault(campsite_id, {})[date] = count
+    result: dict[str, dict[str, dict]] = {}
+    for campsite_id, date, available, total, pct in rows:
+        result.setdefault(campsite_id, {})[date] = {
+            "available": available,
+            "total": total,
+            "pct": pct,
+        }
     return result
 
 

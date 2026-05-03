@@ -219,6 +219,7 @@ def fetch_availability(
         print(f"  Park {resource_location_id}: {len(map_ids)} maps found", file=sys.stderr)
 
     all_counts: dict[str, dict] = {}
+    max_resources_seen = 0
 
     for delta in range(months):
         raw_month = start.month + delta
@@ -255,6 +256,7 @@ def fetch_availability(
                         print(f"    Warning map {map_id}: {exc}", file=sys.stderr)
 
         all_counts[month_key] = counts
+        max_resources_seen = max(max_resources_seen, len(seen_resources))
 
     sorted_dates = sorted(all_counts)
 
@@ -271,5 +273,6 @@ def fetch_availability(
         "first_available": first_available,
         "season_open": open_dates[0] if open_dates else None,
         "season_close": open_dates[-1] if open_dates else None,
+        "total_sites": max_resources_seen or None,
         "by_date": all_counts,
     }

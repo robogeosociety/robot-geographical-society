@@ -53,6 +53,11 @@ class TestRecGov:
         assert "season_open" in result
         assert "season_close" in result
         assert "by_date" in result
+        assert "total_sites" in result
+
+    def test_total_sites_positive(self, result):
+        assert result["total_sites"] is not None
+        assert result["total_sites"] > 0
 
     def test_campground_id_preserved(self, result):
         assert result["campground_id"] == self.CAMPGROUND_ID
@@ -139,6 +144,7 @@ class TestWAStateParks:
         assert "season_open" in result
         assert "season_close" in result
         assert "by_date" in result
+        assert "total_sites" in result
 
     def test_resource_location_id_preserved(self, result):
         assert result["resource_location_id"] == self.RESOURCE_LOCATION_ID
