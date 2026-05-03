@@ -1,10 +1,10 @@
 # Campsite Data Pipeline
 
-This directory contains the source of truth for campsite data and the tooling to process it into a consumeable GeoJSON format for the application.
+This directory contains the source of truth for campsite data and the tooling to process it into the two canonical outputs the application consumes.
 
 ## 🔄 Data Workflow
 
-The data pipeline consists of two main stages: **Update** (enrichment) and **Generate** (compilation). All operations are driven by the `campsites.toml` registry.
+A single Metaflow flow (`refresh_flow.py`) replaces the old three-script pipeline. It validates the markdown source, fetches live availability per agency in parallel, derives metrics, and emits the two canonical outputs.
 
 ```mermaid
 graph TD
@@ -13,48 +13,93 @@ graph TD
     end
 
     subgraph Source["Source of Truth"]
-        MD["Markdown Files<br/>(campsites/{agency}/WA/.../index.md)"]
+        MD["Markdown Files<br/>(campsites/{agency}/WA/.../*.md)"]
     end
 
-    subgraph UpdateWorkflow["Update Workflow"]
-        Updater["update_campsites.py"]
-        RecGov[("Recreation.gov<br/>API")]
-        WAParks[("WA State Parks<br/>API")]
-        Quality["Quality Calculator"]
-        
-        TOML -->|Reads Paths| Updater
-        Updater -->|Reads| MD
-        Updater <-->|Fetches| RecGov
-        Updater <-->|Fetches| WAParks
-        Updater -->|Calculates| Quality
-        Updater -->|Writes Metadata| MD
+    subgraph Refresh["CampsiteRefreshFlow (refresh_flow.py)"]
+        Start["start<br/>validate + migrate schema"]
+        Partition["partition_by_agency"]
+        Rec["fetch_agency<br/>rec_gov"]
+        Wa["fetch_agency<br/>wa_parks"]
+        Join["join_agencies"]
+        Write["write_to_db"]
+        Recalc["recalculate_metrics<br/>(available_pct + summary)"]
+        Out["write_outputs"]
+
+        TOML -->|Reads paths| Start
+        Start -->|Reads frontmatter| MD
+        Start --> Partition
+        Partition --> Rec
+        Partition --> Wa
+        Rec -->|recreation.gov API| Join
+        Wa -->|GoingToCamp API| Join
+        Join --> Write
+        Write --> Recalc
+        Recalc --> Out
     end
 
-    subgraph GenerateWorkflow["Generate Workflow"]
-        Sync["generate_geojson.py"]
-        TOML -->|Reads Paths| Sync
-        Sync -->|Reads| MD
-        Sync -->|Generates| JSON["campsites.json<br/>(Base GeoJSON)"]
+    subgraph Outputs["Canonical Outputs"]
+        GeoJSON["data/campsites.json<br/>STAC-shaped GeoJSON<br/>(live map)"]
+        DB[("data/availability.db<br/>SQLite time-series<br/>(history + forecasts)")]
+        AvailJSON["web/public/availability.json<br/>derived from DB"]
     end
+
+    Out --> GeoJSON
+    Write --> DB
+    Recalc --> DB
+    Out --> AvailJSON
 ```
 
-## 🛠️ Scripts
+## 🛠️ Commands
 
-### 1. Update Campsites
-Reads `campsites.toml`, iterates through the listed campsites, fetches live availability data from government APIs, calculates quality scores, and updates the Markdown frontmatter.
+All commands run from `data/`.
+
+### Full refresh
+Validates markdown, fetches live availability from rec.gov and WA State Parks in parallel branches, recomputes metrics, and writes both canonical outputs.
 ```bash
-uv run update --verbose
+uv run refresh run
 ```
 
-### 2. Generate GeoJSON
-Compiles all campsites listed in `campsites.toml` (including the embedded availability data) into a single `campsites.json` FeatureCollection. Validates data integrity.
+### Validate + GeoJSON only (offline)
+Skips the live availability fetch — useful in CI and when iterating on schema changes.
 ```bash
-uv run generate
+uv run refresh run --skip-availability
 ```
+
+### Test on a single campsite
+Filter to ids matching a substring (great for debugging a single agency or campsite).
+```bash
+uv run refresh run --only panorama-point
+```
+
+### Tune cross-branch parallelism
+Metaflow's `--max-workers` controls how many agency branches run concurrently.
+```bash
+uv run refresh run --max-workers 2
+```
+
+### Crawl recreation.gov for new campgrounds
+Interactive helper for adding new campsites to the registry.
+```bash
+uv run crawl
+```
+
+## 🗂️ Outputs
+
+The flow produces exactly two artifacts, joined by stable campsite `id` (`{agency_short}/{slug}`):
+
+| Output | Purpose | Cadence |
+|---|---|---|
+| `data/campsites.json` | STAC-Item-shaped GeoJSON for the live map (id, datetime, links[], assets{}, summary) | Every refresh |
+| `data/availability.db` | SQLite time-series (campground-level today; reserved `site_availability` table for future per-individual-site capture) | Every refresh; grows monotonically |
+
+`web/public/availability.json` is derived from `availability.db` and shipped to the browser.
 
 ## 📁 Directory Structure
-- `campsites/`: Directory containing individual campsite data (Markdown files).
-- `campsites.toml`: Registry of all active campsites and their file paths.
-- `campsite.schema.json`: JSON schema for campsite validation.
-- `campsite_sync/`: Python package containing shared logic.
-- `scripts/`: CLI scripts for the data pipeline.
+- `campsites/` — Markdown source of truth (one file per campsite).
+- `campsites.toml` — Registry of all active campsites and their file paths.
+- `campsite.schema.json` — JSON schema for campsite validation.
+- `campsite_sync/` — Python package: clients (`rec_gov.py`, `wa_state_parks.py`), persistence (`db.py`, `migrations.py`, `metrics.py`), feature builder (`registry.py`), quality scoring (`quality.py`).
+- `refresh_flow.py` — The Metaflow flow.
+- `scripts/` — Standalone CLI tools (`crawl_rec_gov.py`).
+- `tests/` — Pytest suite.
