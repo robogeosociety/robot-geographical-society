@@ -28,11 +28,8 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
         
-      - name: Install Playwright Browsers
-        run: uv run playwright install --with-deps chromium
-
       - name: Generate GeoJSON (validate + STAC-shaped FeatureCollection)
         run: USER=ci uv run refresh run --skip-availability
 
-      - name: Run Tests
-        run: uv run pytest
+      - name: Run Tests (excluding `slow` network-bound tests)
+        run: uv run pytest -m "not slow"

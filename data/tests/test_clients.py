@@ -10,13 +10,18 @@ Test subjects:
   - recreation.gov   — Douglas Fir Campground  (campground id 232038)
   - goingtocamp.com  — Deception Pass State Park (resourceLocationId -2147483624)
 
-Run: uv run pytest tests/test_clients.py -v
+All tests in this module hit live third-party APIs and are marked `slow`.
+CI runs with `-m "not slow"` and excludes them; run them locally with:
+
+    uv run pytest tests/test_clients.py -v
 """
 
 import re
 from datetime import date
 
 import pytest
+
+pytestmark = pytest.mark.slow
 
 from campsite_sync.rec_gov import fetch_availability as rec_gov_fetch
 from campsite_sync.wa_state_parks import (
