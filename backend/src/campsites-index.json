@@ -1,0 +1,429 @@
+[
+{
+"id": "246855",
+"kind": "rec",
+"ref": "246855",
+"name": "Colonial Creek North",
+"agency": "nps"
+},
+{
+"id": "255201",
+"kind": "rec",
+"ref": "255201",
+"name": "Colonial Creek South",
+"agency": "nps"
+},
+{
+"id": "232466",
+"kind": "rec",
+"ref": "232466",
+"name": "Cougar Rock",
+"agency": "nps"
+},
+{
+"id": "259084",
+"kind": "rec",
+"ref": "259084",
+"name": "Fairholme",
+"agency": "nps"
+},
+{
+"id": "246852",
+"kind": "rec",
+"ref": "246852",
+"name": "Goodell Creek",
+"agency": "nps"
+},
+{
+"id": "10004932",
+"kind": "rec",
+"ref": "10004932",
+"name": "Gorge Lake",
+"agency": "nps"
+},
+{
+"id": "247585",
+"kind": "rec",
+"ref": "247585",
+"name": "Heart O' the Hills",
+"agency": "nps"
+},
+{
+"id": "247592",
+"kind": "rec",
+"ref": "247592",
+"name": "Hoh Rain Forest",
+"agency": "nps"
+},
+{
+"id": "232464",
+"kind": "rec",
+"ref": "232464",
+"name": "Kalaloch",
+"agency": "nps"
+},
+{
+"id": "234061",
+"kind": "rec",
+"ref": "234061",
+"name": "Kettle Falls",
+"agency": "nps"
+},
+{
+"id": "247591",
+"kind": "rec",
+"ref": "247591",
+"name": "Mora",
+"agency": "nps"
+},
+{
+"id": "234060",
+"kind": "rec",
+"ref": "234060",
+"name": "Newhalem Creek",
+"agency": "nps"
+},
+{
+"id": "232465",
+"kind": "rec",
+"ref": "232465",
+"name": "Ohanapecosh",
+"agency": "nps"
+},
+{
+"id": "275027",
+"kind": "rec",
+"ref": "275027",
+"name": "Snag Cove",
+"agency": "nps"
+},
+{
+"id": "251906",
+"kind": "rec",
+"ref": "251906",
+"name": "Sol Duc",
+"agency": "nps"
+},
+{
+"id": "234064",
+"kind": "rec",
+"ref": "234064",
+"name": "Spring Canyon",
+"agency": "nps"
+},
+{
+"id": "247586",
+"kind": "rec",
+"ref": "247586",
+"name": "Staircase",
+"agency": "nps"
+},
+{
+"id": "259031",
+"kind": "rec",
+"ref": "259031",
+"name": "White River",
+"agency": "nps"
+},
+{
+"id": "232018",
+"kind": "rec",
+"ref": "232018",
+"name": "Beckler River",
+"agency": "usfs"
+},
+{
+"id": "233864",
+"kind": "rec",
+"ref": "233864",
+"name": "Bedal Campground",
+"agency": "usfs"
+},
+{
+"id": "233713",
+"kind": "rec",
+"ref": "233713",
+"name": "Blue Lake Creek",
+"agency": "usfs"
+},
+{
+"id": "252036",
+"kind": "rec",
+"ref": "252036",
+"name": "Bonaparte Lake",
+"agency": "usfs"
+},
+{
+"id": "232135",
+"kind": "rec",
+"ref": "232135",
+"name": "Buck Creek",
+"agency": "usfs"
+},
+{
+"id": "232230",
+"kind": "rec",
+"ref": "232230",
+"name": "Bumping Lake",
+"agency": "usfs"
+},
+{
+"id": "10250504",
+"kind": "rec",
+"ref": "10250504",
+"name": "Chiwawa Horse Camp",
+"agency": "usfs"
+},
+{
+"id": "233865",
+"kind": "rec",
+"ref": "233865",
+"name": "Clear Creek",
+"agency": "usfs"
+},
+{
+"id": "233384",
+"kind": "rec",
+"ref": "233384",
+"name": "Coho",
+"agency": "usfs"
+},
+{
+"id": "234016",
+"kind": "rec",
+"ref": "234016",
+"name": "Cottonwood",
+"agency": "usfs"
+},
+{
+"id": "232320",
+"kind": "rec",
+"ref": "232320",
+"name": "Denny Creek",
+"agency": "usfs"
+},
+{
+"id": "232038",
+"kind": "rec",
+"ref": "232038",
+"name": "Douglas Fir",
+"agency": "usfs"
+},
+{
+"id": "251365",
+"kind": "rec",
+"ref": "251365",
+"name": "Falls Creek",
+"agency": "usfs"
+},
+{
+"id": "232081",
+"kind": "rec",
+"ref": "232081",
+"name": "Panorama Point",
+"agency": "usfs"
+},
+{
+"id": "232204",
+"kind": "rec",
+"ref": "232204",
+"name": "Rimrock Lake (Indian Creek)",
+"agency": "usfs"
+},
+{
+"id": "234024",
+"kind": "rec",
+"ref": "234024",
+"name": "Soda Springs",
+"agency": "usfs"
+},
+{
+"id": "232328",
+"kind": "rec",
+"ref": "232328",
+"name": "Steamboat Creek (Iron Creek)",
+"agency": "usfs"
+},
+{
+"id": "232252",
+"kind": "rec",
+"ref": "232252",
+"name": "Takhlakh Lake",
+"agency": "usfs"
+},
+{
+"id": "10352186",
+"kind": "rec",
+"ref": "10352186",
+"name": "Trout Lake Creek",
+"agency": "usfs"
+},
+{
+"id": "232247",
+"kind": "rec",
+"ref": "232247",
+"name": "Walupt Lake",
+"agency": "usfs"
+},
+{
+"id": "233384",
+"kind": "rec",
+"ref": "233384",
+"name": "Wynoochee Lake",
+"agency": "usfs"
+},
+{
+"id": "-2147483646",
+"kind": "wa",
+"ref": -2147483646,
+"name": "Battle Ground Lake State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483644",
+"kind": "wa",
+"ref": -2147483644,
+"name": "Beacon Rock State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483639",
+"kind": "wa",
+"ref": -2147483639,
+"name": "Bogachiel State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483633",
+"kind": "wa",
+"ref": -2147483633,
+"name": "Cape Disappointment State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483627",
+"kind": "wa",
+"ref": -2147483627,
+"name": "Curlew Lake State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483624",
+"kind": "wa",
+"ref": -2147483624,
+"name": "Deception Pass State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483622",
+"kind": "wa",
+"ref": -2147483622,
+"name": "Dosewallips State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483615",
+"kind": "wa",
+"ref": -2147483615,
+"name": "Fort Flagler State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483612",
+"kind": "wa",
+"ref": -2147483612,
+"name": "Fort Worden State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483610",
+"kind": "wa",
+"ref": -2147483610,
+"name": "Grayland Beach State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483600",
+"kind": "wa",
+"ref": -2147483600,
+"name": "Kitsap Memorial State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483593",
+"kind": "wa",
+"ref": -2147483593,
+"name": "Larrabee State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483585",
+"kind": "wa",
+"ref": -2147483585,
+"name": "Moran State Park (Orcas Island)",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483582",
+"kind": "wa",
+"ref": -2147483582,
+"name": "Ocean City State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483577",
+"kind": "wa",
+"ref": -2147483577,
+"name": "Pacific Beach State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483576",
+"kind": "wa",
+"ref": -2147483576,
+"name": "Paradise Point State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483569",
+"kind": "wa",
+"ref": -2147483569,
+"name": "Potlatch State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483565",
+"kind": "wa",
+"ref": -2147483565,
+"name": "Riverside State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483558",
+"kind": "wa",
+"ref": -2147483558,
+"name": "Seaquest State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483557",
+"kind": "wa",
+"ref": -2147483557,
+"name": "Sequim Bay State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483552",
+"kind": "wa",
+"ref": -2147483552,
+"name": "Steamboat Rock State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483551",
+"kind": "wa",
+"ref": -2147483551,
+"name": "Sun Lakes-Dry Falls State Park",
+"agency": "wa-state-parks"
+}
+]

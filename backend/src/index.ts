@@ -1,11 +1,12 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import type { Env as CollectorEnv, Job } from './collector';
 
 type Bindings = {
   CAMPSITES: KVNamespace;
-};
+} & CollectorEnv;
 
-const app = new Hono<{ Bindings: Bindings }>();
+export const app = new Hono<{ Bindings: Bindings }>();
 
 // Enable CORS for frontend integration
 app.use('/*', cors());
@@ -45,4 +46,26 @@ app.get('/campsites', async (c) => {
   return c.json(list.keys.map((k) => k.name));
 });
 
-export default app;
+// Manual trigger for the daily collection (useful for testing the producer).
+app.post('/collect/run', async (c) => {
+  const { runProducer } = await import('./collector');
+  const limit = Number(c.req.query('limit')) || undefined;
+  const n = await runProducer(c.env, limit);
+  return c.json({ enqueued: n });
+});
+
+// collector.ts pulls in @cloudflare/playwright (a Workers-runtime module), so it's
+// dynamically imported only when the cron/queue actually fires — keeps it out of
+// the API cold-start path and out of the vitest (Node) module graph.
+export default {
+  fetch: app.fetch,
+  // Cron producer: enqueue one message per reservable campsite.
+  async scheduled(_event: ScheduledEvent, env: Bindings, ctx: ExecutionContext) {
+    ctx.waitUntil(import('./collector').then((m) => m.runProducer(env)));
+  },
+  // Queue consumer: drain a batch, scrape via Browser Rendering, write to R2.
+  async queue(batch: MessageBatch<Job>, env: Bindings) {
+    const { processBatch } = await import('./collector');
+    await processBatch(batch, env);
+  },
+};
