@@ -54,7 +54,10 @@ app.get('/campsites', async (c) => {
 app.post('/collect/run', async (c) => {
   const date = new Date().toISOString().slice(0, 10);
   const limit = Number(c.req.query('limit')) || undefined;
-  const windowSec = Number(c.req.query('window')) || undefined; // spread the run over N seconds (default 3600)
+  // spread the run over N seconds (default 3600); window=0 means no pacing (run immediately)
+  const wq = c.req.query('window');
+  const wn = wq === undefined ? NaN : Number(wq);
+  const windowSec = Number.isFinite(wn) ? wn : undefined;
   const i = await c.env.COLLECTOR_WF.create({ params: { date, limit, windowSec } });
   return c.json({ workflow: 'campsite-collector', instanceId: i.id, date, limit, windowSec: windowSec ?? 3600 });
 });
