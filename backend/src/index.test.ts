@@ -1,5 +1,5 @@
 import { expect, test, describe, vi } from 'vitest';
-import app from './index';
+import { app } from './index';
 
 describe('Hono API Tests', () => {
   test('GET / should return success message', async () => {

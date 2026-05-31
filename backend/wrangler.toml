@@ -1,11 +1,59 @@
 name = "robot-geographical-society-backend"
 main = "src/index.ts"
-compatibility_date = "2024-01-01"
+compatibility_date = "2026-03-16"
+compatibility_flags = ["nodejs_compat"]
 
 [[kv_namespaces]]
 binding = "CAMPSITES"
-id = "xxxx" # Not needed for local dev
-preview_id = "xxxx" # Not needed for local dev
+id = "aad9f04d90e945ffb8d278d7b8e70976"
+preview_id = "aad9f04d90e945ffb8d278d7b8e70976"
+
+# Raw + summarized availability snapshots; the Mac pulls summary/<date>/* → InfluxDB.
+[[r2_buckets]]
+binding = "RAW"
+bucket_name = "campsite-raw"
+
+# Per-run/per-site collector coverage → queried by the observability "Collector
+# history" Grafana dashboard via the AE SQL API. Schema:
+#   index=site.id  blob1=date blob2=agency blob3=kind blob4=name blob5=status(ok|failed)
+#   double1=datesCollected  double2=durationMs
+[[analytics_engine_datasets]]
+binding = "COLLECTOR_AE"
+dataset = "campsite_collector"
+
+# One row per collector run (run-level totals). Schema:
+#   index=date  blob1=date  double1=total double2=ok double3=failed double4=empty
+[[analytics_engine_datasets]]
+binding = "RUNS_AE"
+dataset = "campsite_collector_runs"
+
+# Per-site availability rollup (one row per site per run). Schema:
+#   index=site.id  blob1=date blob2=agency blob3=name
+#   double1=siteNightsAvailable double2=siteNightsReserved double3=siteNightsTotal double4=datesOpen
+[[analytics_engine_datasets]]
+binding = "AVAIL_AE"
+dataset = "campsite_availability"
+
+# Dense per-check hot-date watch points. Schema:
+#   index=site.id  blob1=targetDate blob2=agency blob3=name
+#   double1=available double2=reserved double3=total
+[[analytics_engine_datasets]]
+binding = "WATCH_AE"
+dataset = "campsite_watch"
+
+[triggers]
+crons = ["0 13 * * *"] # 06:00 America/Los_Angeles (PDT)
+
+# Workflows prototype (durable execution) — coexists with the queue collector.
+[[workflows]]
+name = "campsite-collector"
+binding = "COLLECTOR_WF"
+class_name = "CampsiteCollectorWorkflow"
+
+[[workflows]]
+name = "campsite-hot-date-watch"
+binding = "WATCH_WF"
+class_name = "HotDateWatchWorkflow"
 
 [observability]
 enabled = true
