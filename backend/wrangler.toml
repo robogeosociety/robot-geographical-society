@@ -42,7 +42,7 @@ binding = "WATCH_AE"
 dataset = "campsite_watch"
 
 [triggers]
-crons = ["0 13 * * *"] # 06:00 America/Los_Angeles (PDT)
+crons = ["0 7 * * *"] # 00:00 PT during PDT (cron is UTC-only → 23:00 PT in winter/PST). Starts the daily 24h sweep at midnight PT.
 
 # Workflows prototype (durable execution) — coexists with the queue collector.
 [[workflows]]
