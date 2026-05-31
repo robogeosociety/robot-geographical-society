@@ -1,9 +1,15 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import type { Env as CollectorEnv, Job } from './collector';
+import campsites from './campsites-index.json';
+
+// Cloudflare Workflows must be exported from the entry module by class name.
+export { CampsiteCollectorWorkflow, HotDateWatchWorkflow } from './workflows';
 
 type Bindings = {
   CAMPSITES: KVNamespace;
+  COLLECTOR_WF: Workflow;
+  WATCH_WF: Workflow;
 } & CollectorEnv;
 
 export const app = new Hono<{ Bindings: Bindings }>();
@@ -52,6 +58,24 @@ app.post('/collect/run', async (c) => {
   const limit = Number(c.req.query('limit')) || undefined;
   const n = await runProducer(c.env, limit);
   return c.json({ enqueued: n });
+});
+
+// Durable Workflows prototype (coexists with the queue collector above).
+app.post('/collect/workflow', async (c) => {
+  const date = new Date().toISOString().slice(0, 10);
+  const limit = Number(c.req.query('limit')) || undefined;
+  const i = await c.env.COLLECTOR_WF.create({ params: { date, limit } });
+  return c.json({ workflow: 'campsite-collector', instanceId: i.id, date, limit });
+});
+
+app.post('/watch', async (c) => {
+  const id = c.req.query('id');
+  const date = c.req.query('date');
+  const every = c.req.query('every') || undefined; // e.g. "60 seconds" to demo the loop fast
+  const site = (campsites as any[]).find((s) => s.id === id);
+  if (!site || !date) return c.json({ error: 'need ?id=<campsite-index id>&date=YYYY-MM-DD [&every=]' }, 400);
+  const i = await c.env.WATCH_WF.create({ params: { ...site, targetDate: date, every } });
+  return c.json({ workflow: 'campsite-hot-date-watch', instanceId: i.id, watching: site.name, targetDate: date, every });
 });
 
 // collector.ts pulls in @cloudflare/playwright (a Workers-runtime module), so it's

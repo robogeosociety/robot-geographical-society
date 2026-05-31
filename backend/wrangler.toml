@@ -33,5 +33,16 @@ dead_letter_queue = "campsite-availability-dlq"
 [triggers]
 crons = ["0 13 * * *"] # 06:00 America/Los_Angeles (PDT)
 
+# Workflows prototype (durable execution) — coexists with the queue collector.
+[[workflows]]
+name = "campsite-collector"
+binding = "COLLECTOR_WF"
+class_name = "CampsiteCollectorWorkflow"
+
+[[workflows]]
+name = "campsite-hot-date-watch"
+binding = "WATCH_WF"
+class_name = "HotDateWatchWorkflow"
+
 [observability]
 enabled = true
