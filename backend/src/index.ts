@@ -54,8 +54,9 @@ app.get('/campsites', async (c) => {
 app.post('/collect/run', async (c) => {
   const date = new Date().toISOString().slice(0, 10);
   const limit = Number(c.req.query('limit')) || undefined;
-  const i = await c.env.COLLECTOR_WF.create({ params: { date, limit } });
-  return c.json({ workflow: 'campsite-collector', instanceId: i.id, date, limit });
+  const windowSec = Number(c.req.query('window')) || undefined; // spread the run over N seconds (default 3600)
+  const i = await c.env.COLLECTOR_WF.create({ params: { date, limit, windowSec } });
+  return c.json({ workflow: 'campsite-collector', instanceId: i.id, date, limit, windowSec: windowSec ?? 3600 });
 });
 
 // Watch a single (campsite, target_date) with adaptive cadence until sold out.

@@ -24,13 +24,23 @@ type Site = { id: string; kind: "rec" | "wa"; ref: string | number; name: string
 
 // --- 1. Durable daily snapshot ---------------------------------------------
 
-export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date: string; limit?: number }> {
-  async run(event: WorkflowEvent<{ date: string; limit?: number }>, step: WorkflowStep) {
-    const { date, limit } = event.payload;
+export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date: string; limit?: number; windowSec?: number }> {
+  async run(event: WorkflowEvent<{ date: string; limit?: number; windowSec?: number }>, step: WorkflowStep) {
+    const { date, limit, windowSec = 3600 } = event.payload;
     const sites = limit ? (index as Site[]).slice(0, limit) : (index as Site[]);
+
+    // Pace the full refresh across ~windowSec with per-gap jitter (±50%), planned
+    // once inside a step (Math.random → replay-safe). Spreads the daily run over
+    // ~1 hour so it isn't a synchronized burst against the sources.
+    const gaps = await step.do('plan-schedule', async () => {
+      const base = sites.length > 1 ? windowSec / sites.length : 0;
+      return sites.map(() => Math.max(0, Math.round(base * (0.5 + Math.random()))));
+    });
+
     let ok = 0;
     let failed = 0;
-    for (const site of sites) {
+    for (let i = 0; i < sites.length; i++) {
+      const site = sites[i];
       try {
         await step.do(
           `collect ${site.id}`,
@@ -66,8 +76,12 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
         });
         failed++;
       }
+      // Jittered tick between sites — spreads the run across the window.
+      if (i < sites.length - 1 && gaps[i] > 0) {
+        await step.sleep(`pace ${i}`, `${gaps[i]} seconds`);
+      }
     }
-    return { date, total: sites.length, ok, failed };
+    return { date, total: sites.length, ok, failed, windowSec };
   }
 }
 
