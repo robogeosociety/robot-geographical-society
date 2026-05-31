@@ -8,27 +8,10 @@ binding = "CAMPSITES"
 id = "aad9f04d90e945ffb8d278d7b8e70976"
 preview_id = "aad9f04d90e945ffb8d278d7b8e70976"
 
-# Browser Rendering — Playwright for the availability collector (WAF-gated sources).
-[browser]
-binding = "BROWSER"
-
 # Raw + summarized availability snapshots; the Mac pulls summary/<date>/* → InfluxDB.
 [[r2_buckets]]
 binding = "RAW"
 bucket_name = "campsite-raw"
-
-# Cron enqueues one job per campsite; consumer drains batches (≤2 browsers at once).
-[[queues.producers]]
-binding = "CAMPSITE_QUEUE"
-queue = "campsite-availability"
-
-[[queues.consumers]]
-queue = "campsite-availability"
-max_batch_size = 10
-max_batch_timeout = 30
-max_concurrency = 2
-max_retries = 3
-dead_letter_queue = "campsite-availability-dlq"
 
 [triggers]
 crons = ["0 13 * * *"] # 06:00 America/Los_Angeles (PDT)

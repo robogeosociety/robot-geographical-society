@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import type { Env as CollectorEnv, Job } from './collector';
 import campsites from './campsites-index.json';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
@@ -8,9 +7,10 @@ export { CampsiteCollectorWorkflow, HotDateWatchWorkflow } from './workflows';
 
 type Bindings = {
   CAMPSITES: KVNamespace;
+  RAW: R2Bucket;
   COLLECTOR_WF: Workflow;
   WATCH_WF: Workflow;
-} & CollectorEnv;
+};
 
 export const app = new Hono<{ Bindings: Bindings }>();
 
@@ -25,11 +25,9 @@ app.get('/', (c) => {
 app.get('/campsite/:id', async (c) => {
   const id = c.req.param('id');
   const campsite = await c.env.CAMPSITES.get(id, { type: 'json' });
-
   if (!campsite) {
     return c.json({ error: 'Campsite not found' }, 404);
   }
-
   return c.json(campsite);
 });
 
@@ -52,22 +50,15 @@ app.get('/campsites', async (c) => {
   return c.json(list.keys.map((k) => k.name));
 });
 
-// Manual trigger for the daily collection (useful for testing the producer).
+// Trigger the daily collection Workflow on demand (the cron does this nightly).
 app.post('/collect/run', async (c) => {
-  const { runProducer } = await import('./collector');
-  const limit = Number(c.req.query('limit')) || undefined;
-  const n = await runProducer(c.env, limit);
-  return c.json({ enqueued: n });
-});
-
-// Durable Workflows prototype (coexists with the queue collector above).
-app.post('/collect/workflow', async (c) => {
   const date = new Date().toISOString().slice(0, 10);
   const limit = Number(c.req.query('limit')) || undefined;
   const i = await c.env.COLLECTOR_WF.create({ params: { date, limit } });
   return c.json({ workflow: 'campsite-collector', instanceId: i.id, date, limit });
 });
 
+// Watch a single (campsite, target_date) with adaptive cadence until sold out.
 app.post('/watch', async (c) => {
   const id = c.req.query('id');
   const date = c.req.query('date');
@@ -78,18 +69,11 @@ app.post('/watch', async (c) => {
   return c.json({ workflow: 'campsite-hot-date-watch', instanceId: i.id, watching: site.name, targetDate: date, every });
 });
 
-// collector.ts pulls in @cloudflare/playwright (a Workers-runtime module), so it's
-// dynamically imported only when the cron/queue actually fires — keeps it out of
-// the API cold-start path and out of the vitest (Node) module graph.
 export default {
   fetch: app.fetch,
-  // Cron producer: enqueue one message per reservable campsite.
-  async scheduled(_event: ScheduledEvent, env: Bindings, ctx: ExecutionContext) {
-    ctx.waitUntil(import('./collector').then((m) => m.runProducer(env)));
-  },
-  // Queue consumer: drain a batch, scrape via Browser Rendering, write to R2.
-  async queue(batch: MessageBatch<Job>, env: Bindings) {
-    const { processBatch } = await import('./collector');
-    await processBatch(batch, env);
+  // Daily cron → durable collection Workflow (one step.do per site, retry/resume).
+  async scheduled(event: ScheduledEvent, env: Bindings, ctx: ExecutionContext) {
+    const date = new Date(event.scheduledTime).toISOString().slice(0, 10);
+    ctx.waitUntil(env.COLLECTOR_WF.create({ params: { date } }));
   },
 };
