@@ -131,13 +131,16 @@ async function fetchWa(page: any, ref: number | string, start: Date) {
 
 export async function processBatch(batch: MessageBatch<Job>, env: Env): Promise<void> {
   const start = new Date();
+  console.log(`queue batch: ${batch.messages.length} messages`);
   const browser = await launch(env.BROWSER);
+  console.log("browser launched");
   const page = await browser.newPage();
   let onRec = false, onWa = false;
   try {
     for (const msg of batch.messages) {
       const job = msg.body;
       try {
+        console.log(`fetch ${job.kind} ${job.id} ${job.name}`);
         let result: { raw: Record<string, any>; by: ByDate };
         if (job.kind === "rec") {
           if (!onRec) { await page.goto("https://www.recreation.gov/", { waitUntil: "domcontentloaded" }); onRec = true; onWa = false; }
@@ -155,6 +158,7 @@ export async function processBatch(batch: MessageBatch<Job>, env: Env): Promise<
           `summary/${job.date}/${job.id}.json`,
           JSON.stringify({ id: job.id, name: job.name, agency: job.agency, kind: job.kind, by_date: result.by }),
         );
+        console.log(`wrote ${job.id}: ${Object.keys(result.by).length} dates`);
         msg.ack();
       } catch (err) {
         console.error(`collect failed for ${job.name} (${job.id}):`, err);
