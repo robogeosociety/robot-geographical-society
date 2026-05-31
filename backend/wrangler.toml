@@ -21,6 +21,26 @@ bucket_name = "campsite-raw"
 binding = "COLLECTOR_AE"
 dataset = "campsite_collector"
 
+# One row per collector run (run-level totals). Schema:
+#   index=date  blob1=date  double1=total double2=ok double3=failed double4=empty
+[[analytics_engine_datasets]]
+binding = "RUNS_AE"
+dataset = "campsite_collector_runs"
+
+# Per-site availability rollup (one row per site per run). Schema:
+#   index=site.id  blob1=date blob2=agency blob3=name
+#   double1=siteNightsAvailable double2=siteNightsReserved double3=siteNightsTotal double4=datesOpen
+[[analytics_engine_datasets]]
+binding = "AVAIL_AE"
+dataset = "campsite_availability"
+
+# Dense per-check hot-date watch points. Schema:
+#   index=site.id  blob1=targetDate blob2=agency blob3=name
+#   double1=available double2=reserved double3=total
+[[analytics_engine_datasets]]
+binding = "WATCH_AE"
+dataset = "campsite_watch"
+
 [triggers]
 crons = ["0 13 * * *"] # 06:00 America/Los_Angeles (PDT)
 

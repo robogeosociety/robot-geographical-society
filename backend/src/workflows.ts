@@ -18,6 +18,9 @@ import { fetchAvailability, type Counts } from "./availability";
 export interface WfEnv {
   RAW: R2Bucket;
   COLLECTOR_AE?: AnalyticsEngineDataset; // per-run/site coverage → Grafana (observability)
+  RUNS_AE?: AnalyticsEngineDataset; // one row per collector run (totals)
+  AVAIL_AE?: AnalyticsEngineDataset; // per-site availability rollup
+  WATCH_AE?: AnalyticsEngineDataset; // dense per-check watch points
 }
 
 type Site = { id: string; kind: "rec" | "wa"; ref: string | number; name: string; agency: string };
@@ -39,10 +42,11 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
 
     let ok = 0;
     let failed = 0;
+    let empty = 0;
     for (let i = 0; i < sites.length; i++) {
       const site = sites[i];
       try {
-        await step.do(
+        const r = await step.do(
           `collect ${site.id}`,
           { retries: { limit: 4, delay: "10 seconds", backoff: "exponential" }, timeout: "2 minutes" },
           async () => {
@@ -59,10 +63,29 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
               blobs: [date, site.agency, site.kind, site.name, "ok"],
               doubles: [Object.keys(a.by).length, Date.now() - t0],
             });
-            return { id: site.id, dates: Object.keys(a.by).length };
+            // Per-site availability rollup over all target_dates.
+            const counts = Object.values(a.by);
+            let siteNightsAvailable = 0;
+            let siteNightsReserved = 0;
+            let siteNightsTotal = 0;
+            let datesOpen = 0;
+            for (const c of counts) {
+              siteNightsAvailable += c.available;
+              siteNightsReserved += c.reserved;
+              siteNightsTotal += c.total;
+              if (c.available > 0) datesOpen++;
+            }
+            this.env.AVAIL_AE?.writeDataPoint({
+              indexes: [site.id],
+              blobs: [date, site.agency, site.name],
+              doubles: [siteNightsAvailable, siteNightsReserved, siteNightsTotal, datesOpen],
+            });
+            const dates = Object.keys(a.by).length;
+            return { id: site.id, dates, empty: dates === 0 };
           },
         );
         ok++;
+        if (r.empty) empty++;
       } catch (err) {
         // A single site exhausting its retries must NOT abort the whole run.
         // Record the failure (own step → cached, resume-safe) and continue.
@@ -81,7 +104,16 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
         await step.sleep(`pace ${i}`, `${gaps[i]} seconds`);
       }
     }
-    return { date, total: sites.length, ok, failed, windowSec };
+    // One row per run (cached → resume-safe). AE is sampled/at-least-once — fine.
+    await step.do('record-run', async () => {
+      this.env.RUNS_AE?.writeDataPoint({
+        indexes: [date],
+        blobs: [date],
+        doubles: [sites.length, ok, failed, empty],
+      });
+      return { date, total: sites.length, ok, failed, empty };
+    });
+    return { date, total: sites.length, ok, failed, empty, windowSec };
   }
 }
 
@@ -108,6 +140,12 @@ export class HotDateWatchWorkflow extends WorkflowEntrypoint<WfEnv, WatchParams>
             `watch/${p.targetDate}/${p.id}/${observedAt}.json`,
             JSON.stringify({ id: p.id, name: p.name, agency: p.agency, target_date: p.targetDate, observedAt, ...c }),
           );
+          // Dense per-check watch metric (AE is sampled / at-least-once — fine for metrics).
+          this.env.WATCH_AE?.writeDataPoint({
+            indexes: [p.id],
+            blobs: [p.targetDate, p.agency, p.name],
+            doubles: [c.available, c.reserved, c.total],
+          });
           const now = Date.now();
           const daysOut = (Date.parse(p.targetDate) - now) / 86_400_000;
           const fill = c.total ? 1 - c.available / c.total : 0;
