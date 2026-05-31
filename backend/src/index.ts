@@ -75,9 +75,11 @@ app.post('/watch', async (c) => {
 
 export default {
   fetch: app.fetch,
-  // Daily cron → durable collection Workflow (one step.do per site, retry/resume).
+  // Daily cron → durable collection Workflow. windowSec 86400 spreads the 61
+  // sites evenly across 24h (~24 min apart, ±50% jitter) so samples cover the
+  // whole day and consecutive days tile seamlessly — not a once-daily burst.
   async scheduled(event: ScheduledEvent, env: Bindings, ctx: ExecutionContext) {
     const date = new Date(event.scheduledTime).toISOString().slice(0, 10);
-    ctx.waitUntil(env.COLLECTOR_WF.create({ params: { date } }));
+    ctx.waitUntil(env.COLLECTOR_WF.create({ params: { date, windowSec: 86400 } }));
   },
 };

@@ -32,9 +32,9 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
     const { date, limit, windowSec = 3600 } = event.payload;
     const sites = limit ? (index as Site[]).slice(0, limit) : (index as Site[]);
 
-    // Pace the full refresh across ~windowSec with per-gap jitter (±50%), planned
-    // once inside a step (Math.random → replay-safe). Spreads the daily run over
-    // ~1 hour so it isn't a synchronized burst against the sources.
+    // Pace the run across ~windowSec with per-gap jitter (±50%), planned once
+    // inside a step (Math.random → replay-safe). The cron passes 86400 to spread
+    // samples evenly over 24h; not a synchronized burst against the sources.
     const gaps = await step.do('plan-schedule', async () => {
       const base = sites.length > 1 ? windowSec / sites.length : 0;
       return sites.map(() => Math.max(0, Math.round(base * (0.5 + Math.random()))));
