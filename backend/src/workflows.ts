@@ -17,6 +17,7 @@ import { fetchAvailability, type Counts } from "./availability";
 
 export interface WfEnv {
   RAW: R2Bucket;
+  COLLECTOR_AE?: AnalyticsEngineDataset; // per-run/site coverage → Grafana (observability)
 }
 
 type Site = { id: string; kind: "rec" | "wa"; ref: string | number; name: string; agency: string };
@@ -26,25 +27,47 @@ type Site = { id: string; kind: "rec" | "wa"; ref: string | number; name: string
 export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date: string; limit?: number }> {
   async run(event: WorkflowEvent<{ date: string; limit?: number }>, step: WorkflowStep) {
     const { date, limit } = event.payload;
-    const sites = (limit ? (index as Site[]).slice(0, limit) : (index as Site[]));
-    const results: { id: string; dates: number }[] = [];
+    const sites = limit ? (index as Site[]).slice(0, limit) : (index as Site[]);
+    let ok = 0;
+    let failed = 0;
     for (const site of sites) {
-      const r = await step.do(
-        `collect ${site.id}`,
-        { retries: { limit: 4, delay: "10 seconds", backoff: "exponential" }, timeout: "2 minutes" },
-        async () => {
-          const a = await fetchAvailability(site.kind, site.ref);
-          await this.env.RAW.put(`raw/${date}/${site.agency}/${site.id}.json`, JSON.stringify(a.raw));
-          await this.env.RAW.put(
-            `summary/${date}/${site.id}.json`,
-            JSON.stringify({ id: site.id, name: site.name, agency: site.agency, kind: site.kind, by_date: a.by }),
-          );
-          return { id: site.id, dates: Object.keys(a.by).length };
-        },
-      );
-      results.push(r);
+      try {
+        await step.do(
+          `collect ${site.id}`,
+          { retries: { limit: 4, delay: "10 seconds", backoff: "exponential" }, timeout: "2 minutes" },
+          async () => {
+            const t0 = Date.now();
+            const a = await fetchAvailability(site.kind, site.ref);
+            await this.env.RAW.put(`raw/${date}/${site.agency}/${site.id}.json`, JSON.stringify(a.raw));
+            await this.env.RAW.put(
+              `summary/${date}/${site.id}.json`,
+              JSON.stringify({ id: site.id, name: site.name, agency: site.agency, kind: site.kind, by_date: a.by }),
+            );
+            // Per-site coverage metric (AE is sampled / at-least-once — fine for metrics).
+            this.env.COLLECTOR_AE?.writeDataPoint({
+              indexes: [site.id],
+              blobs: [date, site.agency, site.kind, site.name, "ok"],
+              doubles: [Object.keys(a.by).length, Date.now() - t0],
+            });
+            return { id: site.id, dates: Object.keys(a.by).length };
+          },
+        );
+        ok++;
+      } catch (err) {
+        // A single site exhausting its retries must NOT abort the whole run.
+        // Record the failure (own step → cached, resume-safe) and continue.
+        await step.do(`record-failure ${site.id}`, async () => {
+          this.env.COLLECTOR_AE?.writeDataPoint({
+            indexes: [site.id],
+            blobs: [date, site.agency, site.kind, site.name, "failed"],
+            doubles: [0, 0],
+          });
+          return { id: site.id, failed: true, error: String((err as any)?.message ?? err) };
+        });
+        failed++;
+      }
     }
-    return { date, collected: results.length, results };
+    return { date, total: sites.length, ok, failed };
   }
 }
 
