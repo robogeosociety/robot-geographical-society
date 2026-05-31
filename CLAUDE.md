@@ -22,6 +22,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `npm run build` — production build
 - **Campsite data:** `data/campsites.json` — GeoJSON FeatureCollection
 
+## Jupyter Notebook (campsite data sync)
+
+The data sync notebook lives at `data/sync_campsites.ipynb` and runs via `uv` with the `data/` project.
+
+- **Port:** 8888
+- **Launch:** `uv run --project data jupyter notebook --no-browser --ip=0.0.0.0 --ServerApp.password='argon2:$argon2id$v=19$m=10240,t=10,p=8$+SyoDRzfMuDouwfYkxjM/w$aUq4FoD50I4NBp3oKMBawGjFkHfFjwLyf9xsKnLEOBg' data/sync_campsites.ipynb`
+- **Password:** `booknote`
+- **Context:** See `data/NOTEBOOKS.md` for full details
+
 ## Development Protocol
 
 See **[ISSUES.md](./ISSUES.md)** for the full issue lifecycle protocol (workspace isolation, verification steps, PR process, and deployment).
