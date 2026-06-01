@@ -92,11 +92,14 @@ describe('Standalone mode (VITE_STANDALONE=true)', () => {
     });
   }
 
-  it('does not call fetch when a campsite is selected', async () => {
+  it('does not call the backend API when a campsite is selected', async () => {
     render(<App />);
     selectCampsite(fakeCampsite);
     await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
-    expect(fetchSpy).not.toHaveBeenCalled();
+    // Standalone mode may load the static /availability.json bundled with the SPA,
+    // but must never hit the backend /campsite API (the guard at App.jsx).
+    const calledUrls = fetchSpy.mock.calls.map(([url]) => String(url));
+    expect(calledUrls.some((u) => u.includes('/campsite/'))).toBe(false);
   });
 
   it('detail panel renders campsite info from GeoJSON properties', async () => {
