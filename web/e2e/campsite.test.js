@@ -9,7 +9,7 @@ test.describe('Robot Geographical Society - Integration', () => {
     let response;
     for (let i = 0; i < 5; i++) {
         try {
-            response = await request.get(`${BACKEND_URL}/campsite/fishtrap-recreation-area`);
+            response = await request.get(`${BACKEND_URL}/campsite/blm/fishtrap-recreation-area`);
             if (response.ok()) break;
         } catch (e) {
             console.log(`Backend attempt ${i+1} failed: ${e.message}`);

@@ -21,8 +21,10 @@ app.get('/', (c) => {
   return c.text('Robot Geographical Society Backend API');
 });
 
-// GET /campsite/:id - Fetch individual campsite details
-app.get('/campsite/:id', async (c) => {
+// GET /campsite/:id - Fetch individual campsite details.
+// Ids are agency-prefixed and contain a slash (e.g. "blm/fishtrap-recreation-area"),
+// so capture the full remainder of the path with {.+} rather than a single segment.
+app.get('/campsite/:id{.+}', async (c) => {
   const id = c.req.param('id');
   const campsite = await c.env.CAMPSITES.get(id, { type: 'json' });
   if (!campsite) {
