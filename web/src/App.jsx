@@ -373,14 +373,14 @@ export default function App() {
           )}
 
           {loadingDetails ? (
-            <div className=”loading-indicator”>Loading additional details...</div>
+            <div className="loading-indicator">Loading additional details...</div>
           ) : campsiteDetails?.reservation_dates?.length > 0 ? (
-            <div className=”panel-reservations”>
+            <div className="panel-reservations">
               <h3>Opening Reservation Dates</h3>
-              <ul className=”res-list”>
+              <ul className="res-list">
                 {campsiteDetails.reservation_dates.map((date) => (
-                  <li key={date} className=”res-item”>
-                    ðŸ—“ï¸  {new Date(date).toLocaleDateString(undefined, {
+                  <li key={date} className="res-item">
+                    🗓️  {new Date(date).toLocaleDateString(undefined, {
                       month: 'long',
                       day: 'numeric',
                       year: 'numeric',
@@ -402,11 +402,11 @@ export default function App() {
               .slice(0, 10);
             if (availDates.length === 0) return null;
             return (
-              <div className=”panel-reservations”>
+              <div className="panel-reservations">
                 <h3>Sites Available (next {availDates.length} dates)</h3>
-                <ul className=”res-list”>
+                <ul className="res-list">
                   {availDates.map(([date, count]) => (
-                    <li key={date} className=”res-item”>
+                    <li key={date} className="res-item">
                       <span style={{ color: 'var(--cyan)', marginRight: 6 }}>{count}</span>
                       {new Date(date + 'T12:00:00').toLocaleDateString(undefined, {
                         month: 'short',

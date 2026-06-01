@@ -23,6 +23,20 @@ describe('Hono API Tests', () => {
     expect(body).toEqual({ error: 'Campsite not found' });
   });
 
+  test('GET /campsite/:id matches agency-prefixed (slash-containing) ids', async () => {
+    const mockCampsite = { id: 'blm/fishtrap-recreation-area', name: 'Fishtrap Recreation Area', agency_short: 'blm' };
+    const MOCK_CAMPSITES = { get: vi.fn().mockResolvedValue(mockCampsite) };
+
+    const res = await app.request('/campsite/blm/fishtrap-recreation-area', {}, {
+      CAMPSITES: MOCK_CAMPSITES,
+    } as any);
+
+    expect(res.status).toBe(200);
+    // The full agency/slug path, not just the last segment, is used as the KV key.
+    expect(MOCK_CAMPSITES.get).toHaveBeenCalledWith('blm/fishtrap-recreation-area', { type: 'json' });
+    expect(await res.json()).toEqual(mockCampsite);
+  });
+
   test('GET /campsite/:id should return campsite if found', async () => {
     const mockCampsite = {
       id: 'test-camp',

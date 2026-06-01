@@ -10,6 +10,25 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export type Counts = { available: number; reserved: number; total: number };
 export type ByDate = Record<string, Counts>;
 
+// Per-individual-campsite detail — preserved instead of collapsed into Counts.
+// `by_date` mirrors the aggregate's keys (daily for rec.gov, monthly for WA).
+export type SiteStatus = "available" | "reserved" | "other";
+export type PerSite = {
+  label: string | null; // site number / loop label (e.g. "A012"); null until enriched (WA)
+  loop: string | null;
+  type: string | null; // campsite type (e.g. "STANDARD NONELECTRIC")
+  use: string | null; // type of use (e.g. "Overnight")
+  by_date: Record<string, SiteStatus>;
+};
+export type BySite = Record<string, PerSite>;
+
+function recStatus(status: string): SiteStatus {
+  const s = String(status).toLowerCase();
+  if (s === "available") return "available";
+  if (s === "reserved") return "reserved";
+  return "other";
+}
+
 function monthStarts(start: Date, n: number): { y: number; m: number }[] {
   const out: { y: number; m: number }[] = [];
   for (let i = 0; i < n; i++) {
@@ -30,6 +49,7 @@ async function getJson(url: string, referer: string): Promise<any> {
 export async function fetchRecAvailability(id: string, months = 6, start = new Date()) {
   const raw: Record<string, any> = {};
   const by: ByDate = {};
+  const bySite: BySite = {};
   for (const { y, m } of monthStarts(start, months)) {
     const sd = `${y}-${pad(m)}-01T00:00:00.000Z`;
     const data = await getJson(
@@ -38,17 +58,26 @@ export async function fetchRecAvailability(id: string, months = 6, start = new D
     );
     raw[`${y}-${pad(m)}`] = data;
     for (const site of Object.values<any>(data.campsites ?? {})) {
+      const sid = String(site.campsite_id ?? site.site ?? "");
+      const ps = (bySite[sid] ??= {
+        label: site.site ?? null,
+        loop: site.loop ?? null,
+        type: site.campsite_type ?? null,
+        use: site.type_of_use ?? null,
+        by_date: {},
+      });
       for (const [ds, status] of Object.entries<string>(site.availabilities ?? {})) {
         const day = ds.slice(0, 10);
         const c = (by[day] ??= { available: 0, reserved: 0, total: 0 });
-        const s = String(status).toLowerCase();
-        if (s === "available") c.available++;
-        else if (s === "reserved") c.reserved++;
+        const label = recStatus(status);
+        if (label === "available") c.available++;
+        else if (label === "reserved") c.reserved++;
         c.total++;
+        ps.by_date[day] = label;
       }
     }
   }
-  return { raw, by };
+  return { raw, by, bySite };
 }
 
 const WA_AVAIL: Record<number, "available" | "reserved" | "other"> = {
@@ -61,6 +90,7 @@ export async function fetchWaAvailability(ref: number | string, months = 6, star
   const mapIds = (Array.isArray(maps) ? maps : []).map((m: any) => m.mapId).filter(Boolean);
   const raw: Record<string, any> = {};
   const by: ByDate = {};
+  const bySite: BySite = {};
   for (const { y, m } of monthStarts(start, months)) {
     const startISO = `${y}-${pad(m)}-01`;
     const end = m === 12 ? `${y + 1}-01-01` : `${y}-${pad(m + 1)}-01`;
@@ -80,6 +110,10 @@ export async function fetchWaAvailability(ref: number | string, months = 6, star
           if (label === "available") c.available++;
           else if (label === "reserved") c.reserved++;
           c.total++;
+          // WA labels aren't resolved yet (see CAMPSITE-PLAN.md open questions);
+          // the stable resource id keys a per-site series we can enrich later.
+          const ps = (bySite[rid] ??= { label: null, loop: null, type: null, use: null, by_date: {} });
+          ps.by_date[startISO] = label;
         }
       } catch {
         /* some sub-maps 403 — skip */
@@ -87,7 +121,7 @@ export async function fetchWaAvailability(ref: number | string, months = 6, star
     }
     by[startISO] = c;
   }
-  return { raw, by };
+  return { raw, by, bySite };
 }
 
 export async function fetchAvailability(kind: "rec" | "wa", ref: string | number, months = 6) {
