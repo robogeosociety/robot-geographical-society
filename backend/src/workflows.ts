@@ -57,6 +57,19 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
               `summary/${date}/${site.id}.json`,
               JSON.stringify({ id: site.id, name: site.name, agency: site.agency, kind: site.kind, by_date: a.by }),
             );
+            // Per-individual-campsite breakdown (CAMPSITE-PLAN.md). Same fetch,
+            // same cadence — preserves the per-site rows the summary collapses.
+            await this.env.RAW.put(
+              `sites/${date}/${site.id}.json`,
+              JSON.stringify({
+                id: site.id,
+                name: site.name,
+                agency: site.agency,
+                kind: site.kind,
+                collected_date: date,
+                sites: a.bySite,
+              }),
+            );
             // Per-site coverage metric (AE is sampled / at-least-once — fine for metrics).
             this.env.COLLECTOR_AE?.writeDataPoint({
               indexes: [site.id],

@@ -1,0 +1,66 @@
+import { expect, test, describe, vi, afterEach } from 'vitest';
+import { fetchRecAvailability } from './availability';
+
+// A single-month rec.gov availability payload, two sites, mixed statuses.
+const REC_PAYLOAD = {
+  campsites: {
+    '111': {
+      campsite_id: '111',
+      site: 'A001',
+      loop: 'Loop A',
+      campsite_type: 'STANDARD NONELECTRIC',
+      type_of_use: 'Overnight',
+      availabilities: {
+        '2026-06-15T00:00:00Z': 'Available',
+        '2026-06-16T00:00:00Z': 'Reserved',
+      },
+    },
+    '222': {
+      campsite_id: '222',
+      site: 'A002',
+      loop: 'Loop A',
+      campsite_type: 'TENT ONLY',
+      type_of_use: 'Overnight',
+      availabilities: {
+        '2026-06-15T00:00:00Z': 'Reserved',
+        '2026-06-16T00:00:00Z': 'Not Reservable',
+      },
+    },
+  },
+};
+
+afterEach(() => vi.unstubAllGlobals());
+
+describe('fetchRecAvailability per-site collection', () => {
+  test('preserves per-campsite identity and status', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => REC_PAYLOAD }));
+
+    const { bySite } = await fetchRecAvailability('123', 1, new Date('2026-06-01T00:00:00Z'));
+
+    expect(Object.keys(bySite).sort()).toEqual(['111', '222']);
+    expect(bySite['111']).toMatchObject({ label: 'A001', loop: 'Loop A', type: 'STANDARD NONELECTRIC', use: 'Overnight' });
+    expect(bySite['111'].by_date).toEqual({ '2026-06-15': 'available', '2026-06-16': 'reserved' });
+    // Unknown statuses normalize to "other", not silently dropped.
+    expect(bySite['222'].by_date).toEqual({ '2026-06-15': 'reserved', '2026-06-16': 'other' });
+  });
+
+  test('aggregate counts equal the derived per-site sum (no drift)', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => REC_PAYLOAD }));
+
+    const { by, bySite } = await fetchRecAvailability('123', 1, new Date('2026-06-01T00:00:00Z'));
+
+    // Recompute the aggregate straight from bySite and assert it matches `by`.
+    const derived: Record<string, { available: number; reserved: number; total: number }> = {};
+    for (const site of Object.values(bySite)) {
+      for (const [day, status] of Object.entries(site.by_date)) {
+        const c = (derived[day] ??= { available: 0, reserved: 0, total: 0 });
+        if (status === 'available') c.available++;
+        else if (status === 'reserved') c.reserved++;
+        c.total++;
+      }
+    }
+    expect(by).toEqual(derived);
+    expect(by['2026-06-15']).toEqual({ available: 1, reserved: 1, total: 2 });
+    expect(by['2026-06-16']).toEqual({ available: 0, reserved: 1, total: 2 });
+  });
+});

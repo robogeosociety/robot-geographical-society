@@ -1,6 +1,6 @@
 # CAMPSITE-PLAN.md — Per-Campsite Availability Collection
 
-**Status:** Proposed
+**Status:** Phase 1 (collect) implemented — see §8. Phases 2–3 pending.
 **Goal:** Collect availability at the level of the *individual campsite* (e.g. loop A, site 12), not just the campground-wide aggregate, so we can eventually predict when a specific site/date sells out.
 **Non-goal:** Changing the daily cadence. Daily sampling stays — this is purely about granularity, not frequency.
 
@@ -85,7 +85,7 @@ Per-site detail lives in R2 (`sites/`). The Mac-side ingest decides how much of 
 
 ## 8. Rollout
 
-1. **Phase 1 — collect (this PR's follow-up):** implement §5, deploy. Per-site files start landing in `sites/`. No consumer yet — purely begin banking the data so history accrues from day one.
+1. **Phase 1 — collect (✅ done, this PR):** §5 implemented. Per-site files land in `sites/<date>/<id>.json` on the same daily run. No consumer yet — purely begin banking the data so history accrues from day one.
 2. **Phase 2 — ingest:** extend the Mac ingest to read `sites/` into InfluxDB for a curated watchlist of `(campground, date)` pairs (the dates we actually want to forecast), keeping cardinality bounded.
 3. **Phase 3 — model:** once a season of per-site history exists, build the per-site sell-out projection on top of it.
 
