@@ -69,13 +69,35 @@ Small and contained — three files in `backend/`:
 2. **`src/workflows.ts`** — in the `collect <id>` step (`workflows.ts:49-86`), write the new `sites/<date>/<id>.json` from `bySite` after the existing `raw/` and `summary/` puts. Aggregate `summary/` write stays as-is.
 3. **`src/availability.ts` types** — add `PerSite` / `BySite` types next to `Counts`/`ByDate` (`availability.ts:10-11`).
 
-No changes to the cron, the pacing/jitter logic, the Hono routes, or `wrangler.toml` bindings (R2 prefix reuse needs no new binding).
+No changes to the cron, the Hono routes, or `wrangler.toml` bindings (R2 prefix reuse needs no new binding). The pacing logic is replaced by `planSchedule` — see §6b.
 
 ## 6. Analytics Engine / observability
 
 Per-site-per-date is high cardinality: ~61 campgrounds × (tens–hundreds of sites) × ~180 nights ≈ millions of cells per day. **Do not** fan this into Analytics Engine as one row per site-night — keep the existing campground-level AE datasets (`campsite_availability`, etc.) unchanged for Grafana coverage dashboards.
 
 Per-site detail lives in R2 (`sites/`). The Mac-side ingest decides how much of it to land in InfluxDB and at what cardinality (proposed: tag by `campground_id` + `campsite_id`, field `state` 0/1, scoped to a watchlist of target dates rather than all 180 nights — see Open Questions).
+
+## 6b. Request distribution / schedule generation
+
+As the fleet grows, the request pattern against each booking system must stay
+unobtrusive — evenly spread, interleaved, and varying day to day. The original
+plan paced sites in index order, which clustered all rec.gov requests into the
+front of the window and all goingtocamp into the tail, in the same order every
+run. `planSchedule` (`src/schedule.ts`) replaces that:
+
+- **Per-system even spread.** Items are grouped by booking system (`site.kind`).
+  Each group of N is laid over N equal slots of width `windowSec / N`; one
+  request per slot → even coverage with no bursts. Each system keeps its own
+  cadence regardless of the others' size.
+- **Interleaved.** Groups are merged and sorted by time, so requests alternate
+  across systems (rec → wa → rec …) instead of arriving in per-agency blocks.
+- **No fixed daily pattern.** The item→slot assignment is reshuffled and the
+  offset within each slot is jittered every run, so a given site is never
+  collected at the same time two days running.
+- **Scales & is generic.** Adding campsites just shrinks the slots; adding a new
+  booking system gives it its own independent cadence — no code change. The
+  function is pure (randomness injected) so it runs inside the replay-safe
+  `plan-schedule` Workflow step and is unit-tested with a seeded PRNG.
 
 ## 7. Volume & cost
 

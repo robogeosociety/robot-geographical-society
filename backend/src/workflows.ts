@@ -14,6 +14,7 @@
 import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:workers";
 import index from "./campsites-index.json";
 import { fetchAvailability, type Counts } from "./availability";
+import { planSchedule } from "./schedule";
 
 export interface WfEnv {
   RAW: R2Bucket;
@@ -32,19 +33,25 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
     const { date, limit, windowSec = 3600 } = event.payload;
     const sites = limit ? (index as Site[]).slice(0, limit) : (index as Site[]);
 
-    // Pace the run across ~windowSec with per-gap jitter (±50%), planned once
-    // inside a step (Math.random → replay-safe). The cron passes 86400 to spread
-    // samples evenly over 24h; not a synchronized burst against the sources.
-    const gaps = await step.do('plan-schedule', async () => {
-      const base = sites.length > 1 ? windowSec / sites.length : 0;
-      return sites.map(() => Math.max(0, Math.round(base * (0.5 + Math.random()))));
-    });
+    // Plan a highly distributed schedule across ~windowSec: each booking system
+    // (site.kind) spread evenly over the whole window on its own cadence, systems
+    // interleaved in time, and the per-site timing reshuffled every run so no
+    // identifiable per-agency pattern emerges. Planned once inside a step
+    // (Math.random → persisted → replay-safe). The cron passes 86400 (24h).
+    const schedule = await step.do('plan-schedule', async () =>
+      planSchedule(sites, { windowSec, groupBy: (s) => s.kind }),
+    );
 
     let ok = 0;
     let failed = 0;
     let empty = 0;
-    for (let i = 0; i < sites.length; i++) {
-      const site = sites[i];
+    let prevAt = 0;
+    for (let i = 0; i < schedule.length; i++) {
+      const { item: site, atSec } = schedule[i];
+      // Sleep to this site's planned offset (delta from the previous one).
+      const wait = atSec - prevAt;
+      if (wait > 0) await step.sleep(`pace ${i}`, `${wait} seconds`);
+      prevAt = atSec;
       try {
         const r = await step.do(
           `collect ${site.id}`,
@@ -111,10 +118,6 @@ export class CampsiteCollectorWorkflow extends WorkflowEntrypoint<WfEnv, { date:
           return { id: site.id, failed: true, error: String((err as any)?.message ?? err) };
         });
         failed++;
-      }
-      // Jittered tick between sites — spreads the run across the window.
-      if (i < sites.length - 1 && gaps[i] > 0) {
-        await step.sleep(`pace ${i}`, `${gaps[i]} seconds`);
       }
     }
     // One row per run (cached → resume-safe). AE is sampled/at-least-once — fine.
