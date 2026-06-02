@@ -31,7 +31,11 @@ export const HEARTBEAT_KEY = "scheduler/heartbeat.json";
 
 // Loop tuning.
 const SLACK_MS = 30_000; // collect anything due within 30s of a wake
-const MAX_BATCH = 8; // cap collections per wake (guards deadline pile-ups)
+// Collect one site per wake — maximally distributed. In steady state only ~1
+// site is ever due per wake anyway; this also drips the cold-start prime and any
+// post-downtime pile-up out one-at-a-time (paced by MIN_SLEEP) instead of in a
+// burst. A full 140-site catch-up still clears in ~35min, far inside the SLA.
+const MAX_BATCH = 1;
 const MIN_SLEEP_MS = 15_000; // never busy-loop
 const MAX_SLEEP_MS = 6 * 60 * 60_000; // wake at least every 6h (heartbeat liveness)
 const RETRY_BACKOFF_MS = 10 * 60_000; // failed site retried soon, not a full X later
