@@ -73,7 +73,7 @@ This cron does **not** schedule collection — it only ensures the loop exists. 
 
 ## 6. Batching, fairness, failure
 
-- **Batch size:** with even-spread deadlines, ~1 site/wake. A `MAX_BATCH` cap (e.g. 8) guards against deadline pile-ups (e.g. right after a forced refresh-all); overflow just shortens the next sleep.
+- **One site per wake (`MAX_BATCH = 1`):** maximally distributed. In steady state only ~1 site is due per wake anyway, so this changes nothing there; it only affects transients — the cold-start prime and post-downtime pile-ups drip out one-at-a-time (paced by `MIN_SLEEP` ≈ 15s) instead of bursting. A full 140-site catch-up clears in ~35min, far inside the 2-day SLA, so there's no reason to collect more than one at once.
 - **Booking-system fairness:** tiny mixed batches mean no per-host bursts inherently. Deadlines are seeded interleaved across systems, and `± jitter` on each reschedule prevents lockstep — so the distribution property `planSchedule` gave us falls out *without* a fixed window.
 - **Failures:** a failed collection sets `due = now + RETRY_BACKOFF` (minutes), not `now + X`, so it's retried soon and never silently goes stale. `step.do` retries handle transient errors first; the deadline backoff is the outer safety net.
 
