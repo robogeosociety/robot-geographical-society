@@ -47,10 +47,9 @@ dataset = "campsite_watch"
 # The one knob: every campsite is refreshed within this many days. No fixed schedule.
 MAX_STALENESS_DAYS = "2"
 
-[triggers]
-# Weekly LIVENESS supervisor — not a collection schedule. Restarts the
-# self-scheduling CollectorLoop only if its heartbeat shows it has died.
-crons = ["0 0 * * 1"]
+# No cron. The CollectorLoop self-perpetuates via continue-as-new; a hard crash
+# is surfaced by Grafana → Discord staleness alerting (observability repo), and a
+# human restarts it with POST /collect/start?force=1.
 
 # Deadline-driven durable collector loop (self-schedules via step.sleep,
 # continues-as-new to bound history).

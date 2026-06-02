@@ -50,12 +50,15 @@ app.get('/campsites', async (c) => {
   return c.json(list.keys.map((k) => k.name));
 });
 
-// Start the deadline-driven collector loop (no-op if one is already alive).
+// Start the deadline-driven collector loop. No-op if a fresh heartbeat shows one
+// already alive, unless ?force=1 (use after a crash/terminate, e.g. in response to
+// a staleness alert — the heartbeat can read "alive" even when no instance runs).
 app.post('/collect/start', async (c) => {
+  const force = c.req.query('force') === '1';
   const { alive, hb } = await loopAlive(c.env);
-  if (alive) return c.json({ status: 'already-running', lastWakeISO: hb?.lastWakeISO });
+  if (alive && !force) return c.json({ status: 'already-running', lastWakeISO: hb?.lastWakeISO });
   const i = await c.env.COLLECTOR_WF.create({ params: {} });
-  return c.json({ status: 'started', instanceId: i.id });
+  return c.json({ status: 'started', instanceId: i.id, forced: force });
 });
 
 // Freshness/observability snapshot (the loop's heartbeat).
@@ -100,16 +103,7 @@ app.post('/watch', async (c) => {
   return c.json({ workflow: 'campsite-hot-date-watch', instanceId: i.id, watching: site.name, targetDate: date, every });
 });
 
-export default {
-  fetch: app.fetch,
-  // Weekly liveness supervisor — NOT a collection schedule. It only restarts the
-  // self-scheduling CollectorLoop if its heartbeat shows it has died.
-  async scheduled(event: ScheduledEvent, env: Bindings, ctx: ExecutionContext) {
-    ctx.waitUntil(
-      (async () => {
-        const { alive } = await loopAlive(env);
-        if (!alive) await env.COLLECTOR_WF.create({ params: {} });
-      })(),
-    );
-  },
-};
+// No scheduled() handler / cron. The CollectorLoop self-perpetuates via
+// continue-as-new; staleness is surfaced by Grafana → Discord alerting (see the
+// observability repo), and a human restarts with POST /collect/start?force=1.
+export default { fetch: app.fetch };

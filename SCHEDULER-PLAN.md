@@ -60,16 +60,15 @@ loop:
 
 This is exactly *"Workflow payload + R2-derived"*: the loop owns the live state; the heartbeat (written every wake) is the durable R2 snapshot the supervisor recovers from. No new bucket, KV, or DO.
 
-## 5. Liveness — tiny weekly supervisor
+## 5. Liveness — alert, don't auto-restart
 
-A self-looping Workflow could die on an uncaught error and stop silently. A minimal safety net:
+The loop self-perpetuates via continue-as-new, so the only failure mode is a hard crash (an uncaught error that skips continue-as-new). Rather than carry a cron+supervisor to auto-restart it, we **alert a human and let them restart**:
 
-- Each loop iteration writes a **heartbeat** (`{ instanceId, lastWakeMs }`) to a fixed R2 key (e.g. `scheduler/heartbeat.json`).
-- A **weekly cron** (`0 0 * * 1`) runs a ~10-line supervisor: read the heartbeat; if it's older than a threshold (e.g. > 1 day), start a fresh `CollectorLoop` (which R2-reconstructs `due[]`).
+- Each loop iteration writes a **heartbeat** (`{ instanceId, lastWakeMs, collectedTotal, due }`) to `scheduler/heartbeat.json` in R2.
+- **No cron.** Staleness is surfaced by **Grafana → Discord** alerting (separate observability repo): if the newest collection per site ages past the SLA (queried from the `campsite_collector` Analytics Engine dataset), it fires a Discord alert.
+- A human restarts with `POST /collect/start?force=1` (the `force` bypass is needed because a stale heartbeat can still read "alive" when no instance is actually running).
 
-This cron does **not** schedule collection — it only ensures the loop exists. One tick a week. (If you'd rather have zero crons, drop it and rely purely on continue-as-new.)
-
-**SLA caveat:** a weekly supervisor means a hard crash (uncaught error that skips continue-as-new) could go up to ~7 days before restart — looser than the 2-day staleness target. Continue-as-new makes such crashes rare, so weekly is cheap insurance; if you want the supervisor itself to uphold the SLA, tighten it to **daily** (`0 0 * * *`). Easy one-line change.
+This trades automatic recovery for a simpler system with no scheduling primitive at all — appropriate because continue-as-new makes crashes rare, and a stalled collector is a human-noticed event, not a silent one.
 
 ## 6. Batching, fairness, failure
 
