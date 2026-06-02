@@ -43,14 +43,21 @@ dataset = "campsite_availability"
 binding = "WATCH_AE"
 dataset = "campsite_watch"
 
-[triggers]
-crons = ["0 7 * * *"] # 00:00 PT during PDT (cron is UTC-only → 23:00 PT in winter/PST). Starts the daily 24h sweep at midnight PT.
+[vars]
+# The one knob: every campsite is refreshed within this many days. No fixed schedule.
+MAX_STALENESS_DAYS = "2"
 
-# Workflows prototype (durable execution) — coexists with the queue collector.
+[triggers]
+# Weekly LIVENESS supervisor — not a collection schedule. Restarts the
+# self-scheduling CollectorLoop only if its heartbeat shows it has died.
+crons = ["0 0 * * 1"]
+
+# Deadline-driven durable collector loop (self-schedules via step.sleep,
+# continues-as-new to bound history).
 [[workflows]]
 name = "campsite-collector"
 binding = "COLLECTOR_WF"
-class_name = "CampsiteCollectorWorkflow"
+class_name = "CollectorLoop"
 
 [[workflows]]
 name = "campsite-hot-date-watch"

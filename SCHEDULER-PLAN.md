@@ -1,6 +1,6 @@
 # SCHEDULER-PLAN.md — Deadline-driven distributed collection
 
-**Status:** Proposed (design for review — no code yet).
+**Status:** Implemented (`backend/src/scheduler.ts`, `workflows.ts` `CollectorLoop`, `index.ts`, `wrangler.toml`).
 **Replaces:** the fixed daily window sweep (`planSchedule` + `windowSec`/`limit`/`window=0`) in `backend/src/workflows.ts` / `src/schedule.ts`, and the `0 7 * * *` cron.
 **Independent of:** PR #62 (WA daily granularity) — that changes *what* a collection fetches; this changes *when/which* sites are collected. They compose.
 
@@ -55,9 +55,10 @@ loop:
 `due[]` is the only state. Two paths:
 
 - **Continuity (normal):** `due[]` rides in the Workflow payload. When the loop hits its iteration budget it **continues-as-new** — spawns a fresh instance with the current `due[]` and returns. This bounds each instance's step history (avoids unbounded-loop step limits) while preserving state with zero external store.
-- **Recovery (cold start / supervisor restart):** if started with no payload, reconstruct `due[]` from R2: the newest `summary/<date>/<id>.json` (or `sites/…`) per site gives `lastCollected`; `due = lastCollected + X`. Sites with no history are **seeded spread uniformly across `[now, now+X)`** (random permutation) so a cold start doesn't collect all 140 at once.
+- **Recovery (supervisor restart):** if started with no payload, read the last **heartbeat snapshot** (`scheduler/heartbeat.json` in R2), which carries the full `due[]` map; resume from it (`mergeDue` seeds any newly-added sites). 
+- **True cold start (no heartbeat):** **prime** the first `PRIME` (8) sites for immediate collection — a prompt baseline — and spread the remaining sites uniformly across `[now, now+X)`, interleaved by booking system. So a fresh deploy starts producing data in seconds without collecting all sites at once.
 
-This is exactly *"Workflow payload + R2-derived"*: the loop owns the live state; R2 (already written every collection) is the durable fallback. No new bucket, KV, or DO.
+This is exactly *"Workflow payload + R2-derived"*: the loop owns the live state; the heartbeat (written every wake) is the durable R2 snapshot the supervisor recovers from. No new bucket, KV, or DO.
 
 ## 5. Liveness — tiny weekly supervisor
 
@@ -66,7 +67,9 @@ A self-looping Workflow could die on an uncaught error and stop silently. A mini
 - Each loop iteration writes a **heartbeat** (`{ instanceId, lastWakeMs }`) to a fixed R2 key (e.g. `scheduler/heartbeat.json`).
 - A **weekly cron** (`0 0 * * 1`) runs a ~10-line supervisor: read the heartbeat; if it's older than a threshold (e.g. > 1 day), start a fresh `CollectorLoop` (which R2-reconstructs `due[]`).
 
-This cron does **not** schedule collection — it only ensures the loop exists. One tick a week. (If you'd rather have zero crons, drop it and rely purely on continue-as-new; the tradeoff is that an uncaught crash halts collection until noticed.)
+This cron does **not** schedule collection — it only ensures the loop exists. One tick a week. (If you'd rather have zero crons, drop it and rely purely on continue-as-new.)
+
+**SLA caveat:** a weekly supervisor means a hard crash (uncaught error that skips continue-as-new) could go up to ~7 days before restart — looser than the 2-day staleness target. Continue-as-new makes such crashes rare, so weekly is cheap insurance; if you want the supervisor itself to uphold the SLA, tighten it to **daily** (`0 0 * * *`). Easy one-line change.
 
 ## 6. Batching, fairness, failure
 
@@ -76,11 +79,12 @@ This cron does **not** schedule collection — it only ensures the loop exists. 
 
 ## 7. HTTP surface (replaces the flag-driven endpoints)
 
-- `POST /collect/site?id=<siteId>` — force-refresh one site now (`due[id] = now`); for backfill/debug.
-- `POST /collect/refresh-all` — re-seed all `due[]` spread across `[now, now+X)` (NOT all `now` — that would burst). Triggers a fresh full cycle without a thundering herd.
-- `GET /scheduler/status` — heartbeat + per-site `lastCollected` / `due` / max-staleness, for observability.
-- `windowSec` / `limit` / `window` params: **removed**.
+- `POST /collect/start` — start the loop (no-op if a fresh heartbeat shows one already alive).
+- `GET /scheduler/status` — heartbeat summary: last wake, `collectedTotal`, site count, overdue count.
+- `POST /collect/site?id=<siteId>` — ad-hoc one-shot collect of one site now (backfill/debug), independent of the loop schedule.
+- `windowSec` / `limit` / `window` params and the old `/collect/run`: **removed**.
 - `HotDateWatchWorkflow` and `/watch`: **unchanged** (orthogonal feature).
+- *(Future: `/collect/refresh-all` to re-seed `due[]` spread across `[now, now+X)` — deferred to keep the singleton-loop semantics simple.)*
 
 ## 8. Observability / SLA monitoring
 
@@ -104,6 +108,7 @@ This cron does **not** schedule collection — it only ensures the loop exists. 
 - **Refresh-all burst** — explicitly spread across `[now, now+X)`, not `now`, to avoid a thundering herd (called out in §7).
 - **Per-site X** — global X first; per-agency/per-site override (hot parks fresher) is a clean follow-up once the global model is proven.
 - **Clock determinism** — every `Date.now()` / jitter read happens inside a `step.do`, so it's checkpointed and replay-safe.
+- **Singleton loop** — `/collect/start` and the supervisor both guard on heartbeat freshness before creating an instance, so we don't run two competing loops (each would continue-as-new and double the collection rate). The guard has a small race window; a Durable Object lock would make it airtight if it ever matters.
 
 ---
 
