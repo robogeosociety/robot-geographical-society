@@ -1,5 +1,5 @@
 import { expect, test, describe, vi, afterEach } from 'vitest';
-import { fetchRecAvailability } from './availability';
+import { fetchRecAvailability, fetchWaAvailability } from './availability';
 
 // A single-month rec.gov availability payload, two sites, mixed statuses.
 const REC_PAYLOAD = {
@@ -62,5 +62,36 @@ describe('fetchRecAvailability per-site collection', () => {
     expect(by).toEqual(derived);
     expect(by['2026-06-15']).toEqual({ available: 1, reserved: 1, total: 2 });
     expect(by['2026-06-16']).toEqual({ available: 0, reserved: 1, total: 2 });
+  });
+});
+
+describe('fetchWaAvailability daily granularity + labels', () => {
+  test('produces per-night statuses keyed by date, with resolved site labels', async () => {
+    const fetchMock = vi.fn(async (url: string) => {
+      let body: unknown = {};
+      if (url.includes('/api/maps?')) body = [{ mapId: 111 }];
+      else if (url.includes('/api/resourcelocation/resources')) body = { r1: { localizedValues: [{ name: 'A01' }] } };
+      else if (url.includes('/api/availability/map'))
+        // codes: 0=available, 1=reserved, 3=other → three consecutive nights
+        body = { resourceAvailabilities: { r1: [{ availability: 0 }, { availability: 1 }, { availability: 3 }] } };
+      return { ok: true, json: async () => body };
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { by, bySite } = await fetchWaAvailability(-123, 1, new Date('2026-07-01T00:00:00Z'));
+
+    // Label resolved from /api/resourcelocation/resources.
+    expect(bySite['r1'].label).toBe('A01');
+    // Daily (not monthly) per-night statuses, one key per night.
+    expect(bySite['r1'].by_date).toEqual({
+      '2026-07-01': 'available',
+      '2026-07-02': 'reserved',
+      '2026-07-03': 'other',
+    });
+    // Aggregate derived per day from per-site.
+    expect(by['2026-07-01']).toEqual({ available: 1, reserved: 0, total: 1 });
+    expect(by['2026-07-02']).toEqual({ available: 0, reserved: 1, total: 1 });
+    // Must request the daily-grid endpoint.
+    expect(fetchMock.mock.calls.some(([u]) => String(u).includes('getDailyAvailability=true'))).toBe(true);
   });
 });

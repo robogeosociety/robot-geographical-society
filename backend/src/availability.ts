@@ -84,46 +84,69 @@ const WA_AVAIL: Record<number, "available" | "reserved" | "other"> = {
   0: "available", 5: "available", 1: "reserved", 2: "other", 3: "other", 4: "other",
 };
 
+// "YYYY-MM-DD" + n days, as a UTC ISO date string (lexicographically comparable).
+function addDaysISO(iso: string, n: number): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + n));
+  return `${dt.getUTCFullYear()}-${pad(dt.getUTCMonth() + 1)}-${pad(dt.getUTCDate())}`;
+}
+
 export async function fetchWaAvailability(ref: number | string, months = 6, start = new Date()) {
   const base = "https://washington.goingtocamp.com";
   const maps = await getJson(`${base}/api/maps?resourceLocationId=${ref}&bookingCategoryId=0`, `${base}/`);
   const mapIds = (Array.isArray(maps) ? maps : []).map((m: any) => m.mapId).filter(Boolean);
+
+  // Resolve per-resource site labels once per park (resourceId → site name, e.g. "A12").
+  const labels: Record<string, string | null> = {};
+  try {
+    const resmap = await getJson(`${base}/api/resourcelocation/resources?resourceLocationId=${ref}`, `${base}/`);
+    for (const [rid, r] of Object.entries<any>(resmap ?? {})) labels[rid] = r?.localizedValues?.[0]?.name ?? null;
+  } catch {
+    /* labels are best-effort — fall back to null */
+  }
+
   const raw: Record<string, any> = {};
-  const by: ByDate = {};
   const bySite: BySite = {};
   for (const { y, m } of monthStarts(start, months)) {
     const startISO = `${y}-${pad(m)}-01`;
     const end = m === 12 ? `${y + 1}-01-01` : `${y}-${pad(m + 1)}-01`;
-    const c: Counts = { available: 0, reserved: 0, total: 0 };
-    const seen = new Set<string>();
     for (const mapId of mapIds) {
       try {
+        // getDailyAvailability=true → resourceAvailabilities[rid] is a per-night
+        // array (index i = startISO + i days), not a single range rollup.
         const data = await getJson(
-          `${base}/api/availability/map?mapId=${mapId}&startDate=${startISO}&endDate=${end}&bookingCategoryId=0&nights=1`,
+          `${base}/api/availability/map?mapId=${mapId}&startDate=${startISO}&endDate=${end}&bookingCategoryId=0&nights=1&getDailyAvailability=true`,
           `${base}/`,
         );
         raw[`${startISO}:${mapId}`] = data;
-        for (const [rid, av] of Object.entries<any>(data.resourceAvailabilities ?? {})) {
-          if (seen.has(rid) || !av?.length) continue;
-          seen.add(rid);
-          const label = WA_AVAIL[av[0].availability] ?? "other";
-          if (label === "available") c.available++;
-          else if (label === "reserved") c.reserved++;
-          c.total++;
-          // WA labels aren't resolved yet (see CAMPSITE-PLAN.md open questions);
-          // the stable resource id keys a per-site series we can enrich later.
-          const ps = (bySite[rid] ??= { label: null, loop: null, type: null, use: null, by_date: {} });
-          ps.by_date[startISO] = label;
+        for (const [rid, arr] of Object.entries<any>(data.resourceAvailabilities ?? {})) {
+          if (!Array.isArray(arr) || !arr.length) continue;
+          const ps = (bySite[rid] ??= { label: labels[rid] ?? null, loop: null, type: null, use: null, by_date: {} });
+          for (let i = 0; i < arr.length; i++) {
+            const day = addDaysISO(startISO, i);
+            if (day >= end) break; // boundary night belongs to the next month's query
+            ps.by_date[day] = WA_AVAIL[arr[i]?.availability] ?? "other";
+          }
         }
       } catch {
         /* some sub-maps 403 — skip */
       }
     }
-    by[startISO] = c;
+  }
+
+  // Aggregate is a derived sum over per-site (deduped by resourceId across maps), now daily.
+  const by: ByDate = {};
+  for (const ps of Object.values(bySite)) {
+    for (const [day, status] of Object.entries(ps.by_date)) {
+      const c = (by[day] ??= { available: 0, reserved: 0, total: 0 });
+      if (status === "available") c.available++;
+      else if (status === "reserved") c.reserved++;
+      c.total++;
+    }
   }
   return { raw, by, bySite };
 }
 
-export async function fetchAvailability(kind: "rec" | "wa", ref: string | number, months = 6) {
-  return kind === "rec" ? fetchRecAvailability(String(ref), months) : fetchWaAvailability(ref, months);
+export async function fetchAvailability(kind: "rec" | "wa", ref: string | number, months = 6, start = new Date()) {
+  return kind === "rec" ? fetchRecAvailability(String(ref), months, start) : fetchWaAvailability(ref, months, start);
 }

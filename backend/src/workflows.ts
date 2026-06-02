@@ -175,7 +175,12 @@ export class HotDateWatchWorkflow extends WorkflowEntrypoint<WfEnv, WatchParams>
         `check ${checks}`,
         { retries: { limit: 3, delay: "30 seconds", backoff: "exponential" }, timeout: "2 minutes" },
         async () => {
-          const a = await fetchAvailability(p.kind, p.ref, 12);
+          // Fetch only the target date's month (daily granularity for both rec and
+          // wa) instead of a full year — far fewer requests per check, and
+          // a.by[targetDate] now resolves for WA too (was monthly-keyed before).
+          const target = new Date(`${p.targetDate}T00:00:00Z`);
+          const monthStart = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth(), 1));
+          const a = await fetchAvailability(p.kind, p.ref, 1, monthStart);
           const c: Counts = a.by[p.targetDate] ?? { available: 0, reserved: 0, total: 0 };
           const observedAt = new Date().toISOString();
           await this.env.RAW.put(

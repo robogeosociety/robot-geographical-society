@@ -113,7 +113,7 @@ run. `planSchedule` (`src/schedule.ts`) replaces that:
 
 ## 9. Open questions
 
-- **WA site labels:** confirm the `/api/maps` response carries usable per-resource site numbers/loop names; if not, `sites/` carries the resource id and we enrich labels later.
+- ~~**WA site labels / monthly granularity:**~~ *Resolved (#57).* WA now collects daily per-night status via `getDailyAvailability=true` on `/api/availability/map`, and labels resolve from `/api/resourcelocation/resources?resourceLocationId=…` (`resourceId → localizedValues[0].name`, e.g. "A12"). Verified 100% label coverage on a live park.
 - **Watchlist vs. firehose into InfluxDB:** land all site-nights, or only a curated set of target dates? (Leaning curated, to keep InfluxDB cardinality sane — full fidelity always remains in R2.)
 - **`raw/` retention:** once `sites/` is the normalized source of truth, can `raw/` move to a shorter retention window to cap storage growth?
 
