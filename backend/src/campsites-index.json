@@ -266,13 +266,6 @@
 "agency": "usfs"
 },
 {
-"id": "233384",
-"kind": "rec",
-"ref": "233384",
-"name": "Wynoochee Lake",
-"agency": "usfs"
-},
-{
 "id": "-2147483646",
 "kind": "wa",
 "ref": -2147483646,
@@ -424,6 +417,566 @@
 "kind": "wa",
 "ref": -2147483551,
 "name": "Sun Lakes-Dry Falls State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "232857",
+"kind": "rec",
+"ref": "232857",
+"name": "Adams Fork",
+"agency": "usfs"
+},
+{
+"id": "272068",
+"kind": "rec",
+"ref": "272068",
+"name": "Bayview",
+"agency": "usfs"
+},
+{
+"id": "232864",
+"kind": "rec",
+"ref": "232864",
+"name": "Beaver",
+"agency": "usfs"
+},
+{
+"id": "234086",
+"kind": "rec",
+"ref": "234086",
+"name": "Big Creek",
+"agency": "usfs"
+},
+{
+"id": "232023",
+"kind": "rec",
+"ref": "232023",
+"name": "Boulder Creek",
+"agency": "usfs"
+},
+{
+"id": "232051",
+"kind": "rec",
+"ref": "232051",
+"name": "Gold Basin",
+"agency": "usfs"
+},
+{
+"id": "232059",
+"kind": "rec",
+"ref": "232059",
+"name": "Horseshoe Cove",
+"agency": "usfs"
+},
+{
+"id": "233877",
+"kind": "rec",
+"ref": "233877",
+"name": "La Wis Wis",
+"agency": "usfs"
+},
+{
+"id": "250032",
+"kind": "rec",
+"ref": "250032",
+"name": "Lower Falls",
+"agency": "usfs"
+},
+{
+"id": "233862",
+"kind": "rec",
+"ref": "233862",
+"name": "Marble Creek",
+"agency": "usfs"
+},
+{
+"id": "234501",
+"kind": "rec",
+"ref": "234501",
+"name": "Middle Fork",
+"agency": "usfs"
+},
+{
+"id": "233891",
+"kind": "rec",
+"ref": "233891",
+"name": "Mineral Park",
+"agency": "usfs"
+},
+{
+"id": "232074",
+"kind": "rec",
+"ref": "232074",
+"name": "Money Creek",
+"agency": "usfs"
+},
+{
+"id": "232799",
+"kind": "rec",
+"ref": "232799",
+"name": "Moss Creek",
+"agency": "usfs"
+},
+{
+"id": "232852",
+"kind": "rec",
+"ref": "232852",
+"name": "North Fork (Gifford Pinchot NF)",
+"agency": "usfs"
+},
+{
+"id": "232800",
+"kind": "rec",
+"ref": "232800",
+"name": "Oklahoma",
+"agency": "usfs"
+},
+{
+"id": "233103",
+"kind": "rec",
+"ref": "233103",
+"name": "Panther Creek",
+"agency": "usfs"
+},
+{
+"id": "232862",
+"kind": "rec",
+"ref": "232862",
+"name": "Paradise Creek",
+"agency": "usfs"
+},
+{
+"id": "232082",
+"kind": "rec",
+"ref": "232082",
+"name": "Park Creek",
+"agency": "usfs"
+},
+{
+"id": "232895",
+"kind": "rec",
+"ref": "232895",
+"name": "Peterson Prairie",
+"agency": "usfs"
+},
+{
+"id": "233866",
+"kind": "rec",
+"ref": "233866",
+"name": "Red Bridge",
+"agency": "usfs"
+},
+{
+"id": "10363702",
+"kind": "rec",
+"ref": "10363702",
+"name": "Satsop",
+"agency": "usfs"
+},
+{
+"id": "232096",
+"kind": "rec",
+"ref": "232096",
+"name": "Shannon Creek",
+"agency": "usfs"
+},
+{
+"id": "232099",
+"kind": "rec",
+"ref": "232099",
+"name": "Silver Fir",
+"agency": "usfs"
+},
+{
+"id": "232298",
+"kind": "rec",
+"ref": "232298",
+"name": "Silver Springs",
+"agency": "usfs"
+},
+{
+"id": "233863",
+"kind": "rec",
+"ref": "233863",
+"name": "Sulphur Creek",
+"agency": "usfs"
+},
+{
+"id": "234765",
+"kind": "rec",
+"ref": "234765",
+"name": "Sunset Falls",
+"agency": "usfs"
+},
+{
+"id": "233297",
+"kind": "rec",
+"ref": "233297",
+"name": "Swift Creek",
+"agency": "usfs"
+},
+{
+"id": "232033",
+"kind": "rec",
+"ref": "232033",
+"name": "The Dalles",
+"agency": "usfs"
+},
+{
+"id": "232113",
+"kind": "rec",
+"ref": "232113",
+"name": "Tinkham",
+"agency": "usfs"
+},
+{
+"id": "232855",
+"kind": "rec",
+"ref": "232855",
+"name": "Tower Rock",
+"agency": "usfs"
+},
+{
+"id": "232315",
+"kind": "rec",
+"ref": "232315",
+"name": "Troublesome Creek",
+"agency": "usfs"
+},
+{
+"id": "232118",
+"kind": "rec",
+"ref": "232118",
+"name": "Turlo",
+"agency": "usfs"
+},
+{
+"id": "232120",
+"kind": "rec",
+"ref": "232120",
+"name": "Verlot",
+"agency": "usfs"
+},
+{
+"id": "119290",
+"kind": "rec",
+"ref": "119290",
+"name": "Willaby",
+"agency": "usfs"
+},
+{
+"id": "-2147483647",
+"kind": "wa",
+"ref": -2147483647,
+"name": "Alta Lake State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483645",
+"kind": "wa",
+"ref": -2147483645,
+"name": "Bay View State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483452",
+"kind": "wa",
+"ref": -2147483452,
+"name": "Beebe Bridge State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483643",
+"kind": "wa",
+"ref": -2147483643,
+"name": "Belfair State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483641",
+"kind": "wa",
+"ref": -2147483641,
+"name": "Birch Bay State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483640",
+"kind": "wa",
+"ref": -2147483640,
+"name": "Blake Island Marine State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483638",
+"kind": "wa",
+"ref": -2147483638,
+"name": "Bridgeport State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483636",
+"kind": "wa",
+"ref": -2147483636,
+"name": "Brooks Memorial State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483628",
+"kind": "wa",
+"ref": -2147483628,
+"name": "Conconully State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483626",
+"kind": "wa",
+"ref": -2147483626,
+"name": "Daroga State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483625",
+"kind": "wa",
+"ref": -2147483625,
+"name": "Dash Point State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483619",
+"kind": "wa",
+"ref": -2147483619,
+"name": "Fields Spring State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483616",
+"kind": "wa",
+"ref": -2147483616,
+"name": "Fort Ebey State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483608",
+"kind": "wa",
+"ref": -2147483608,
+"name": "Ike Kinswa State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483607",
+"kind": "wa",
+"ref": -2147483607,
+"name": "Illahee State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483604",
+"kind": "wa",
+"ref": -2147483604,
+"name": "Jarrell Cove State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483603",
+"kind": "wa",
+"ref": -2147483603,
+"name": "Joemma Beach State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483478",
+"kind": "wa",
+"ref": -2147483478,
+"name": "Jones Island Marine State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483601",
+"kind": "wa",
+"ref": -2147483601,
+"name": "Kanaskat-Palmer State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483599",
+"kind": "wa",
+"ref": -2147483599,
+"name": "Lake Chelan State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483598",
+"kind": "wa",
+"ref": -2147483598,
+"name": "Lake Easton State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483595",
+"kind": "wa",
+"ref": -2147483595,
+"name": "Lake Sylvia State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483594",
+"kind": "wa",
+"ref": -2147483594,
+"name": "Lake Wenatchee State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483592",
+"kind": "wa",
+"ref": -2147483592,
+"name": "Lewis and Clark State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483590",
+"kind": "wa",
+"ref": -2147483590,
+"name": "Lincoln Rock State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483589",
+"kind": "wa",
+"ref": -2147483589,
+"name": "Manchester State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483588",
+"kind": "wa",
+"ref": -2147483588,
+"name": "Maryhill State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483586",
+"kind": "wa",
+"ref": -2147483586,
+"name": "Millersylvania State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483584",
+"kind": "wa",
+"ref": -2147483584,
+"name": "Mount Spokane State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483503",
+"kind": "wa",
+"ref": -2147483503,
+"name": "Palouse Falls State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483573",
+"kind": "wa",
+"ref": -2147483573,
+"name": "Pearrygin Lake State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483572",
+"kind": "wa",
+"ref": -2147483572,
+"name": "Penrose Point State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483476",
+"kind": "wa",
+"ref": -2147483476,
+"name": "Posey Island Marine State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483570",
+"kind": "wa",
+"ref": -2147483570,
+"name": "Potholes State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483568",
+"kind": "wa",
+"ref": -2147483568,
+"name": "Rainbow Falls State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483567",
+"kind": "wa",
+"ref": -2147483567,
+"name": "Rasar State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483560",
+"kind": "wa",
+"ref": -2147483560,
+"name": "Scenic Beach State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483559",
+"kind": "wa",
+"ref": -2147483559,
+"name": "Schafer State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483554",
+"kind": "wa",
+"ref": -2147483554,
+"name": "Spencer Spit State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483549",
+"kind": "wa",
+"ref": -2147483549,
+"name": "Twanoh State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483548",
+"kind": "wa",
+"ref": -2147483548,
+"name": "Twenty-Five Mile Creek State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483547",
+"kind": "wa",
+"ref": -2147483547,
+"name": "Twin Harbors State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483544",
+"kind": "wa",
+"ref": -2147483544,
+"name": "Wanapum Recreation Area",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483543",
+"kind": "wa",
+"ref": -2147483543,
+"name": "Wenatchee Confluence State Park",
+"agency": "wa-state-parks"
+},
+{
+"id": "-2147483540",
+"kind": "wa",
+"ref": -2147483540,
+"name": "Yakima Sportsman State Park",
 "agency": "wa-state-parks"
 }
 ]
