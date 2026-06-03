@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import campsites from './campsites-index.json';
-import { collectSite, HEARTBEAT_KEY, type WfEnv } from './workflows';
+import { collectSite, HEARTBEAT_KEY, DLQ_PREFIX, listDlqIds, type WfEnv, type DlqEntry } from './workflows';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
 export { CollectorLoop, HotDateWatchWorkflow } from './workflows';
@@ -73,8 +73,32 @@ app.get('/scheduler/status', async (c) => {
     ageSeconds: Math.round((now - hb.lastWakeMs) / 1000),
     collectedTotal: hb.collectedTotal,
     sites: hb.sites,
+    inactive: hb.inactive ?? 0,
     overdue: dueVals.filter((d) => d <= now).length,
   });
+});
+
+// The dead-letter queue: sites quarantined after too many consecutive failures.
+// Each entry is dlq/<id>.json in R2 (the source of truth for "inactive").
+app.get('/collect/dlq', async (c) => {
+  const list = await c.env.RAW.list({ prefix: DLQ_PREFIX });
+  const entries = await Promise.all(
+    list.objects.map(async (o) => (await c.env.RAW.get(o.key))?.json<DlqEntry>()),
+  );
+  const dlq = entries.filter(Boolean) as DlqEntry[];
+  return c.json({ count: dlq.length, sites: dlq.sort((a, b) => b.since - a.since) });
+});
+
+// Reactivate a quarantined site: drop its DLQ entry. The CollectorLoop reconciles
+// against the DLQ each wake, so the site is re-armed for collection on the next
+// wake (or sooner via the daily probe). No-op-safe if the id isn't quarantined.
+app.post('/collect/reactivate', async (c) => {
+  const id = c.req.query('id');
+  if (!id) return c.json({ error: 'need ?id=<campsite id>' }, 400);
+  const key = `${DLQ_PREFIX}${id}.json`;
+  const existed = (await c.env.RAW.head(key)) !== null;
+  await c.env.RAW.delete(key);
+  return c.json({ status: existed ? 'reactivated' : 'not-quarantined', id });
 });
 
 // Ad-hoc one-shot collection of a single campsite (backfill/debug) — independent
