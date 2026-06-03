@@ -17,8 +17,9 @@ bucket_name = "campsite-raw"
 
 # Per-run/per-site collector coverage → queried by the observability "Collector
 # history" Grafana dashboard via the AE SQL API. Schema:
-#   index=site.id  blob1=date blob2=agency blob3=kind blob4=name blob5=status(ok|failed)
-#   double1=datesCollected  double2=durationMs
+#   index=site.id  blob1=date blob2=agency blob3=kind blob4=name
+#   blob5=status(ok|failed|inactive|reactivated)  double1=datesCollected (or failure
+#   count on an "inactive" row)  double2=durationMs
 [[analytics_engine_datasets]]
 binding = "COLLECTOR_AE"
 dataset = "campsite_collector"
@@ -46,6 +47,14 @@ dataset = "campsite_watch"
 [vars]
 # The one knob: every campsite is refreshed within this many days. No fixed schedule.
 MAX_STALENESS_DAYS = "2"
+
+# Consecutive failures before a site is quarantined: removed from the schedule,
+# written to the DLQ (dlq/<id>.json in R2), and emitted as an "inactive" state
+# change in the campsite_collector AE dataset. Failed sites back off exponentially
+# (10m, 20m, 40m, …) until they reach this count, so a permanently-dead site stops
+# being retried instead of failing ~144×/day. A daily probe (or POST
+# /collect/reactivate?id=) can revive it.
+INACTIVE_AFTER_FAILURES = "5"
 
 # No cron. The CollectorLoop self-perpetuates via continue-as-new; a hard crash
 # is surfaced by Grafana → Discord staleness alerting (observability repo), and a

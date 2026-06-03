@@ -12,7 +12,22 @@
  */
 
 export type DueMap = Record<string, number>; // siteId → epoch ms deadline
+export type FailMap = Record<string, number>; // siteId → consecutive failure count
 type S = { id: string; kind: string };
+
+/**
+ * Exponential retry delay for a site that has failed `fails` times in a row
+ * (fails ≥ 1): baseMs, 2·baseMs, 4·baseMs … capped at capMs. A transient outage
+ * that recovers within an hour or so is retried progressively later instead of
+ * being hammered on a fixed cadence, so a single broken site can never make up a
+ * large share of collection attempts. The caller adds ±jitter to avoid lockstep.
+ */
+export function retryBackoffMs(fails: number, baseMs: number, capMs: number): number {
+  const n = Math.max(1, fails);
+  // 2^(n-1) without overflow at large n: clamp the exponent, then cap the result.
+  const factor = n - 1 >= 30 ? Infinity : 2 ** (n - 1);
+  return Math.min(capMs, baseMs * factor);
+}
 
 export function hashStr(s: string): number {
   let h = 2166136261 >>> 0;
@@ -50,8 +65,8 @@ export function interleaveBySystem<T extends S>(sites: T[]): T[] {
  * baseline), and spread the remainder uniformly across [now, now+X) so steady
  * state is evenly distributed and interleaved across systems.
  */
-export function seedDue<T extends S>(sites: T[], X: number, now: number, prime = 8): DueMap {
-  const order = interleaveBySystem(sites);
+export function seedDue<T extends S>(sites: T[], X: number, now: number, prime = 8, inactive?: Set<string>): DueMap {
+  const order = interleaveBySystem(activeOnly(sites, inactive));
   const due: DueMap = {};
   order.forEach((s, r) => {
     due[s.id] = r < prime ? now : now + Math.round((r / order.length) * X);
@@ -59,9 +74,13 @@ export function seedDue<T extends S>(sites: T[], X: number, now: number, prime =
   return due;
 }
 
-/** Recovery: keep deadlines for known sites; spread any new sites across [now, now+X). */
-export function mergeDue<T extends S>(prev: DueMap, sites: T[], X: number, now: number): DueMap {
-  const order = interleaveBySystem(sites);
+/**
+ * Recovery: keep deadlines for known sites; spread any new sites across [now, now+X).
+ * Inactive (quarantined) sites are excluded entirely — they live in the DLQ, not the
+ * due map, so a restart never resurrects a site we deliberately disabled.
+ */
+export function mergeDue<T extends S>(prev: DueMap, sites: T[], X: number, now: number, inactive?: Set<string>): DueMap {
+  const order = interleaveBySystem(activeOnly(sites, inactive));
   const due: DueMap = {};
   order.forEach((s, r) => {
     due[s.id] = s.id in prev ? prev[s.id] : now + Math.round((r / order.length) * X);
@@ -69,11 +88,20 @@ export function mergeDue<T extends S>(prev: DueMap, sites: T[], X: number, now: 
   return due;
 }
 
-/** Sites whose deadline is within `now + slackMs`, soonest-first, capped at maxBatch. */
+/** Drop quarantined sites from a fleet list. */
+function activeOnly<T extends S>(sites: T[], inactive?: Set<string>): T[] {
+  return inactive && inactive.size ? sites.filter((s) => !inactive.has(s.id)) : sites;
+}
+
+/**
+ * Sites whose deadline is within `now + slackMs`, soonest-first, capped at maxBatch.
+ * A site absent from `due` (e.g. quarantined) is never selected — absence is not
+ * "infinitely overdue".
+ */
 export function selectDue<T extends S>(due: DueMap, sites: T[], now: number, slackMs: number, maxBatch: number): string[] {
   return sites
-    .filter((s) => (due[s.id] ?? 0) <= now + slackMs)
-    .sort((a, b) => (due[a.id] ?? 0) - (due[b.id] ?? 0))
+    .filter((s) => due[s.id] !== undefined && due[s.id] <= now + slackMs)
+    .sort((a, b) => due[a.id] - due[b.id])
     .slice(0, maxBatch)
     .map((s) => s.id);
 }
