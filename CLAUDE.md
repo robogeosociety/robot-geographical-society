@@ -22,6 +22,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `npm run build` — production build
 - **Campsite data:** `data/campsites.json` — GeoJSON FeatureCollection
 
+## Availability data (per-site, per-date)
+
+The collector (`backend/`) banks daily availability snapshots to the `campsite-raw` R2 bucket. Three objects per campground per collection day, **keyed by provider id** — rec.gov campground id (e.g. `233864`) or WA goingtocamp resourceLocation id (negative, e.g. `-2147483476`); **not** the `usfs/…`/`wa/…` slug from `campsites.json`:
+
+- `raw/<date>/<agency>/<id>.json` — untouched upstream payload (audit)
+- `summary/<date>/<id>.json` — campground rollup: `by_date → {available, reserved, total}`
+- `sites/<date>/<id>.json` — **per individual site**: `sites[siteId] → {label, loop, type, use, by_date}`, where `by_date["YYYY-MM-DD"]` is `"available" | "reserved" | "other"`
+
+"Remaining availability by site and date" is therefore a direct lookup in `sites/`. The `sites/` shape is normalized identically across rec.gov and WA. Caveats (verified against live R2, 2026-06):
+
+- **Daily granularity** — one status per night. Booking velocity = diff successive daily snapshots.
+- **Staleness ≤ ~2 days** — the collector refreshes one site per wake across the freshness window, so any one campground may be 1–2 days behind.
+- **WA leaves `type`/`use` null** (rec.gov populates them); `loop` is enriched from the goingtocamp maps API, `label` from the resources API.
+- **Window length varies by source** — seasonal USFS sites end at season close (~Sept); WA runs the full ~6 months forward.
+- **`"other"`** = neither bookable nor a confirmed reservation (not-yet-released / not-reservable); seen on rec.gov.
+- Quarantined sites live in `dlq/<id>.json` and stop collecting until reactivated.
+
+Collection owns → R2; the `observability` repo owns R2 → InfluxDB → Grafana. See `backend/README.md`.
+
 ## Jupyter Notebook (campsite data sync)
 
 The data sync notebook lives at `data/sync_campsites.ipynb` and runs via `uv` with the `data/` project.
