@@ -11,7 +11,7 @@ export type Counts = { available: number; reserved: number; total: number };
 export type ByDate = Record<string, Counts>;
 
 // Per-individual-campsite detail — preserved instead of collapsed into Counts.
-// `by_date` mirrors the aggregate's keys (daily for rec.gov, monthly for WA).
+// `by_date` mirrors the aggregate's keys (daily for both rec.gov and WA).
 export type SiteStatus = "available" | "reserved" | "other";
 export type PerSite = {
   label: string | null; // site number / loop label (e.g. "A012"); null until enriched (WA)
@@ -94,7 +94,14 @@ function addDaysISO(iso: string, n: number): string {
 export async function fetchWaAvailability(ref: number | string, months = 6, start = new Date()) {
   const base = "https://washington.goingtocamp.com";
   const maps = await getJson(`${base}/api/maps?resourceLocationId=${ref}&bookingCategoryId=0`, `${base}/`);
-  const mapIds = (Array.isArray(maps) ? maps : []).map((m: any) => m.mapId).filter(Boolean);
+  const mapsArr: any[] = Array.isArray(maps) ? maps : [];
+  const mapIds = mapsArr.map((m) => m.mapId).filter(Boolean);
+
+  // A "map" is a loop/area; its title is the loop name (e.g. "Overflow").
+  const loopByMapId: Record<string, string | null> = {};
+  for (const m of mapsArr) {
+    if (m?.mapId != null) loopByMapId[m.mapId] = m?.localizedValues?.[0]?.title ?? null;
+  }
 
   // Resolve per-resource site labels once per park (resourceId → site name, e.g. "A12").
   const labels: Record<string, string | null> = {};
@@ -121,7 +128,7 @@ export async function fetchWaAvailability(ref: number | string, months = 6, star
         raw[`${startISO}:${mapId}`] = data;
         for (const [rid, arr] of Object.entries<any>(data.resourceAvailabilities ?? {})) {
           if (!Array.isArray(arr) || !arr.length) continue;
-          const ps = (bySite[rid] ??= { label: labels[rid] ?? null, loop: null, type: null, use: null, by_date: {} });
+          const ps = (bySite[rid] ??= { label: labels[rid] ?? null, loop: loopByMapId[mapId] ?? null, type: null, use: null, by_date: {} });
           for (let i = 0; i < arr.length; i++) {
             const day = addDaysISO(startISO, i);
             if (day >= end) break; // boundary night belongs to the next month's query

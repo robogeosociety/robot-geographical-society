@@ -39,8 +39,31 @@ flowchart LR
 | `scheduled()` | cron trigger | create the daily collector workflow |
 | `CampsiteCollectorWorkflow` | Workflow `COLLECTOR_WF` | one `step.do` per site (per-step retry/resume) → R2 |
 | `HotDateWatchWorkflow` | Workflow `WATCH_WF` | adaptive `step.sleep` watch of one (site, date) → R2 `watch/` |
-| `RAW` | R2 `campsite-raw` | `raw/`, `summary/<date>/<id>.json`, `watch/<date>/<id>/<ts>.json` |
+| `RAW` | R2 `campsite-raw` | `raw/`, `summary/<date>/<id>.json`, `sites/<date>/<id>.json`, `watch/<date>/<id>/<ts>.json`, `dlq/<id>.json` |
 | `CAMPSITES` | KV | the campsite API |
+
+## R2 object layout
+
+Objects are **keyed by provider id** — rec.gov campground id (e.g. `233864`) or WA
+goingtocamp resourceLocation id (negative, e.g. `-2147483476`) — **not** the
+`usfs/…`/`wa/…` slug from `campsites.json`.
+
+| Prefix | Shape | Notes |
+|---|---|---|
+| `raw/<date>/<agency>/<id>.json` | untouched upstream payload | audit trail; two un-normalized schemas (rec.gov vs goingtocamp) |
+| `summary/<date>/<id>.json` | `{id,name,agency,kind, by_date: {date → {available,reserved,total}}}` | campground rollup; consumed by the Mac ingest |
+| `sites/<date>/<id>.json` | `{id,name,agency,kind,collected_date, sites: {siteId → {label,loop,type,use, by_date}}}` | **per individual site**; `by_date[date]` ∈ `available\|reserved\|other` |
+| `watch/<date>/<id>/<ts>.json` | dense adaptive watch point | hot-date burn-down |
+| `dlq/<id>.json` | quarantine marker | presence == site skipped until reactivated |
+
+`summary/` and `sites/` are normalized **identically across both providers** —
+read either through one code path keyed on `by_date[date]`. Verified against live
+R2 (2026-06); caveats for consumers:
+
+- **Daily granularity** for both sources — one status per night. (Booking velocity = diff successive daily `sites/` snapshots.)
+- **WA leaves `type`/`use` null** (rec.gov populates them). WA `loop` is enriched from the maps API (`map.localizedValues[0].title`); `label` from the resources API. Don't assume `type` is present.
+- **Window length varies**: seasonal USFS sites end at season close (~Sept); WA runs the full ~6 months forward.
+- **`"other"`** = neither bookable nor a confirmed reservation (not-yet-released / not-reservable); observed on rec.gov.
 
 ## Data flow — daily snapshot
 
@@ -58,7 +81,7 @@ sequenceDiagram
   loop step.do per site — durable, retried independently
     WF->>S: plain fetch availability (next 6 months)
     S-->>WF: JSON (per-site per-date status)
-    WF->>R2: PUT raw/<date>/<agency>/<id>.json + summary/<date>/<id>.json
+    WF->>R2: PUT raw/ + summary/<date>/<id>.json + sites/<date>/<id>.json
   end
   Note over M,G: later that morning (decoupled)
   M->>R2: GET summary/<date>/*

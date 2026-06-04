@@ -69,7 +69,7 @@ describe('fetchWaAvailability daily granularity + labels', () => {
   test('produces per-night statuses keyed by date, with resolved site labels', async () => {
     const fetchMock = vi.fn(async (url: string) => {
       let body: unknown = {};
-      if (url.includes('/api/maps?')) body = [{ mapId: 111 }];
+      if (url.includes('/api/maps?')) body = [{ mapId: 111, localizedValues: [{ title: 'Overflow' }] }];
       else if (url.includes('/api/resourcelocation/resources')) body = { r1: { localizedValues: [{ name: 'A01' }] } };
       else if (url.includes('/api/availability/map'))
         // codes: 0=available, 1=reserved, 3=other → three consecutive nights
@@ -82,6 +82,8 @@ describe('fetchWaAvailability daily granularity + labels', () => {
 
     // Label resolved from /api/resourcelocation/resources.
     expect(bySite['r1'].label).toBe('A01');
+    // Loop enriched from the maps API (map.localizedValues[0].title).
+    expect(bySite['r1'].loop).toBe('Overflow');
     // Daily (not monthly) per-night statuses, one key per night.
     expect(bySite['r1'].by_date).toEqual({
       '2026-07-01': 'available',
