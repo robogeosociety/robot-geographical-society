@@ -50,6 +50,19 @@ The data sync notebook lives at `data/sync_campsites.ipynb` and runs via `uv` wi
 - **Password:** `booknote`
 - **Context:** See `data/NOTEBOOKS.md` for full details
 
+## Pull request descriptions
+
+PR descriptions follow the "newspaper / information-pyramid" framework vendored at
+**[`.github/pr-framework/`](.github/pr-framework/)** — a single Wired-style panel
+(kicker → headline → dek → masthead → narrative lede → punchy sections → vertical mermaid
+/ linked figures → checkpoint task list → verification → risk) that fits **1–2 iPad-mini
+pages** (4 for very complex code changes). Build the body to `PR_FRAMEWORK.md`, validate
+with `python3 .github/pr-framework/validate_pr.py <body.md>`, then `gh pr edit
+--body-file`. **Regenerate the whole description from the full diff** on every push and on
+readability feedback — never append. The PR **title mirrors the headline, prefixed with
+the change type** (e.g. `feat: …`). This repo is **private**, so link committed figures
+by their `blob/<sha>/…` URL rather than embedding (inline images need user-attachments).
+
 ## Development Protocol
 
 See **[ISSUES.md](./ISSUES.md)** for the full issue lifecycle protocol (workspace isolation, verification steps, PR process, and deployment).
