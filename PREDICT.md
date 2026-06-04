@@ -1,6 +1,6 @@
 # PREDICT.md — Per-site sell-out prediction
 
-**Status:** Design + **C0 implemented** (`predict/person_period.py`). C1+ pending — they depend on `sites/` collection (CAMPSITE-PLAN.md §8, shipped) accumulating history.
+**Status:** Design + **C0–C2 implemented** in `predict/` (builder, KM baseline, hazard model — validated on a synthetic generator with planted ground truth, since real `sites/` history is still ~empty). C3+ and the readiness dashboard (§10) pending real history accumulating (CAMPSITE-PLAN.md §8, shipped).
 **Goal:** For a specific site `S` and a specific stay-date `D`, produce a *calibrated probability* that `S` is still bookable on `D` as a function of time — and from it a median sell-out ETA with uncertainty.
 **Non-goal:** A deterministic "it sells out at 09:04:12 on Tuesday" timestamp. Cadence and one-sample-per-peak (§2) make that unachievable; we predict a distribution, not an instant.
 
@@ -131,10 +131,41 @@ Output per cell: a survival curve + median ETA + risk band — *"~85% gone withi
 
 ## 9. Where it lives
 
-C0 lives in **`predict/`** in this repo: pure-stdlib table building with no cloud dependency (reads a local mirror of `sites/`), so it is trivially testable and portable. Heavier modeling (C2+) is **downstream of R2** and may move to the ingest/analysis side (the `observability` repo owns R2 → InfluxDB → Grafana; see `backend/README.md` boundary) once it needs the S3 loader, pandas, and a training runtime. The collector Worker stays out of it.
+The model lives in **`predict/`** in this repo, numpy-only (C0 is pure stdlib), so the whole pipeline is testable offline with no cloud or sklearn dependency. The synthetic generator feeds the *real* C0 builder, so tests exercise the actual code path. When training needs the S3 loader / a real runtime it can move downstream (the `observability` repo owns R2 → InfluxDB → Grafana; see `backend/README.md` boundary). The collector Worker stays out of it.
 
-- `predict/person_period.py` — C0 builder (+ `predict/tests/`).
+- `predict/person_period.py` — C0 builder.
+- `predict/survival.py` — C1 Kaplan–Meier + cohorts.
+- `predict/hazard.py` — C2 discrete-time logistic hazard + survival-curve inference.
+- `predict/metrics.py` — AUC / Brier / ECE.
+- `predict/evaluate.py` — leakage-safe C1-vs-C2 harness + runnable demo.
+- `predict/readiness.py` — the §10 dashboard gauge value.
+- `predict/synth.py` — planted-truth generator for validation.
 - `predict/make_figures.py` — the illustrative accuracy figures above.
+
+## 10. Predictions dashboard — the readiness gauge
+
+A **separate Grafana dashboard** (distinct from the existing Campsite Availability board), provisioned in `observability/campsites/dashboards/`. Its headline panel is a **readiness gauge** that fills as collection deepens — answering "can we trust predictions yet?" before any number is shown to a user.
+
+**Gauge value** (`predict/readiness.py`, emitted as `campsite_predict_readiness`): the geometric mean of three 0–1 components, so one lagging term holds the gauge down:
+
+```
+events   = min(1, observed_sellouts / EVENTS_TARGET)     # enough events to fit
+coverage = active_cells / total_cells                    # cells with ≥2 snapshots
+depth    = min(1, median_intervals_per_cell / DEPTH_TARGET)
+readiness = (events · coverage · depth) ^ (1/3)
+```
+
+**Gauge thresholds** map to the bands the model output is gated on:
+
+| Band | Readiness | Meaning | Dashboard behaviour |
+|---|---|---|---|
+| 🔴 insufficient | `< 0.33` | not enough history | predictions hidden / "collecting…" |
+| 🟡 directional | `0.33–0.80` | usable trends, wide bands | show with a "low-confidence" badge |
+| 🟢 reliable | `≥ 0.80` | calibrated | show ETAs + risk bands |
+
+Today it reads **0.0 (🔴 insufficient)** on real data and **0.98 (🟢 reliable)** on full synthetic history — the gauge tracks exactly as intended.
+
+**Supporting panels:** events accumulated over time (with the `EVENTS_TARGET` line), coverage & median-depth trends, per-cohort event counts (which cohorts are still data-starved), and C2-vs-C1 AUC/Brier once enough events exist to backtest. Emission piggybacks on the existing R2 → InfluxDB ingest (`observability/campsites/`); no new collector work.
 
 ---
 
@@ -145,10 +176,11 @@ Each is independently shippable and has an acceptance gate. Don't advance until 
 | # | Checkpoint | Deliverable | Acceptance gate |
 |---|---|---|---|
 | **C0** ✅ | **Data assembly** | `predict/person_period.py` walks a local mirror of `sites/<date>/*`, joins `campsites.json` for `booking_advance_days`, emits the §4 table (CSV) + a summary. 9 unit tests cover the interval/event/censoring logic. | **Done.** Builds end-to-end on real R2 data — 14,550 cells across the current 4-day window, 0 events (correct: <2 snapshots/cell so far, no at-risk intervals yet → 9,487 never-available, 5,063 right-censored). Concretely confirms history is the gate. Next-run deltas land here as collection deepens. |
-| **C1** | **EDA + KM baseline** | Kaplan–Meier survival curves by cohort (DOW × season × popularity tier), on the `days_since_release` clock. | Curves show expected ordering — summer weekends/holidays burn down faster than shoulder weeknights. This is the naive benchmark for C2. |
-| **C2** | **Baseline hazard model** | Discrete-time GBT hazard (§6) + penalized-logistic reference, trained on the §5 features with cohort-blocked CV (§7). | Beats the C1 KM-median benchmark on time-dependent AUC **and** Brier; reliability curve within tolerance (calibrated). |
+| **C1** ✅ | **EDA + KM baseline** | `predict/survival.py` — KM survival curves by cohort on the `days_since_release` clock + the cohort-marginal benchmark for C2. | **Done** (synthetic): weekend median ETA **5d** vs weekday **21d**, `S(30)` 0.05 vs 0.37 — expected ordering holds. Hand-checked KM in tests. |
+| **C2** ✅ | **Baseline hazard model** | `predict/hazard.py` — penalized-logistic discrete-time hazard (GBT a later drop-in) + survival-curve/ETA inference; `predict/evaluate.py` does the leakage-safe (split-by-target-date) C1-vs-C2 comparison. | **Done** (synthetic): beats C1 on all three — AUC **0.72 vs 0.64**, Brier **0.0448 vs 0.0461**, ECE **0.0013 vs 0.0020**. Re-run on real data once readiness (§10) clears 🟡. |
+| **D** ⏳ | **Readiness dashboard (§10)** | `predict/readiness.py` (gauge value, done + tested) → emit `campsite_predict_readiness` from the ingest; provision a Grafana board in `observability/campsites/dashboards/`. | Gauge fills as history accrues; flips 🔴→🟡→🟢 at the §10 thresholds. **Gauge value implemented (0.0 real / 0.98 synthetic); Grafana panel + emission pending.** |
 | **C3** | **Per-cell predictions** | Batch job writing `predict/<id>.json` (survival curve + median ETA + risk band per `(site, D)`); spot-check a few hot cells against reality. | Outputs produced for all active cells; manual spot-checks plausible (known flash dates show short ETAs, sleepy weeknights long). |
 | **C4** | **Watch-informed flash model** | Incorporate `watch/` dense points; report metrics sliced by `is_watched`. | Measurable lift on watched (flash) cells vs daily-only — quantifies the §8 cadence limit and the value of expanding `watch/`. |
 | **C5** | **(Stretch) Recurrence + pooling** | Recurrent-events extension for cancellation/re-release; hierarchical partial pooling for sparse/new sites; year-2 trend term once a second year exists. | Re-release predictions calibrated; new-site predictions fall back to cohort priors without blowing up. |
 
-**Critical path:** C0 → C1 → C2 → C3. C4/C5 are enhancements; C4 should be prioritized if flash-date accuracy is the product goal, since C2/C3 on daily-only data will underperform exactly where users care most.
+**Critical path:** C0 → C1 → C2 → C3. C1/C2 are code-complete and validated on synthetic data; they re-run on real data once the **readiness gauge (D)** clears 🟡, which is the honest gate on trusting any output. C4/C5 are enhancements; C4 should be prioritized if flash-date accuracy is the product goal, since C2/C3 on daily-only data will underperform exactly where users care most.
