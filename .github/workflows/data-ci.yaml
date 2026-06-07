@@ -32,7 +32,9 @@ jobs:
         run: uv run playwright install --with-deps chromium
 
       - name: Generate GeoJSON (validate + STAC-shaped FeatureCollection)
-        run: USER=ci uv run refresh run --skip-availability
+        run: USER=ci uv run refresh run
 
       - name: Run Tests
-        run: uv run pytest
+        # Deselect `slow` tests — they hit live upstream APIs (recreation.gov /
+        # goingtocamp.com) whose WAFs block GitHub runner IPs. Run them locally.
+        run: uv run pytest -m "not slow"

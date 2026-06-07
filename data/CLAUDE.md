@@ -2,18 +2,19 @@
 
 This file instructs Claude Code on how to work with campsite data in this project.
 
-> **Also read:** [`NOTEBOOKS.md`](./NOTEBOOKS.md) — Jupyter server setup, access URLs, passwords, and notebook cell reference.
+> **Availability** (per-site, per-date) is collected by the Cloudflare collector
+> (`backend/`) into the `campsite-raw` R2 bucket — not synced here. This pipeline
+> only compiles campsite **metadata** into the map's GeoJSON.
 
 ## Source of truth
 
 Individual campsite files (`data/{agency}/WA/{name}/index.md` or `data/{agency}/WA/{park}/{name}/index.md`) are the **source of truth**. The GeoJSON (`data/campsites.json`) is a **derived artifact** — regenerate it from the markdown files, never edit it directly.
 
-To sync after any edits:
+To sync after any edits (validates first, halts on any error, then writes `campsites.json`):
 ```bash
-uv run --project data jupyter nbconvert --to notebook --inplace --execute data/sync_campsites.ipynb
+node scripts/sync-geojson.js     # from the repo root
+# or, from data/:  uv run refresh run
 ```
-
-The notebook validates first and halts before writing if any errors are found. Outputs are written back into the notebook so you can inspect results inline.
 
 ---
 
@@ -96,7 +97,7 @@ Link directly to the campground page on the agency website, not the homepage. Ex
 ## Updating existing data
 
 1. Edit the relevant `index.md` field(s)
-2. Run the sync notebook (see above)
+2. Run `node scripts/sync-geojson.js` to regenerate the GeoJSON
 3. Commit both the `index.md` change and the updated `data/campsites.json`
 
 ## Validation checklist

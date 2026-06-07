@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Core Features (Functional Prototype)
 - **Map interface** built on Mapbox GL JS showing campsites currently open for reservation
 - **Static JSON dataset** of all campsites with metadata (site count, parameters, links)
-- **Static RSS feed** of reservation opening dates for tracked campsites (year-round sites excluded)
+- **Cloudflare availability collector** banking daily per-site, per-date snapshots to the `campsite-raw` R2 bucket
 - **Rich popups** per campsite: site count, site types (RV/tent/bike-in/parking), ICS calendar links, and links to official pages
 
 
@@ -41,14 +41,13 @@ The collector (`backend/`) banks daily availability snapshots to the `campsite-r
 
 Collection owns → R2; the `observability` repo owns R2 → InfluxDB → Grafana. See `backend/README.md`.
 
-## Jupyter Notebook (campsite data sync)
+## Campsite data sync
 
-The data sync notebook lives at `data/sync_campsites.ipynb` and runs via `uv` with the `data/` project.
-
-- **Port:** 8888
-- **Launch:** `uv run --project data jupyter notebook --no-browser --ip=0.0.0.0 --ServerApp.password='argon2:$argon2id$v=19$m=10240,t=10,p=8$+SyoDRzfMuDouwfYkxjM/w$aUq4FoD50I4NBp3oKMBawGjFkHfFjwLyf9xsKnLEOBg' data/sync_campsites.ipynb`
-- **Password:** `booknote`
-- **Context:** See `data/NOTEBOOKS.md` for full details
+The campsite catalog is editorial markdown under `data/campsites/` (source of
+truth); `data/campsites.json` is the derived GeoJSON the map imports. Regenerate
+it from the markdown with `node scripts/sync-geojson.js` (or `uv run refresh run`
+from `data/`). Availability is no longer synced locally — the Cloudflare collector
+owns it (see the "Availability data" section above). Full context: `data/CLAUDE.md`.
 
 ## Pull request descriptions
 

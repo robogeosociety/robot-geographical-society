@@ -8,7 +8,7 @@ The Robot Geographical Society performs the same job using computers, foregoing 
 ## Functional Prototype
 * A map interface (built on Mapbox GL JS) allowing a user to view campsites currently open to reserve, hosted by either Washington State Parks, USFS or the National Park Service
 * A statically hosted JSON dataset with all campsites and metadata
-* A statically hosted RSS feed with opening dates for reservations for all tracked campsites. All year campsites are not included
+* Daily per-site, per-date availability collected by the Cloudflare collector into the `campsite-raw` R2 bucket (see [Collector Architecture](#collector-architecture))
 * Rich popups with the following data for each campsite:
     * Number of sites
     * Site parameters (RV, tent, bike-in, parking)
