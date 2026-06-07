@@ -1,0 +1,9 @@
+# Terraform state holds the service-token secret — never commit it.
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+crash.log
+crash.*.log
+
+# Keep .terraform.lock.hcl committed for reproducible inits.
