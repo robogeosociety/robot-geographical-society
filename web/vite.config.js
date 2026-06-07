@@ -8,26 +8,24 @@ export default defineConfig(({ mode }) => {
   // bundle (only VITE_-prefixed vars are). This is what keeps the backend token off
   // the browser. See web/BACKEND_AUTH.md.
   const env = loadEnv(mode, process.cwd(), '');
-  const backend = env.BACKEND_URL;
-
-  // Same-origin `/api` proxy → the deployed Worker. When the Worker sits behind
-  // Cloudflare Access, the dev server attaches a service token as request headers
-  // here (server-side), so the browser authenticates without ever holding the
-  // secret. No BACKEND_URL set → no proxy: the app talks to the local `wrangler
-  // dev` backend directly, exactly as before (unchanged for CI/e2e).
-  const proxy = backend
-    ? {
-        '/api': {
-          target: backend,
-          changeOrigin: true,
-          rewrite: (p) => p.replace(/^\/api/, ''),
-          headers: {
-            ...(env.CF_ACCESS_CLIENT_ID && { 'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID }),
-            ...(env.CF_ACCESS_CLIENT_SECRET && { 'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET }),
-          },
-        },
-      }
-    : undefined;
+  // The app always talks to the backend via the same-origin `/api` proxy (see
+  // src/apiBase.js). Target the deployed Access-protected Worker when BACKEND_URL is
+  // set, else a local `wrangler dev` backend. When the Access service-token creds are
+  // present (CF_ACCESS_CLIENT_ID/SECRET), the dev server attaches them as request
+  // headers here — server-side, so the browser never holds the secret, and the same
+  // path works against the gated backend. See web/BACKEND_AUTH.md.
+  const backend = env.BACKEND_URL || 'http://127.0.0.1:8787';
+  const proxy = {
+    '/api': {
+      target: backend,
+      changeOrigin: true,
+      rewrite: (p) => p.replace(/^\/api/, ''),
+      headers: {
+        ...(env.CF_ACCESS_CLIENT_ID && { 'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID }),
+        ...(env.CF_ACCESS_CLIENT_SECRET && { 'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET }),
+      },
+    },
+  };
 
   return {
     plugins: [react()],
