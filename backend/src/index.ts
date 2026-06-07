@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import campsites from './campsites-index.json';
 import { collectSite, HEARTBEAT_KEY, DLQ_PREFIX, listDlqIds, type WfEnv, type DlqEntry } from './workflows';
+import { readApi } from './read-api';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
 export { CollectorLoop, HotDateWatchWorkflow } from './workflows';
@@ -25,6 +26,9 @@ export const app = new Hono<{ Bindings: Bindings }>();
 app.use('/*', cors());
 
 app.get('/', (c) => c.text('Robot Geographical Society Backend API'));
+
+// Read-only availability + collector-health endpoints (the two-view webapp).
+app.route('/', readApi);
 
 // GET /campsite/:id - Fetch individual campsite details (agency-prefixed slash ids).
 app.get('/campsite/:id{.+}', async (c) => {
