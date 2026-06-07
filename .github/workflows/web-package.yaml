@@ -22,6 +22,9 @@ jobs:
         working-directory: web
         run: npm install
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Sync GeoJSON data
         run: node scripts/sync-geojson.js
 

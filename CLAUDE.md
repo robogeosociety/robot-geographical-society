@@ -43,11 +43,14 @@ Collection owns → R2; the `observability` repo owns R2 → InfluxDB → Grafan
 
 ## Campsite data sync
 
-The campsite catalog is editorial markdown under `data/campsites/` (source of
-truth); `data/campsites.json` is the derived GeoJSON the map imports. Regenerate
-it from the markdown with `node scripts/sync-geojson.js` (or `uv run refresh run`
-from `data/`). Availability is no longer synced locally — the Cloudflare collector
-owns it (see the "Availability data" section above). Full context: `data/CLAUDE.md`.
+`backend/src/campsites-index.json` is the **authoritative campsite inventory**
+(collector fleet + `collect: false` map-only extras; each entry carries a stable
+cross-agency `guid`). `data/campsites.json` is the derived GeoJSON the map imports —
+regenerate it with `node scripts/sync-geojson.js` (or `uv run doit geojson` from
+`data/`). The inventory's editorial metadata is enriched from the Obsidian **camping**
+vault by the obsidian-automations `campsite_inventory` doit task. Availability is
+collected by the Cloudflare collector (see the "Availability data" section above).
+Full context: `data/CLAUDE.md`.
 
 ## Pull request descriptions
 

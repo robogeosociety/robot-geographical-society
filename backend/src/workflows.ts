@@ -26,7 +26,9 @@ export interface WfEnv {
   WATCH_AE?: AnalyticsEngineDataset; // dense per-check watch points
 }
 
-type Site = { id: string; kind: "rec" | "wa"; ref: string | number; name: string; agency: string };
+// `collect: false` marks map-only / disabled sites (no rec/WA provider, or a
+// deliberately-paused collector) — they appear on the map but the loop skips them.
+type Site = { id: string; kind: "rec" | "wa"; ref: string | number; name: string; agency: string; collect?: boolean };
 
 export const HEARTBEAT_KEY = "scheduler/heartbeat.json";
 export const DLQ_PREFIX = "dlq/"; // dlq/<siteId>.json — presence == site is quarantined
@@ -173,7 +175,7 @@ type LoopPayload = { due?: DueMap; collectedTotal?: number; fails?: FailMap; pro
 
 export class CollectorLoop extends WorkflowEntrypoint<WfEnv, LoopPayload> {
   async run(event: WorkflowEvent<LoopPayload>, step: WorkflowStep) {
-    const sites = index as Site[];
+    const sites = (index as unknown as Site[]).filter((s) => s.collect !== false);
     const X = (Number(this.env.MAX_STALENESS_DAYS ?? "2") || 2) * 86_400_000;
     const inactiveAfter = Math.max(1, Number(this.env.INACTIVE_AFTER_FAILURES ?? "") || INACTIVE_AFTER_DEFAULT);
     const ae = this.env.COLLECTOR_AE;

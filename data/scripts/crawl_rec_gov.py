@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """
-Crawl Recreation.gov for WA campgrounds not yet in this dataset,
-then prompt to add them in batch.
+Discover Recreation.gov WA campgrounds not yet in the campsite inventory.
 
 Fetches campground listings from the recreation.gov search API, cross-references
-against all rec_gov_id values already in campsites.toml, and presents new
-candidates in an interactive numbered list. Selected entries get an index.md
-created and are appended to campsites.toml (kept alphabetical).
+against the rec.gov ids already in `backend/src/campsites-index.json` (the
+authoritative inventory), and prints the new candidates as ready-to-paste
+inventory stubs.
+
+Read-only: it never edits files. To track a candidate, paste its stub into
+`backend/src/campsites-index.json`, then enrich + derive:
+    1. (obsidian-automations) uv run doit campsite_inventory   # vault → enriched inventory
+    2. (data/)               uv run doit geojson                # inventory → campsites.json
 
 Usage (from data/):
     uv run crawl                   # search all WA campgrounds (up to 500)
@@ -15,19 +19,21 @@ Usage (from data/):
 """
 
 import argparse
+import json
 import re
 import sys
-import tomllib
 from pathlib import Path
 from urllib.parse import urlencode
 
-import yaml
 from playwright.sync_api import APIRequestContext, sync_playwright
 
 _BASE = "https://www.recreation.gov"
 _SEARCH_PATH = "/api/search"
 _CAMPGROUND_PATH = "/api/camps/campgrounds/{id}"
 _CAMPSITES_PATH = "/api/camps/campgrounds/{id}/campsites"
+
+# The authoritative inventory, relative to data/.
+INVENTORY = Path("../backend/src/campsites-index.json")
 
 WA_LAT = (45.0, 49.5)
 WA_LNG = (-125.0, -116.0)
@@ -126,50 +132,18 @@ def _fetch_site_count(ctx: APIRequestContext, cid: str) -> int:
 # Dataset helpers
 # ---------------------------------------------------------------------------
 
-def _load_existing_ids(toml_path: Path) -> set[str]:
-    """Return the set of rec_gov_id strings already tracked in campsites.toml."""
-    with open(toml_path, "rb") as f:
-        config = tomllib.load(f)
-
-    ids: set[str] = set()
-    for entry in config.get("campsites", []):
-        path = Path(entry.get("path", ""))
-        if not path.exists():
-            continue
-        text = path.read_text()
-        m = re.match(r"^---\n(.*?)\n---", text, re.DOTALL)
-        if not m:
-            continue
-        try:
-            fm = yaml.safe_load(m.group(1)) or {}
-        except yaml.YAMLError:
-            continue
-        rid = fm.get("rec_gov_id")
-        if rid:
-            ids.add(str(rid))
-    return ids
-
-
-def _load_toml_entries(toml_path: Path) -> list[dict]:
-    """Load campsites.toml and return the list of {name, path} dicts."""
-    with open(toml_path, "rb") as f:
-        config = tomllib.load(f)
-    return list(config.get("campsites", []))
-
-
-def _write_toml(toml_path: Path, entries: list[dict]) -> None:
-    """Write campsites.toml from a list of {name, path} dicts, sorted by name."""
-    lines: list[str] = []
-    for e in sorted(entries, key=lambda x: x["name"]):
-        lines.append("[[campsites]]")
-        lines.append(f'name = "{e["name"]}"')
-        lines.append(f'path = "{e["path"]}"')
-        lines.append("")
-    toml_path.write_text("\n".join(lines))
+def _load_existing_ids(inventory_path: Path) -> set[str]:
+    """Return the set of rec.gov ids already tracked in the inventory."""
+    inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+    return {
+        str(e["ref"])
+        for e in inventory
+        if e.get("kind") == "rec" and e.get("ref") is not None
+    }
 
 
 # ---------------------------------------------------------------------------
-# Agency / path inference
+# Agency inference + candidate normalisation
 # ---------------------------------------------------------------------------
 
 def _detect_agency(parent_name: str) -> tuple[str, str]:
@@ -186,88 +160,6 @@ def _detect_agency(parent_name: str) -> tuple[str, str]:
     # Fallback — user will need to review
     return "usfs", "US Forest Service"
 
-
-def _detect_subdir(agency_short: str, parent_name: str) -> str | None:
-    """Return the forest/park subdirectory name, or None if unrecognised."""
-    lower = parent_name.lower()
-    if agency_short == "usfs":
-        if "okanogan" in lower or "wenatchee" in lower:
-            return "Okanogan_Wenatchee_NF"
-        if "baker" in lower or "snoqualmie" in lower:
-            return "Mt_Baker_Snoqualmie_NF"
-        if "olympic" in lower:
-            return "Olympic_NF"
-        if "gifford" in lower or "pinchot" in lower:
-            return "Gifford_Pinchot_NF"
-        if "colville" in lower:
-            return "Colville_NF"
-        if "umatilla" in lower:
-            return "Umatilla_NF"
-        return None
-    if agency_short == "nps":
-        if "rainier" in lower:
-            return "Mt_Rainier_NP"
-        if "olympic" in lower:
-            return "Olympic_NP"
-        if "north cascades" in lower:
-            return "North_Cascades_NP"
-        if "lake roosevelt" in lower or "roosevelt" in lower:
-            return "Lake_Roosevelt_NRA"
-        return None
-    return None
-
-
-def _slugify(name: str) -> str:
-    """Convert a campsite name to a filesystem-safe slug."""
-    slug = re.sub(r"[^\w\s'\-]", "", name)
-    slug = re.sub(r"[\s\-]+", "_", slug.strip())
-    return slug
-
-
-# ---------------------------------------------------------------------------
-# index.md generation
-# ---------------------------------------------------------------------------
-
-def _build_index_md(candidate: dict, site_count: int, agency_short: str, agency_full: str) -> str:
-    """Return the full text of a new index.md for a candidate campsite."""
-    rec_id = candidate["id"]
-    lat = round(float(candidate.get("lat") or 0.0), 4)
-    lng = round(float(candidate.get("lng") or 0.0), 4)
-    url = f"https://www.recreation.gov/camping/campgrounds/{rec_id}"
-
-    fm = {
-        "name": candidate["name"],
-        "agency": agency_full,
-        "agency_short": agency_short,
-        "state": "WA",
-        "lat": lat,
-        "lng": lng,
-        "sites": site_count,
-        "types": ["tent", "rv"],  # default — review after adding
-        "reservable": True,
-        "rec_gov_id": rec_id,
-        "reservation_url": url,
-        "official_url": url,
-        "availability_windows": [
-            {
-                "start": "05-01",
-                "end": "09-30",
-                "booking_advance_days": 180,
-                "site_total_count": site_count,
-                "reserved_count": 0,
-            }
-        ],
-    }
-
-    parent = candidate.get("parent_name") or "Washington State"
-    body = f"Recreation.gov campground in {parent}."
-    fm_text = yaml.dump(fm, sort_keys=False, allow_unicode=True, width=1000).strip()
-    return f"---\n{fm_text}\n---\n\n{body}\n"
-
-
-# ---------------------------------------------------------------------------
-# Candidate normalisation
-# ---------------------------------------------------------------------------
 
 def _from_search_result(r: dict) -> dict:
     """Build a normalised candidate dict from a search API result."""
@@ -301,13 +193,25 @@ def _from_detail(cid: str, cg: dict) -> dict:
     }
 
 
+def _inventory_stub(c: dict) -> dict:
+    """A ready-to-paste backend/src/campsites-index.json entry for a candidate."""
+    agency_short, _ = _detect_agency(c.get("parent_name", ""))
+    return {
+        "id": c["id"],
+        "kind": "rec",
+        "ref": c["id"],
+        "name": c["name"],
+        "agency": agency_short,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Find Recreation.gov WA campgrounds not yet in the dataset."
+        description="Discover Recreation.gov WA campgrounds not yet in the inventory."
     )
     parser.add_argument(
         "--max", type=int, default=500, metavar="N",
@@ -319,14 +223,13 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    toml_path = Path("campsites.toml")
-    if not toml_path.exists():
-        print("Error: campsites.toml not found — run from data/", file=sys.stderr)
+    if not INVENTORY.exists():
+        print(f"Error: {INVENTORY} not found — run from data/", file=sys.stderr)
         sys.exit(1)
 
     print("Loading existing campsite IDs...")
-    existing_ids = _load_existing_ids(toml_path)
-    print(f"  {len(existing_ids)} recreation.gov IDs already in dataset\n")
+    existing_ids = _load_existing_ids(INVENTORY)
+    print(f"  {len(existing_ids)} recreation.gov IDs already in the inventory\n")
 
     candidates: list[dict] = []
 
@@ -343,7 +246,7 @@ def main() -> None:
                 cid = m.group(1)
                 print(f"Checking campground {cid}...")
                 if cid in existing_ids:
-                    print(f"  Already in dataset (rec_gov_id: {cid})")
+                    print(f"  Already in the inventory (rec.gov id: {cid})")
                     sys.exit(0)
                 # Try search API first (has parent_name, lat, lng already formatted)
                 search_result = _search_by_id(ctx, cid)
@@ -365,7 +268,7 @@ def main() -> None:
                 results = _search_wa_campgrounds(ctx, max_results=args.max)
                 already = sum(1 for r in results if str(r.get("entity_id", "")) in existing_ids)
                 new_results = [r for r in results if str(r.get("entity_id", "")) not in existing_ids]
-                print(f"  {len(results)} total  |  {already} already in dataset  |  {len(new_results)} new\n")
+                print(f"  {len(results)} total  |  {already} already in inventory  |  {len(new_results)} new\n")
                 candidates = [_from_search_result(r) for r in new_results]
 
                 if candidates:
@@ -418,79 +321,12 @@ def main() -> None:
 
     print(f"\n{len(candidates)} new campground(s) found.\n")
 
-    # --- Selection prompt ---
-    while True:
-        raw = input("Add which? (e.g. '1,3,5' | 'a'=all | 'q'=quit): ").strip()
-        if raw.lower() == "q":
-            print("Cancelled — nothing added.")
-            return
-        if raw.lower() == "a":
-            selected = list(candidates)
-            break
-        try:
-            indices = [int(x.strip()) - 1 for x in raw.split(",") if x.strip()]
-            if any(i < 0 or i >= len(candidates) for i in indices):
-                print(f"  Out of range — enter 1–{len(candidates)}")
-                continue
-            selected = [candidates[i] for i in indices]
-            break
-        except ValueError:
-            print("  Enter numbers (e.g. '1,3'), 'a' for all, or 'q' to quit.")
-
-    if not selected:
-        print("Nothing selected.")
-        return
-
-    # --- Write files and update TOML ---
-    toml_entries = _load_toml_entries(toml_path)
-    existing_paths = {e["path"] for e in toml_entries}
-    added: list[str] = []
-
-    with sync_playwright() as p:
-        ctx = _new_context(p)
-        try:
-            for c in selected:
-                agency_short, agency_full = _detect_agency(c.get("parent_name", ""))
-                subdir = _detect_subdir(agency_short, c.get("parent_name", ""))
-                slug = _slugify(c["name"])
-
-                if subdir:
-                    rel_path = f"campsites/{agency_short}/WA/{subdir}/{slug}.md"
-                else:
-                    rel_path = f"campsites/{agency_short}/WA/{slug}.md"
-
-                if rel_path in existing_paths:
-                    print(f"  Skipping {c['name']} — path already in TOML: {rel_path}")
-                    continue
-
-                # Fetch site count if not already available
-                if not c.get("site_count"):
-                    try:
-                        c["site_count"] = _fetch_site_count(ctx, c["id"])
-                    except Exception:
-                        c["site_count"] = 0
-
-                file_path = Path(rel_path)
-                file_path.parent.mkdir(parents=True, exist_ok=True)
-                file_path.write_text(_build_index_md(c, c.get("site_count", 0), agency_short, agency_full))
-
-                toml_entries.append({"name": c["name"], "path": rel_path})
-                existing_paths.add(rel_path)
-                added.append(f"  + {c['name']:40s}  {rel_path}")
-        finally:
-            ctx.dispose()
-
-    if added:
-        _write_toml(toml_path, toml_entries)
-        print("\nAdded:")
-        for line in added:
-            print(line)
-        print(f"\n{len(added)} campsite(s) added.")
-        print("Next steps:")
-        print("  1. Review and edit the new index.md file(s) — check types, availability_windows, lat/lng")
-        print("  2. Run 'uv run generate' to rebuild campsites.json")
-    else:
-        print("Nothing was added.")
+    # --- Inventory stubs (read-only; paste the ones you want to track) ---
+    print("Inventory stubs — paste the ones to track into backend/src/campsites-index.json:")
+    for c in candidates:
+        print("  " + json.dumps(_inventory_stub(c)))
+    print("\nThen enrich (obsidian-automations: uv run doit campsite_inventory) "
+          "and derive (data/: uv run doit geojson).")
 
 
 if __name__ == "__main__":

@@ -23,8 +23,9 @@ const seedData = data.features.map((feature) => {
     key: id,
     value: JSON.stringify({
       ...props,
-      // Add extra details here as mentioned in the issue
-      reservation_dates: props.reservable ? ["2026-05-01", "2026-06-01"] : [], // Placeholder
+      // Reservation-opening dates aren't sourced yet (the availability webapp is
+      // deferred); ship an empty list rather than fake placeholder dates.
+      reservation_dates: [],
       full_description: props.notes,
     }),
   };

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Wrapper for the new Python-based data generation logic.
+ * Derive data/campsites.json from the authoritative campsite inventory
+ * (backend/src/campsites-index.json) via the `geojson` doit task.
  */
 const { execSync } = require('child_process');
 const path = require('path');
@@ -8,11 +9,9 @@ const path = require('path');
 const DATA_DIR = path.join(__dirname, '..', 'data');
 
 try {
-  console.log('Running python data generator via uv...');
-  // Metaflow requires a username; fall back to "ci" when none is set.
-  const env = { ...process.env, USER: process.env.USER || process.env.USERNAME || 'ci' };
-  execSync('uv run refresh run', { stdio: 'inherit', cwd: DATA_DIR, env });
+  console.log('Deriving campsites.json from the inventory (uv run doit geojson)...');
+  execSync('uv run doit geojson', { stdio: 'inherit', cwd: DATA_DIR });
 } catch (err) {
-  console.error('Data generation failed:', err.message);
+  console.error('GeoJSON derivation failed:', err.message);
   process.exit(1);
 }

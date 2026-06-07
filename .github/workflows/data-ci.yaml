@@ -31,8 +31,8 @@ jobs:
       - name: Install Playwright Browsers
         run: uv run playwright install --with-deps chromium
 
-      - name: Generate GeoJSON (validate + STAC-shaped FeatureCollection)
-        run: USER=ci uv run refresh run
+      - name: Derive GeoJSON from the campsite inventory
+        run: uv run doit geojson
 
       - name: Run Tests
         # Deselect `slow` tests — they hit live upstream APIs (recreation.gov /

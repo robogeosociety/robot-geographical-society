@@ -11,21 +11,16 @@ Run all including network:
     uv run pytest tests/test_crawl_rec_gov.py -v
 """
 
-import textwrap
-from pathlib import Path
+import json
 
 import pytest
-import yaml
 
 from scripts.crawl_rec_gov import (
-    _build_index_md,
     _detect_agency,
-    _detect_subdir,
     _from_detail,
     _from_search_result,
+    _inventory_stub,
     _load_existing_ids,
-    _slugify,
-    _write_toml,
 )
 
 
@@ -35,89 +30,22 @@ from scripts.crawl_rec_gov import (
 
 class TestDetectAgency:
     def test_national_forest(self):
-        short, full = _detect_agency("Mt. Baker-Snoqualmie National Forest")
-        assert short == "usfs"
-        assert full == "US Forest Service"
+        assert _detect_agency("Mt. Baker-Snoqualmie National Forest") == ("usfs", "US Forest Service")
 
     def test_national_park(self):
-        short, full = _detect_agency("Olympic National Park")
-        assert short == "nps"
-        assert full == "National Park Service"
+        assert _detect_agency("Mount Rainier National Park") == ("nps", "National Park Service")
 
     def test_national_recreation_area(self):
-        short, full = _detect_agency("Lake Roosevelt National Recreation Area")
-        assert short == "nps"
-        assert full == "National Park Service"
+        assert _detect_agency("Lake Roosevelt National Recreation Area") == ("nps", "National Park Service")
 
     def test_blm(self):
-        short, full = _detect_agency("Bureau of Land Management - Spokane District")
-        assert short == "blm"
-        assert full == "Bureau of Land Management"
+        assert _detect_agency("Bureau of Land Management - Spokane") == ("blm", "Bureau of Land Management")
 
     def test_state_park(self):
-        short, full = _detect_agency("Washington State Parks")
-        assert short == "wa-state-parks"
-        assert full == "Washington State Parks"
+        assert _detect_agency("Deception Pass State Park") == ("wa-state-parks", "Washington State Parks")
 
     def test_unknown_defaults_to_usfs(self):
-        short, full = _detect_agency("Some Unknown Org")
-        assert short == "usfs"
-
-
-# ---------------------------------------------------------------------------
-# _detect_subdir
-# ---------------------------------------------------------------------------
-
-class TestDetectSubdir:
-    @pytest.mark.parametrize("parent,expected", [
-        ("Mt. Baker-Snoqualmie National Forest", "Mt_Baker_Snoqualmie_NF"),
-        ("Okanogan-Wenatchee National Forest",   "Okanogan_Wenatchee_NF"),
-        ("Olympic National Forest",              "Olympic_NF"),
-        ("Gifford Pinchot National Forest",      "Gifford_Pinchot_NF"),
-        ("Colville National Forest",             "Colville_NF"),
-        ("Umatilla National Forest",             "Umatilla_NF"),
-    ])
-    def test_usfs_forests(self, parent, expected):
-        assert _detect_subdir("usfs", parent) == expected
-
-    @pytest.mark.parametrize("parent,expected", [
-        ("Mount Rainier National Park",          "Mt_Rainier_NP"),
-        ("Olympic National Park",                "Olympic_NP"),
-        ("North Cascades National Park",         "North_Cascades_NP"),
-        ("Lake Roosevelt National Recreation Area", "Lake_Roosevelt_NRA"),
-    ])
-    def test_nps_parks(self, parent, expected):
-        assert _detect_subdir("nps", parent) == expected
-
-    def test_unknown_usfs_returns_none(self):
-        assert _detect_subdir("usfs", "Some Unrecognised Forest") is None
-
-    def test_blm_returns_none(self):
-        assert _detect_subdir("blm", "BLM Anything") is None
-
-
-# ---------------------------------------------------------------------------
-# _slugify
-# ---------------------------------------------------------------------------
-
-class TestSlugify:
-    def test_basic(self):
-        assert _slugify("Bedal Campground") == "Bedal_Campground"
-
-    def test_apostrophe_preserved(self):
-        slug = _slugify("Heart O' the Hills")
-        assert "'" in slug or "Heart_O" in slug  # apostrophe or dropped cleanly
-
-    def test_special_chars_removed(self):
-        slug = _slugify("Buck & Doe (Test)")
-        assert "&" not in slug
-        assert "(" not in slug
-
-    def test_multiple_spaces_collapsed(self):
-        assert _slugify("A  B   C") == "A_B_C"
-
-    def test_hyphens_become_underscores(self):
-        assert _slugify("Rimrock-Lake") == "Rimrock_Lake"
+        assert _detect_agency("Some Random Place")[0] == "usfs"
 
 
 # ---------------------------------------------------------------------------
@@ -187,7 +115,6 @@ class TestFromDetail:
 
     def test_parent_parsed_from_alternate_names(self):
         c = _from_detail("233864", self._make_cg())
-        # Last segment of alternate_names (len > 6) becomes parent
         assert "MT. BAKER-SNOQU NF - FS" in c["parent_name"] or c["parent_name"] != ""
 
     def test_site_count_initialised_to_zero(self):
@@ -196,126 +123,30 @@ class TestFromDetail:
 
 
 # ---------------------------------------------------------------------------
-# _build_index_md
+# inventory dedupe + stub emission
 # ---------------------------------------------------------------------------
 
-class TestBuildIndexMd:
-    def _candidate(self, **overrides):
-        base = {
-            "id": "233864",
-            "name": "Bedal Campground",
-            "parent_name": "Mt. Baker-Snoqualmie National Forest",
-            "lat": 48.0968,
-            "lng": -121.3869,
-            "site_count": 23,
+class TestInventory:
+    def _write_inventory(self, tmp_path, entries):
+        p = tmp_path / "campsites-index.json"
+        p.write_text(json.dumps(entries), encoding="utf-8")
+        return p
+
+    def test_load_existing_ids_only_rec(self, tmp_path):
+        p = self._write_inventory(tmp_path, [
+            {"id": "233864", "kind": "rec", "ref": "233864", "name": "Bedal", "agency": "usfs"},
+            {"id": "x", "kind": "wa", "ref": -2147483647, "name": "Alta", "agency": "wa-state-parks"},
+            {"id": "blm/foo", "kind": "blm", "ref": None, "name": "Foo", "agency": "blm"},
+        ])
+        assert _load_existing_ids(p) == {"233864"}
+
+    def test_inventory_stub_shape(self):
+        c = {"id": "233864", "name": "Bedal Campground",
+             "parent_name": "Mt. Baker-Snoqualmie National Forest"}
+        assert _inventory_stub(c) == {
+            "id": "233864", "kind": "rec", "ref": "233864",
+            "name": "Bedal Campground", "agency": "usfs",
         }
-        base.update(overrides)
-        return base
-
-    def test_valid_yaml_frontmatter(self):
-        md = _build_index_md(self._candidate(), 23, "usfs", "US Forest Service")
-        parts = md.split("---\n")
-        assert len(parts) >= 3
-        fm = yaml.safe_load(parts[1])
-        assert fm["name"] == "Bedal Campground"
-
-    def test_required_fields_present(self):
-        md = _build_index_md(self._candidate(), 23, "usfs", "US Forest Service")
-        fm = yaml.safe_load(md.split("---\n")[1])
-        for field in ("name", "agency", "agency_short", "state", "lat", "lng",
-                      "sites", "types", "reservable", "rec_gov_id",
-                      "reservation_url", "official_url", "availability_windows"):
-            assert field in fm, f"Missing field: {field}"
-
-    def test_rec_gov_id_is_string(self):
-        md = _build_index_md(self._candidate(), 23, "usfs", "US Forest Service")
-        fm = yaml.safe_load(md.split("---\n")[1])
-        assert fm["rec_gov_id"] == "233864"
-        assert isinstance(fm["rec_gov_id"], str)
-
-    def test_reservation_url_contains_id(self):
-        md = _build_index_md(self._candidate(), 23, "usfs", "US Forest Service")
-        fm = yaml.safe_load(md.split("---\n")[1])
-        assert "233864" in fm["reservation_url"]
-        assert fm["reservation_url"].startswith("https://www.recreation.gov")
-
-    def test_lat_lng_rounded(self):
-        md = _build_index_md(self._candidate(lat=48.09684300000, lng=-121.38694300000), 23, "usfs", "US Forest Service")
-        fm = yaml.safe_load(md.split("---\n")[1])
-        # Should be rounded to 4 decimal places
-        assert len(str(fm["lat"]).split(".")[-1]) <= 4
-        assert len(str(abs(fm["lng"])).split(".")[-1]) <= 4
-
-    def test_sites_from_site_count(self):
-        md = _build_index_md(self._candidate(), 17, "usfs", "US Forest Service")
-        fm = yaml.safe_load(md.split("---\n")[1])
-        assert fm["sites"] == 17
-
-    def test_availability_windows_has_site_total_count(self):
-        md = _build_index_md(self._candidate(), 23, "usfs", "US Forest Service")
-        fm = yaml.safe_load(md.split("---\n")[1])
-        windows = fm["availability_windows"]
-        assert len(windows) == 1
-        assert windows[0]["site_total_count"] == 23
-
-    def test_body_contains_parent_name(self):
-        md = _build_index_md(self._candidate(), 23, "usfs", "US Forest Service")
-        body = md.split("---\n", 2)[-1]
-        assert "Mt. Baker-Snoqualmie National Forest" in body
-
-
-# ---------------------------------------------------------------------------
-# _write_toml / _load_existing_ids (filesystem round-trip)
-# ---------------------------------------------------------------------------
-
-class TestTomlRoundTrip:
-    def test_write_sorted(self, tmp_path):
-        entries = [
-            {"name": "Zebra Lake", "path": "campsites/usfs/WA/Zebra_Lake.md"},
-            {"name": "Apple Creek", "path": "campsites/usfs/WA/Apple_Creek.md"},
-            {"name": "Middle Camp", "path": "campsites/usfs/WA/Middle_Camp.md"},
-        ]
-        toml_file = tmp_path / "campsites.toml"
-        _write_toml(toml_file, entries)
-        text = toml_file.read_text()
-        positions = {name: text.index(name) for name in ["Apple Creek", "Middle Camp", "Zebra Lake"]}
-        assert positions["Apple Creek"] < positions["Middle Camp"] < positions["Zebra Lake"]
-
-    def test_write_valid_toml(self, tmp_path):
-        import tomllib
-        entries = [{"name": "Test Camp", "path": "campsites/usfs/WA/Test_Camp.md"}]
-        toml_file = tmp_path / "campsites.toml"
-        _write_toml(toml_file, entries)
-        with open(toml_file, "rb") as f:
-            config = tomllib.load(f)
-        assert config["campsites"][0]["name"] == "Test Camp"
-        assert config["campsites"][0]["path"] == "campsites/usfs/WA/Test_Camp.md"
-
-    def test_load_existing_ids(self, tmp_path):
-        # Create a minimal index.md with a rec_gov_id
-        camp_dir = tmp_path / "campsites" / "usfs" / "WA"
-        camp_dir.mkdir(parents=True)
-        md_file = camp_dir / "Test_Camp.md"
-        md_file.write_text(textwrap.dedent("""\
-            ---
-            name: Test Camp
-            rec_gov_id: '999001'
-            ---
-
-            A test campsite.
-        """))
-        # Write a matching TOML
-        toml_file = tmp_path / "campsites.toml"
-        _write_toml(toml_file, [{"name": "Test Camp", "path": str(md_file)}])
-
-        ids = _load_existing_ids(toml_file)
-        assert "999001" in ids
-
-    def test_load_existing_ids_skips_missing_files(self, tmp_path):
-        toml_file = tmp_path / "campsites.toml"
-        _write_toml(toml_file, [{"name": "Ghost Camp", "path": "does/not/exist.md"}])
-        ids = _load_existing_ids(toml_file)
-        assert len(ids) == 0
 
 
 # ---------------------------------------------------------------------------
