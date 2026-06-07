@@ -1,22 +1,26 @@
 import { test, expect } from '@playwright/test';
 
 const BASE_URL = 'http://127.0.0.1:5173';
-const BACKEND_URL = 'http://127.0.0.1:8787';
+// Reach the backend the way the app does: through the same-origin `/api` proxy on
+// the Vite dev server, which attaches the Cloudflare Access service token
+// (CF_ACCESS_CLIENT_ID/SECRET, set in CI) and forwards to the backend. This
+// exercises the authenticated path end-to-end instead of hitting :8787 directly.
+const API_URL = `${BASE_URL}/api`;
 
 test.describe('Robot Geographical Society - Integration', () => {
-  test('backend should be reachable and return campsite data', async ({ request }) => {
-    // Retry logic for backend readiness
+  test('backend is reachable through the authenticated /api proxy', async ({ request }) => {
+    // Retry logic for backend/proxy readiness
     let response;
     for (let i = 0; i < 5; i++) {
         try {
-            response = await request.get(`${BACKEND_URL}/campsite/blm/fishtrap-recreation-area`);
+            response = await request.get(`${API_URL}/campsite/blm/fishtrap-recreation-area`);
             if (response.ok()) break;
         } catch (e) {
-            console.log(`Backend attempt ${i+1} failed: ${e.message}`);
+            console.log(`Proxy attempt ${i+1} failed: ${e.message}`);
         }
         await new Promise(r => setTimeout(r, 2000));
     }
-    
+
     expect(response?.ok()).toBeTruthy();
     const data = await response.json();
     expect(data.name).toBe('Fishtrap Recreation Area');

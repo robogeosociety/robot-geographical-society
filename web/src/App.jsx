@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import campsiteData from '../../data/campsites.json';
+import { apiBase } from './apiBase';
 
 const AGENCY_COLORS = {
   'wa-state-parks': '#A6E22E',
@@ -227,11 +228,9 @@ export default function App() {
         return;
     }
 
-    const backendUrl = window.location.hostname === 'localhost' 
-      ? 'http://localhost:8787' 
-      : `http://${window.location.hostname}:8787`;
-
-    fetch(`${backendUrl}/campsite/${id}`)
+    // Go through the same-origin `/api` proxy (apiBase). In dev the proxy attaches
+    // the Access service token server-side; in prod it targets the gated backend.
+    fetch(`${apiBase()}/campsite/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch details');
         return res.json();

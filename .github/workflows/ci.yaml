@@ -63,6 +63,13 @@ jobs:
           VITE_MAPBOX_ACCESS_TOKEN: pk.eyJ1Ijoiam9lIiwiYSI6ImNsamVnZzFpZzAwZHYzZ214ZzFqZzFqZzEifQ.fake-token
           CI: true
           WRANGLER_SEND_METRICS: false
+          # Drive the e2e through the authenticated /api proxy. The Vite proxy targets
+          # the local wrangler-dev backend and attaches these Access service-token
+          # headers (exercising the production auth wiring). The local backend ignores
+          # them — real creds live in web/.env.local for dev against the gated backend.
+          BACKEND_URL: http://127.0.0.1:8787
+          CF_ACCESS_CLIENT_ID: ci-dummy.access
+          CF_ACCESS_CLIENT_SECRET: ci-dummy-secret
         run: |
           # Use 127.0.0.1 for everything. Wait-on will ensure ports are open and responding correctly.
           ./node_modules/.bin/concurrently --success first --kill-others \
