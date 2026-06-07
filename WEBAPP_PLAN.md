@@ -82,7 +82,7 @@ deals with provider-id quirks.
 | Endpoint | Returns | Reads |
 |---|---|---|
 | `GET /collectors` | `[{guid,name,agency,lat,lng,collect,state,lastCollectedDate,ageDays,dueMs,fails,lastLatencyMs}]` | inventory + heartbeat + `dlq/` |
-| `GET /collectors/:guid/history?days=30` | run history `[{date,status,n_dates,latency_ms}]` | Analytics Engine SQL API |
+| `GET /collectors/:guid/history?days=30` | run history `[{date,status,n_dates,latency_ms}]` | observability InfluxDB (`localhost:8086`) |
 | `GET /availability?date=YYYY-MM-DD` | `[{guid, available, reserved, total, collected_date}]` (all campgrounds for that night) | `summary/` rollup |
 | `GET /availability/:guid?date=` | `{sites:[{siteId,label,loop,type,status}]}` for the date | `sites/<date>/<id>` |
 | `GET /availability/:guid/site/:siteId` | `{by_date:{date→status}}` — one site's calendar | latest `sites/<id>` |
@@ -136,8 +136,11 @@ flowchart TD
 - [ ] **Collectors view**: state coloring, fleet panel, reactivate action, AE history sparkline.
 - [ ] **Availability filters**: date recolor, campsite focus, per-site calendar strip.
 - [ ] **Cutover**: replace the old single-map `App.jsx`; update e2e + CI; remove the dead `/availability.json` fallback.
+- [ ] **(future, gates public deploy)** Gated login — Cloudflare Pages + Access — before anything ships off-box; revisit the InfluxDB-read history endpoint at that point.
 
 Each checkpoint is independently shippable behind the existing standalone/back­end flags.
+Everything runs against a **local vitest / wrangler-dev server** until the gated-login
+checkpoint lands (see Resolved decisions #4).
 
 ## Validated end-to-end test case (a known reservation)
 
@@ -167,12 +170,24 @@ This drives the `/availability` view's three filters end-to-end, with exact asse
 > lookup that motivated the whole migration: "how many sites were reserved at Middle
 > Fork" — answer, 23 — now a regression test.)
 
-## Open questions
+## Resolved decisions
 
-1. **Aggregator owner** — extend the collector to emit the per-date rollup, or a
-   separate scheduled worker? (Affects `backend/` vs a new job.)
-2. **AE access** — query the Analytics Engine SQL API from the Worker (token), or
-   read run-history from InfluxDB via the observability stack instead?
-3. **History window** — does `/collectors` need only "current" health, or the full
-   capture history (booking-velocity curves belong more to `/availability`)?
-4. **Auth** — public read-only, or gated? (`/collect/*` mutations stay protected.)
+1. **Aggregator owner → the collector.** The `CollectorLoop` writes
+   `summary/<date>/_index.json` at the end of each collection day (one writer, no new
+   schedule or auth surface). `/availability?date=` then serves a single R2 object;
+   the Cache-API fan-out is the fallback only until the rollup exists.
+2. **Run-history source → observability InfluxDB.** `/collectors/:guid/history` reads
+   from the InfluxDB at `localhost:8086` (org `home`) rather than the Analytics Engine
+   SQL API. This is clean while everything runs locally (the Worker and InfluxDB share
+   the host); it's the one endpoint that will need rework if/when the app is deployed
+   off-box — see the deploy posture below.
+3. **History window → current health first.** `/collectors` v1 colors pins from the
+   heartbeat + DLQ + last-`summary` date; the InfluxDB-backed sparkline (decision 2) is
+   additive and can land in the same checkpoint or a follow-up.
+4. **Deploy posture → local-only for now.** All development and "deploys" run on the
+   host: backend endpoints are built and tested against a **local vitest / wrangler-dev
+   server**, the frontend points at `localhost`, and nothing is published to Cloudflare.
+   Read endpoints are therefore **unauthenticated by deployment** (host-only) rather than
+   by policy; `/collect/*` mutations are unchanged. A **gated login (Cloudflare Pages +
+   Access)** is the explicit prerequisite before any public deploy — tracked as its own
+   future checkpoint, not part of this migration.
