@@ -37,6 +37,12 @@ jobs:
         working-directory: web
         run: npx playwright install --with-deps chromium
 
+      - name: Backend unit tests + typecheck
+        working-directory: backend
+        run: |
+          npx vitest run
+          npm run typecheck
+
       - name: Sync data and Seed KV
         run: |
           node scripts/sync-geojson.js
