@@ -18,6 +18,11 @@ from datetime import date
 
 import pytest
 
+# Every test here hits a live upstream API (recreation.gov / goingtocamp.com),
+# so the whole module is `slow` — deselected in CI (`-m "not slow"`), where the
+# WA WAF 403s GitHub runner IPs. Run locally with `uv run pytest` to exercise them.
+pytestmark = pytest.mark.slow
+
 from campsite_sync.rec_gov import fetch_availability as rec_gov_fetch
 from campsite_sync.wa_state_parks import (
     fetch_availability as wa_fetch,
