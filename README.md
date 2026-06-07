@@ -32,11 +32,71 @@ The Robot Geographical Society is built on a modern, serverless stack designed f
 - **[Cloudflare KV](https://developers.cloudflare.com/kv/)**: Low-latency, key-value data store for campsite metadata and reservation details.
 - **[Cloudflare R2](https://developers.cloudflare.com/r2/)**: Object store for collected availability snapshots, the collector heartbeat, and the dead-letter queue.
 - **[Workers Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/)**: Time-series event sink for per-collection telemetry, queried by Grafana.
+- **[Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/applications/)**: The identity-backed auth boundary. The Worker is reachable **only** via the custom domain `api.robogeosociety.xyz` (the `*.workers.dev` route is disabled) — gated by owner SSO and a service token. This is a private project: there is no unauthenticated path.
+- **[Terraform](https://www.terraform.io/)**: Infrastructure-as-code for the Access application, policies, and the dev service token (`infra/access/`), authenticated with a token vended from a dedicated [`cloudflare-tfvend`](https://github.com/tommyroar/cloudflare-tfvend) repo (one bootstrap token → all long-lived tokens, declaratively).
 
 ### Testing & Quality
 - **[Playwright](https://playwright.dev/)**: End-to-end and integration testing framework.
 - **[Vitest](https://vitest.dev/)**: Vite-native unit testing framework for components and API logic.
 - **[ESLint](https://eslint.org/)**: Pluggable JavaScript linting for code quality.
+
+## Deployment Architecture
+
+The backend is a single Cloudflare Worker reachable **only** through a Cloudflare Access boundary on the custom domain `api.robogeosociety.xyz` — the `*.workers.dev` route is disabled, so there is no public, unauthenticated path. Humans authenticate via **SSO**; the local-dev frontend reaches the backend through a Vite `/api` proxy that attaches an Access **service token** server-side, so the token never enters the browser bundle. The same Worker serves the **read API** (`/availability`, `/collectors`) and runs the durable availability **collector**; both read from R2, KV, and Analytics Engine. The Access app, its policies, and the service token are managed as code in [`infra/access/`](./infra/access/) (Terraform), authenticated with a token vended from the [`cloudflare-tfvend`](https://github.com/tommyroar/cloudflare-tfvend) repo (one bootstrap token → all long-lived tokens). `wrangler` (OAuth) handles Worker deploys and the custom-domain bind.
+
+```mermaid
+flowchart TB
+  subgraph CLIENTS["Clients"]
+    DEV["Local dev — Vite<br/>/api proxy + Access service token"]
+    USER["Browser (future Pages frontend)<br/>Access SSO cookie"]
+  end
+
+  subgraph EDGE["Cloudflare"]
+    ACCESS["Cloudflare Access — api.robogeosociety.xyz<br/>SSO + service token · workers.dev disabled"]
+    subgraph WORKER["Worker — robot-geographical-society-backend"]
+      direction TB
+      READ["Read API<br/>/availability · /collectors"]
+      CTRL["Collector control<br/>/collect/* · /scheduler/status · /watch"]
+      LOOP["CollectorLoop Workflow<br/>self-scheduling · ≤ MAX_STALENESS_DAYS"]
+    end
+    R2[("R2 campsite-raw<br/>summary/ · sites/ · dlq/ · heartbeat")]
+    KV[("KV — campsite metadata")]
+    AE[("Analytics Engine<br/>campsite_collector · campsite_availability")]
+  end
+
+  subgraph UP["Upstream booking systems"]
+    REC["recreation.gov"]
+    WA["WA goingtocamp"]
+  end
+
+  subgraph OBS["Observability — Mac mini (private repo)"]
+    INFLUX[("InfluxDB · campsites")]
+    GRAF["Grafana"]
+    DISC["Discord #alerts"]
+  end
+
+  subgraph IAC["Infrastructure-as-code"]
+    TFVEND["cloudflare-tfvend<br/>bootstrap → vended tokens"]
+    INFRA["infra/access — Terraform<br/>Access app · policies · service token"]
+  end
+
+  DEV --> ACCESS
+  USER --> ACCESS
+  ACCESS --> READ
+  ACCESS --> CTRL
+  CTRL --> LOOP
+  LOOP --> REC & WA
+  LOOP -->|"raw / summary / sites · dlq · heartbeat"| R2
+  LOOP --> AE
+  READ --> R2
+  READ --> KV
+  R2 -->|"daily ingest (07:30)"| INFLUX --> GRAF
+  AE --> GRAF
+  GRAF -->|"failure ratio · quarantine · staleness"| DISC
+  TFVEND -->|"rgs-access-admin token"| INFRA -->|manages| ACCESS
+```
+
+The section below zooms into the collector loop itself.
 
 ## Collector Architecture
 
