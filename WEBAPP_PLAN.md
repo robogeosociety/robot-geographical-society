@@ -139,6 +139,34 @@ flowchart TD
 
 Each checkpoint is independently shippable behind the existing standalone/back­end flags.
 
+## Validated end-to-end test case (a known reservation)
+
+A real booking from the camping vault (`Trips/Middle Fork 2026-06-05.md` — the
+"Family of Gerald" calendar stay, **Site 24, Fri night only**) gives a ground-truth
+fixture: we *know* this site is reserved that night, and the collector captured it.
+**Verified against live R2** (`sites/2026-06-05/234501.json`, collected 2026-06-05):
+
+| Field | Value |
+|---|---|
+| Campground | Middle Fork (USFS) · guid `0c89950f-d0dc-594e-b48d-b1a5293027aa` · slug `usfs/middle-fork` · rec.gov `234501` |
+| Date (night) | `2026-06-05` |
+| Site number | **24** → internal `siteId 81835`, loop "AREA MIDDLE FORK CAMPGROUND", type STANDARD NONELECTRIC |
+| Captured status | **`reserved`** ✓ |
+| Aggregate that night | `available 0 · reserved 23 · total 35` (+12 "other") |
+
+This drives the `/availability` view's three filters end-to-end, with exact assertions:
+
+- `GET /availability?date=2026-06-05` → the `0c89950f…` entry is `{available:0, reserved:23, total:35}`; its pin renders **full** (ratio 0).
+- `GET /availability/0c89950f…?date=2026-06-05` → the site list contains `{label:"24", loop:"AREA MIDDLE FORK CAMPGROUND", status:"reserved"}`.
+- `GET /availability/0c89950f…/site/81835` → `by_date["2026-06-05"] == "reserved"`.
+- **UI walk**: `/availability` → date `2026-06-05` → campsite "Middle Fork" → site number "24" → the calendar strip shows **2026-06-05 reserved**.
+
+> **Contract nuance the test pins down:** the "individual site number" filter is the
+> human **`label`** ("24"), not the R2 `siteId` (`81835`) — `/availability/:guid` must
+> expose `label`, and the site picker resolves label → siteId. (This is the same
+> lookup that motivated the whole migration: "how many sites were reserved at Middle
+> Fork" — answer, 23 — now a regression test.)
+
 ## Open questions
 
 1. **Aggregator owner** — extend the collector to emit the per-date rollup, or a
