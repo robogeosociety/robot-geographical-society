@@ -34,7 +34,6 @@ export default function App() {
   const [selectedCampsite, setSelectedCampsite] = useState(null);
   const [campsiteDetails, setCampsiteDetails] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
-  const [availabilityData, setAvailabilityData] = useState(null);
   const [activeAgencies, setActiveAgencies] = useState(
     Object.keys(AGENCY_COLORS)
   );
@@ -43,14 +42,6 @@ export default function App() {
   const isDebug = new URLSearchParams(window.location.search).has('debug');
   const [debugInfo, setDebugInfo] = useState({ zoom: '—', lng: '—', lat: '—' });
   const [debugCopied, setDebugCopied] = useState(false);
-
-  // Load per-date availability from static JSON
-  useEffect(() => {
-    fetch('/availability.json')
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => { if (data) setAvailabilityData(data); })
-      .catch(() => {});
-  }, []);
 
   // Build Mapbox filter expression for active agencies
   const buildFilter = useCallback((agencies) => {
@@ -390,35 +381,6 @@ export default function App() {
               </ul>
             </div>
           ) : null}
-
-          {(() => {
-            const id = selectedCampsite.rec_gov_id?.toString()
-              ?? selectedCampsite.wa_park_id?.toString();
-            const byDate = id && availabilityData?.[id];
-            if (!byDate) return null;
-            const availDates = Object.entries(byDate)
-              .filter(([, count]) => count > 0)
-              .sort(([a], [b]) => a.localeCompare(b))
-              .slice(0, 10);
-            if (availDates.length === 0) return null;
-            return (
-              <div className="panel-reservations">
-                <h3>Sites Available (next {availDates.length} dates)</h3>
-                <ul className="res-list">
-                  {availDates.map(([date, count]) => (
-                    <li key={date} className="res-item">
-                      <span style={{ color: 'var(--cyan)', marginRight: 6 }}>{count}</span>
-                      {new Date(date + 'T12:00:00').toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })()}
 
           <div className="panel-actions">
             <a

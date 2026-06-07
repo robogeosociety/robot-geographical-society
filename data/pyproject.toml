@@ -7,13 +7,9 @@ name = "campsite-sync"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
-    "ipyfilechooser>=0.6.0",
-    "jupyter",
     "metaflow>=2.12",
-    "nbconvert",
     "playwright>=1.40",
     "pyyaml>=6.0.3",
-    "tenacity>=8.0",
 ]
 
 [project.scripts]
