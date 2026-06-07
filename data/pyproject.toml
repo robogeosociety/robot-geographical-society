@@ -7,18 +7,17 @@ name = "campsite-sync"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
-    "metaflow>=2.12",
+    "doit>=0.36",
     "playwright>=1.40",
     "pyyaml>=6.0.3",
 ]
 
 [project.scripts]
-refresh = "refresh_flow:main"
 crawl = "scripts.crawl_rec_gov:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["campsite_sync", "scripts"]
-include = ["refresh_flow.py"]
+include = ["build_geojson.py", "dodo.py"]
 
 [dependency-groups]
 dev = [

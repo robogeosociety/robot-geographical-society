@@ -1,50 +1,52 @@
 # Campsite Data Pipeline
 
-This directory holds the **source of truth** for campsite metadata and the tooling
-that compiles it into the GeoJSON the map consumes.
+This directory **derives** the map GeoJSON from the authoritative campsite
+inventory. It is no longer the source of truth.
 
-> **Availability is not synced here.** Per-site, per-date availability is collected
-> by the Cloudflare collector (`backend/`) into the `campsite-raw` R2 bucket. This
-> pipeline only validates the editorial markdown and writes `campsites.json`.
+> **Source of truth:** `backend/src/campsites-index.json` — the collector fleet
+> plus map-only extras, each carrying a stable cross-agency `guid` and the geo/
+> editorial metadata. It is maintained by the **obsidian-automations**
+> `campsite_inventory` doit task (camping vault → enriched inventory).
+>
+> **Availability** (per-site, per-date) is collected by the Cloudflare collector
+> (`backend/`) into the `campsite-raw` R2 bucket — not here.
 
-## 🔄 Data Workflow
-
-`campsites.toml` is the registry of tracked campsites; each entry points at a
-markdown file whose YAML frontmatter is the editorial record. `refresh_flow.py`
-(Metaflow) validates every referenced file and compiles a single GeoJSON
-`FeatureCollection`.
+## Flow
 
 ```mermaid
 graph TD
-    TOML["campsites.toml<br/>(registry)"] -->|reads paths| Refresh["refresh_flow.py<br/>(validate + compile)"]
-    MD["campsites/{agency}/WA/.../index.md<br/>(source of truth)"] -->|reads| Refresh
-    Refresh -->|writes| JSON["campsites.json<br/>(GeoJSON the map imports)"]
+    VAULT["Obsidian camping vault<br/>Campsites/*.md (editorial)"] -->|obsidian-automations<br/>campsite_inventory| INV["backend/src/campsites-index.json<br/>(authoritative inventory)"]
+    INV -->|data/: uv run doit geojson| GJ["data/campsites.json<br/>(derived GeoJSON — the map)"]
 ```
 
-## 🛠️ Generate the GeoJSON
+## Derive the GeoJSON
 
-Validates `campsites.toml` + every referenced `index.md` (halts on any error),
-then writes `campsites.json`:
+Reads `backend/src/campsites-index.json` → writes `data/campsites.json`:
 
 ```bash
-uv run refresh run                 # from data/
+uv run doit geojson                # from data/
 # or, from the repo root:  node scripts/sync-geojson.js
 ```
 
-## 🔎 Discover new campgrounds
+Pure projection — no network, no iCloud. Every inventory entry becomes a Feature;
+`collect: false` sites (BLM / non-reservable / disabled collectors) still appear
+on the map with `properties.collected = false` and are skipped by the collector.
 
-`crawl` searches recreation.gov for campgrounds not yet in `campsites.toml`:
+## Discover new campgrounds
+
+`crawl` searches recreation.gov for WA campgrounds not yet in the inventory and
+prints ready-to-paste inventory stubs (read-only — it never edits files):
 
 ```bash
 uv run crawl
+# paste chosen stubs into backend/src/campsites-index.json, then:
+#   (obsidian-automations)  uv run doit campsite_inventory   # enrich from the vault
+#   (data/)                 uv run doit geojson              # re-derive the map
 ```
 
-## 📁 Directory Structure
-- `campsites/`: individual campsite records (Markdown + YAML frontmatter).
-- `campsites.toml`: registry of all active campsites and their file paths.
+## Directory Structure
+- `build_geojson.py` / `dodo.py`: the inventory → GeoJSON derivation (`doit geojson`).
 - `campsites.json`: derived GeoJSON `FeatureCollection` (never edit by hand).
-- `campsite.schema.json`: JSON schema for campsite validation.
-- `campsite_sync/`: shared Python package (registry parsing, validation, quality
-  scoring, and the recreation.gov / WA State Parks API clients used by `crawl`).
-- `refresh_flow.py`: Metaflow flow that validates and compiles the GeoJSON.
-- `scripts/`: CLI tooling (`crawl_rec_gov.py`).
+- `campsite_sync/`: recreation.gov / WA State Parks API clients used by `crawl`.
+- `scripts/crawl_rec_gov.py`: discovery tool (`crawl`).
+- `tests/`: client + crawl unit tests (live-API tests marked `slow`).
