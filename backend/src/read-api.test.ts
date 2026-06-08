@@ -140,4 +140,21 @@ describe('/collectors — fleet health (current state, no history)', () => {
     expect(overdue?.state).toBe('overdue');
     expect(overdue?.fails).toBe(2);
   });
+
+  test('reads the inventory from KV (_inventory) when present, not the bundled JSON', async () => {
+    const RAW = seedWithHeartbeat();
+    // KV serves a one-entry inventory — /collectors must reflect *that*, proving KV is
+    // the runtime source of truth (the bundled JSON has 156 entries).
+    const CAMPSITES = {
+      get: async (k: string) =>
+        k === '_inventory'
+          ? [{ id: '777', guid: 'guid-kv-only', name: 'KV-only Camp', kind: 'rec', ref: '777', agency: 'usfs', collect: true }]
+          : null,
+    } as unknown as KVNamespace;
+
+    const res = await app.request(`/collectors?now=${NOW}`, {}, { RAW, CAMPSITES } as any);
+    const body = (await res.json()) as any[];
+    expect(body).toHaveLength(1);
+    expect(body[0]).toMatchObject({ guid: 'guid-kv-only', name: 'KV-only Camp' });
+  });
 });

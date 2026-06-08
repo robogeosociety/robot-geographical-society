@@ -1,0 +1,42 @@
+name: Deploy inventory to KV
+
+# When the authoritative inventory changes on main (the camping-vault pydoit job
+# lands it via the bot/inventory-sync PR), push it to the live CAMPSITES KV under the
+# `_inventory` key. The collector + read API read that key at runtime (with the
+# bundled JSON as fallback), so a refreshed inventory takes effect without a Worker
+# redeploy. See backend/src/inventory.ts.
+on:
+  push:
+    branches: [main]
+    paths:
+      - backend/src/campsites-index.json
+  workflow_dispatch: {}
+
+jobs:
+  deploy-kv:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # Account id is not sensitive (see CLAUDE.md); a scoped KV-write token is.
+      CLOUDFLARE_ACCOUNT_ID: d7adee58513c1b2f770ccaac90cf114f
+    steps:
+      - uses: actions/checkout@v4
+
+      # Stay green before the token is configured: skip the write if the secret is unset.
+      - id: gate
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN not set — skipping live KV write (configure the vended KV-write token to enable)."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Write _inventory to the live CAMPSITES KV
+        if: steps.gate.outputs.go == 'true'
+        working-directory: backend
+        run: |
+          npx --yes wrangler@4 kv key put _inventory \
+            --path src/campsites-index.json \
+            --binding CAMPSITES \
+            --remote

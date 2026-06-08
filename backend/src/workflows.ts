@@ -11,12 +11,13 @@
  *  2. HotDateWatchWorkflow — adaptive dense watcher for one (campsite, target_date).
  */
 import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:workers";
-import index from "./campsites-index.json";
+import { loadInventory } from "./inventory";
 import { fetchAvailability, type Counts } from "./availability";
 import { type DueMap, type FailMap, seedDue, mergeDue, selectDue, nextSleepMs, jitterMs, retryBackoffMs } from "./scheduler";
 
 export interface WfEnv {
   RAW: R2Bucket;
+  CAMPSITES?: KVNamespace; // inventory source of truth (_inventory key); bundled fallback
   COLLECTOR_WF: Workflow; // self-reference for continue-as-new
   MAX_STALENESS_DAYS?: string;
   INACTIVE_AFTER_FAILURES?: string; // consecutive failures before a site is quarantined
@@ -175,7 +176,12 @@ type LoopPayload = { due?: DueMap; collectedTotal?: number; fails?: FailMap; pro
 
 export class CollectorLoop extends WorkflowEntrypoint<WfEnv, LoopPayload> {
   async run(event: WorkflowEvent<LoopPayload>, step: WorkflowStep) {
-    const sites = (index as unknown as Site[]).filter((s) => s.collect !== false);
+    // Load the inventory from KV (bundled fallback) inside a step so the snapshot is
+    // checkpointed for this run's lifetime — replay-safe. Each continue-as-new re-runs
+    // this and picks up an inventory refreshed in KV since, with no Worker redeploy.
+    const sites = await step.do("load-inventory", async () =>
+      (await loadInventory(this.env.CAMPSITES) as unknown as Site[]).filter((s) => s.collect !== false),
+    );
     const X = (Number(this.env.MAX_STALENESS_DAYS ?? "2") || 2) * 86_400_000;
     const inactiveAfter = Math.max(1, Number(this.env.INACTIVE_AFTER_FAILURES ?? "") || INACTIVE_AFTER_DEFAULT);
     const ae = this.env.COLLECTOR_AE;
