@@ -22,23 +22,19 @@
  * the WEBAPP_PLAN flags for the Cache-API/rollup optimization is /availability?date=).
  */
 import { Hono } from 'hono';
-import index from './campsites-index.json';
+import { loadInventory, type InventoryEntry } from './inventory';
 
-type ReadEnv = { RAW: R2Bucket };
+// CAMPSITES (KV) holds the authoritative inventory under `_inventory`; RAW (R2) holds
+// the collected snapshots. The inventory is read per request (loadInventory) so a
+// deploy that refreshes KV is reflected without a Worker redeploy.
+type ReadEnv = { RAW: R2Bucket; CAMPSITES?: KVNamespace };
 
-type InventoryEntry = {
-  id: string;
-  guid: string;
-  name: string;
-  agency?: string;
-  agency_full?: string;
-  lat?: number | null;
-  lng?: number | null;
-  collect?: boolean | null;
-};
-
-const INVENTORY = index as unknown as InventoryEntry[];
-const BY_GUID = new Map(INVENTORY.map((e) => [e.guid, e]));
+// Per-request inventory + guid index. Rebuilding the Map each request is negligible
+// next to the R2 fan-out these handlers already do.
+async function inventoryFor(env: ReadEnv): Promise<{ inventory: InventoryEntry[]; byGuid: Map<string, InventoryEntry> }> {
+  const inventory = await loadInventory(env.CAMPSITES);
+  return { inventory, byGuid: new Map(inventory.map((e) => [e.guid, e])) };
+}
 
 // How many recent date-partitions to scan when resolving the newest snapshot per
 // site. Collection cadence is ~daily within MAX_STALENESS_DAYS, but a quarantined
@@ -112,12 +108,13 @@ readApi.get('/availability', async (c) => {
   if (!date || !DATE_RE.test(date)) return c.json({ error: 'need ?date=YYYY-MM-DD' }, 400);
   const pinned = c.req.query('collected');
 
+  const { inventory } = await inventoryFor(c.env);
   const latest = pinned
-    ? new Map(INVENTORY.map((e) => [e.id, pinned]))
+    ? new Map(inventory.map((e) => [e.id, pinned]))
     : await latestByProvider(c.env, 'summary');
 
   const out: any[] = [];
-  for (const e of INVENTORY) {
+  for (const e of inventory) {
     const collDate = latest.get(e.id);
     if (!collDate) continue;
     const snap = await getJson<{ by_date?: Record<string, Counts> }>(c.env, `summary/${collDate}/${e.id}.json`);
@@ -141,7 +138,8 @@ readApi.get('/availability', async (c) => {
 // GET /availability/:guid/site/:siteId — one site's per-night status calendar.
 // :siteId is the internal R2 site id (e.g. 81835), NOT the human label ("24").
 readApi.get('/availability/:guid/site/:siteId', async (c) => {
-  const entry = BY_GUID.get(c.req.param('guid'));
+  const { byGuid } = await inventoryFor(c.env);
+  const entry = byGuid.get(c.req.param('guid'));
   if (!entry) return c.json({ error: 'unknown guid' }, 404);
   const siteId = c.req.param('siteId');
 
@@ -168,7 +166,8 @@ readApi.get('/availability/:guid/site/:siteId', async (c) => {
 // The "individual site number" filter resolves the human `label` ("24") → siteId
 // against this list, so we surface both.
 readApi.get('/availability/:guid', async (c) => {
-  const entry = BY_GUID.get(c.req.param('guid'));
+  const { byGuid } = await inventoryFor(c.env);
+  const entry = byGuid.get(c.req.param('guid'));
   if (!entry) return c.json({ error: 'unknown guid' }, 404);
   const date = c.req.query('date');
   if (!date || !DATE_RE.test(date)) return c.json({ error: 'need ?date=YYYY-MM-DD' }, 400);
@@ -203,7 +202,8 @@ readApi.get('/collectors', async (c) => {
 
   const lastDates = await latestByProvider(c.env, 'summary');
 
-  const out = INVENTORY.map((e) => {
+  const { inventory } = await inventoryFor(c.env);
+  const out = inventory.map((e) => {
     const collect = e.collect !== false;
     const lastCollectedDate = lastDates.get(e.id) ?? null;
     const ageDays = lastCollectedDate ? Math.floor((now - Date.parse(lastCollectedDate)) / 86_400_000) : null;

@@ -31,5 +31,15 @@ const seedData = data.features.map((feature) => {
   };
 });
 
+// The collector + read API read the whole inventory from KV under a single
+// `_inventory` key (src/inventory.ts) — KV is the runtime source of truth, the
+// bundled campsites-index.json is the fallback. Seed that key from the same
+// committed inventory so local/CI KV matches what a deploy pushes to remote KV
+// (.github/workflows/deploy-kv.yaml).
+const inventory = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '../src/campsites-index.json'), 'utf8'),
+);
+seedData.push({ key: '_inventory', value: JSON.stringify(inventory) });
+
 fs.writeFileSync(outputPath, JSON.stringify(seedData, null, 2), 'utf8');
-console.log(`Generated seed data for ${seedData.length} campsites in ${outputPath}`);
+console.log(`Generated seed for ${seedData.length - 1} campsites + the _inventory key in ${outputPath}`);
