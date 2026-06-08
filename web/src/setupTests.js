@@ -2,27 +2,35 @@ import '@testing-library/jest-dom';
 
 // Mock mapbox-gl for tests (it requires a browser canvas)
 vi.mock('mapbox-gl', () => {
-  const mockMap = {
-    on: vi.fn(),
-    off: vi.fn(),
-    remove: vi.fn(),
-    addControl: vi.fn(),
-    addSource: vi.fn(),
-    addLayer: vi.fn(),
-    setFilter: vi.fn(),
-    setFeatureState: vi.fn(),
-    queryRenderedFeatures: vi.fn(() => []),
-    getCanvas: vi.fn(() => ({ style: {} })),
-    isStyleLoaded: vi.fn(() => true),
+  const makeMap = () => {
+    const handlers = [];
+    return {
+      __handlers: handlers,
+      on: vi.fn((...args) => handlers.push(args)),
+      off: vi.fn(),
+      remove: vi.fn(),
+      addControl: vi.fn(),
+      addSource: vi.fn(),
+      addLayer: vi.fn(),
+      getSource: vi.fn(() => ({ setData: vi.fn() })),
+      getLayer: vi.fn(() => undefined),
+      removeLayer: vi.fn(),
+      removeSource: vi.fn(),
+      setFilter: vi.fn(),
+      setFeatureState: vi.fn(),
+      queryRenderedFeatures: vi.fn(() => []),
+      getCanvas: vi.fn(() => ({ style: {} })),
+      getZoom: vi.fn(() => 7),
+      flyTo: vi.fn(),
+      isStyleLoaded: vi.fn(() => true),
+      loaded: vi.fn(() => true),
+    };
   };
 
+  const Map = vi.fn(() => makeMap());
   return {
-    default: {
-      Map: vi.fn(() => mockMap),
-      NavigationControl: vi.fn(),
-      accessToken: null,
-    },
-    Map: vi.fn(() => mockMap),
+    default: { Map, NavigationControl: vi.fn(), accessToken: null },
+    Map,
     NavigationControl: vi.fn(),
   };
 });

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const BASE_URL = 'http://127.0.0.1:5173';
+const BASE_URL = process.env.E2E_BASE_URL || 'http://127.0.0.1:5173';
 // Reach the backend the way the app does: through the same-origin `/api` proxy on
 // the Vite dev server, which attaches the Cloudflare Access service token
 // (CF_ACCESS_CLIENT_ID/SECRET, set in CI) and forwards to the backend. This
@@ -9,52 +9,55 @@ const API_URL = `${BASE_URL}/api`;
 
 test.describe('Robot Geographical Society - Integration', () => {
   test('backend is reachable through the authenticated /api proxy', async ({ request }) => {
-    // Retry logic for backend/proxy readiness
+    // Probe /collectors — the path the app actually uses. It reads the bundled
+    // inventory (so it returns rows even with empty R2), which makes this a clean
+    // auth-path check independent of seeded availability snapshots.
     let response;
     for (let i = 0; i < 5; i++) {
-        try {
-            response = await request.get(`${API_URL}/campsite/blm/fishtrap-recreation-area`);
-            if (response.ok()) break;
-        } catch (e) {
-            console.log(`Proxy attempt ${i+1} failed: ${e.message}`);
-        }
-        await new Promise(r => setTimeout(r, 2000));
+      try {
+        response = await request.get(`${API_URL}/collectors`);
+        if (response.ok()) break;
+      } catch (e) {
+        console.log(`Proxy attempt ${i + 1} failed: ${e.message}`);
+      }
+      await new Promise((r) => setTimeout(r, 2000));
     }
-
     expect(response?.ok()).toBeTruthy();
     const data = await response.json();
-    expect(data.name).toBe('Fishtrap Recreation Area');
-    expect(data.agency_short).toBe('blm');
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeGreaterThan(0);
+    expect(data[0]).toHaveProperty('guid');
+    expect(data[0]).toHaveProperty('state');
   });
 
-  test('frontend should be reachable', async ({ page }) => {
+  test('frontend loads and redirects to the availability view', async ({ page }) => {
     await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
-    const title = await page.title();
-    expect(title).toBe('Robot Geographical Society');
+    expect(await page.title()).toBe('Robot Geographical Society');
+    await expect(page).toHaveURL(/\/availability$/);
   });
 
-  test('all four agency toggle buttons are visible and active by default', async ({ page }) => {
-    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.controls');
-    for (const label of ['WA State Parks', 'National Park Service', 'US Forest Service', 'Bureau of Land Management']) {
-      const btn = page.getByRole('button', { name: new RegExp(label, 'i') });
-      await expect(btn).toBeVisible();
-      await expect(btn).toHaveAttribute('aria-pressed', 'true');
-    }
+  test('the top nav shows both view tabs', async ({ page }) => {
+    await page.goto(`${BASE_URL}/availability`, { waitUntil: 'domcontentloaded' });
+    await expect(page.getByRole('link', { name: /Availability/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Collectors/i })).toBeVisible();
   });
 
-  test('map container element is present', async ({ page }) => {
-    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.map-container');
+  test('availability view renders the date filter, map and agency legend', async ({ page }) => {
+    await page.goto(`${BASE_URL}/availability`, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('.date-filter')).toBeVisible();
     await expect(page.locator('.map-container')).toBeVisible();
+    await expect(page.getByText('WA State Parks')).toBeVisible();
   });
 
-  test('toggling an agency button deactivates it', async ({ page }) => {
-    await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.controls');
-    const btn = page.getByRole('button', { name: /WA State Parks/i });
-    await expect(btn).toHaveAttribute('aria-pressed', 'true');
-    await btn.click();
-    await expect(btn).toHaveAttribute('aria-pressed', 'false');
+  test('collectors view renders the fleet health panel', async ({ page }) => {
+    await page.goto(`${BASE_URL}/collectors`, { waitUntil: 'domcontentloaded' });
+    await expect(page.getByText('Fleet health')).toBeVisible();
+  });
+
+  test('clicking a nav tab switches the route', async ({ page }) => {
+    await page.goto(`${BASE_URL}/availability`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('link', { name: /Collectors/i }).click();
+    await expect(page).toHaveURL(/\/collectors$/);
+    await expect(page.getByText('Fleet health')).toBeVisible();
   });
 });

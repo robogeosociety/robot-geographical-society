@@ -6,14 +6,21 @@ The Royal Geographical Society was founded in 1830 to advance geographical scien
 The Robot Geographical Society performs the same job using computers, foregoing the patriarchal, paper-based excesses of the past.
 
 ## Functional Prototype
-* A map interface (built on Mapbox GL JS) allowing a user to view campsites currently open to reserve, hosted by either Washington State Parks, USFS or the National Park Service
-* A statically hosted JSON dataset with all campsites and metadata
-* Daily per-site, per-date availability collected by the Cloudflare collector into the `campsite-raw` R2 bucket (see [Collector Architecture](#collector-architecture))
-* Rich popups with the following data for each campsite:
-    * Number of sites
-    * Site parameters (RV, tent, bike-in, parking)
-    * ICS links to opening days and first reservstion days
-    * Links to official sites
+A **two-view Mapbox app** (React + Vite) over the live Cloudflare collector data, served
+through the Access-gated backend. The browser never holds a credential — local dev reaches
+the deployed Worker through a same-origin `/api` proxy that attaches the Access service token
+server-side (see [Deployment Architecture](#deployment-architecture)).
+
+* **Availability view** (`/availability`) — one pin per collected campground, recolored by the
+  available/total ratio for a chosen night (the date picker recolors the whole map). Click a
+  campground for its per-site grid, filter by status, and drill into a single site's calendar
+  strip across the captured window.
+* **Collectors view** (`/collectors`) — fleet health map, one pin per inventory site colored by
+  collector state (healthy / overdue / quarantined / disabled), with a fleet-stats panel and a
+  quarantine list that reactivates a stalled collector in one click.
+* Daily per-site, per-date availability collected by the Cloudflare collector into the
+  `campsite-raw` R2 bucket (see [Collector Architecture](#collector-architecture)), surfaced by
+  the Worker's read API (`/availability`, `/collectors`).
 
 ## Tech Stack
 
