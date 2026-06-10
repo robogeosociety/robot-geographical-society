@@ -39,4 +39,5 @@ jobs:
           npx --yes wrangler@4 kv key put _inventory \
             --path src/campsites-index.json \
             --binding CAMPSITES \
+            --preview false \
             --remote
