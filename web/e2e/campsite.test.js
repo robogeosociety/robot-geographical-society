@@ -42,9 +42,9 @@ test.describe('Robot Geographical Society - Integration', () => {
     await expect(page.getByRole('link', { name: /Collectors/i })).toBeVisible();
   });
 
-  test('availability view renders the date filter, map and agency legend', async ({ page }) => {
+  test('availability view renders the map controls and agency legend', async ({ page }) => {
     await page.goto(`${BASE_URL}/availability`, { waitUntil: 'domcontentloaded' });
-    await expect(page.locator('.date-filter')).toBeVisible();
+    await expect(page.locator('.map-overlay-tl')).toBeVisible();
     await expect(page.locator('.map-container')).toBeVisible();
     await expect(page.getByText('WA State Parks')).toBeVisible();
   });
