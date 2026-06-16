@@ -45,15 +45,17 @@ export default function AvailabilityView() {
 
   return (
     <>
-      <div className="controls controls-left">
-        {loading && <span className="muted control-chip">loading…</span>}
-        {error && <span className="error-text control-chip" role="alert">{error}</span>}
-        {!loading && !error && (
-          <span className="muted control-chip">{rows.length} campgrounds · fill = remaining availability</span>
-        )}
+      <div className="map-overlay-tl">
+        <div className="control-row">
+          {loading && <span className="muted control-chip">loading…</span>}
+          {error && <span className="error-text control-chip" role="alert">{error}</span>}
+          {!loading && !error && (
+            <span className="muted control-chip">{rows.length} campgrounds · fill = remaining availability</span>
+          )}
+        </div>
+        <StalenessBanner date={stalest} />
       </div>
 
-      <StalenessBanner date={stalest} />
       <AgencyLegend />
 
       {selected && (

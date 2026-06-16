@@ -42,12 +42,12 @@ describe('App shell', () => {
 
   it('redirects "/" to the availability view', async () => {
     renderAt('/');
-    await waitFor(() => expect(document.querySelector('.controls-left')).not.toBeNull());
+    await waitFor(() => expect(document.querySelector('.map-overlay-tl')).not.toBeNull());
   });
 
   it('availability view shows the map controls and agency legend', async () => {
     renderAt('/availability');
-    await waitFor(() => expect(document.querySelector('.controls-left')).not.toBeNull());
+    await waitFor(() => expect(document.querySelector('.map-overlay-tl')).not.toBeNull());
     expect(screen.getByText(/WA State Parks/i)).toBeInTheDocument();
   });
 
