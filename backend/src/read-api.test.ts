@@ -51,6 +51,25 @@ describe('/availability — aggregate map (the known reservation)', () => {
     const res = await app.request('/availability', {}, { RAW } as any);
     expect(res.status).toBe(400);
   });
+
+  test('reports total remaining availability + per-season breakdown (nights on/after date)', async () => {
+    const RAW = makeR2({
+      [`summary/2026-06-01/${MF_ID}.json`]: {
+        id: MF_ID,
+        by_date: {
+          '2026-05-01': { available: 9, reserved: 0, total: 9 }, // Spring, BEFORE date → excluded
+          '2026-06-05': { available: 2, reserved: 1, total: 3 }, // Summer
+          '2026-06-06': { available: 1, reserved: 2, total: 3 }, // Summer
+          '2026-09-23': { available: 4, reserved: 0, total: 4 }, // Fall
+        },
+      },
+    });
+    const res = await app.request('/availability?date=2026-06-05', {}, { RAW } as any);
+    const mf = ((await res.json()) as any[]).find((e) => e.guid === MF_GUID);
+    expect(mf.remaining).toBe(7); // 2+1+4 (05-01 excluded)
+    expect(mf.remainingTotal).toBe(10); // 3+3+4
+    expect(mf.remainingBySeason).toMatchObject({ Summer: 3, Fall: 4, Spring: 0, Winter: 0 });
+  });
 });
 
 describe('/availability/:guid — per-campground site list for a night', () => {

@@ -43,6 +43,15 @@ async function inventoryFor(env: ReadEnv): Promise<{ inventory: InventoryEntry[]
 const LOOKBACK_PARTITIONS = 30;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+// Northern-hemisphere meteorological seasons, keyed off the month of a YYYY-MM-DD.
+function seasonOf(d: string): 'Winter' | 'Spring' | 'Summer' | 'Fall' {
+  const m = Number(d.slice(5, 7));
+  if (m === 12 || m <= 2) return 'Winter';
+  if (m <= 5) return 'Spring';
+  if (m <= 8) return 'Summer';
+  return 'Fall';
+}
+
 type Counts = { available: number; reserved: number; total: number };
 
 async function listAll(env: ReadEnv, opts: { prefix: string; delimiter?: string }) {
@@ -119,7 +128,23 @@ readApi.get('/availability', async (c) => {
     if (!collDate) continue;
     const snap = await getJson<{ by_date?: Record<string, Counts> }>(c.env, `summary/${collDate}/${e.id}.json`);
     if (!snap) continue;
-    const counts = snap.by_date?.[date] ?? null;
+    const byDate = snap.by_date ?? {};
+    const counts = byDate[date] ?? null;
+
+    // Total REMAINING availability for the campground: available campsite-nights summed
+    // across every captured night on/after `date`, plus a per-season breakdown. This is
+    // the map's default metric (and the little per-pin availability bar).
+    let remaining = 0;
+    let remainingTotal = 0;
+    const remainingBySeason = { Winter: 0, Spring: 0, Summer: 0, Fall: 0 };
+    for (const [d, cnt] of Object.entries(byDate)) {
+      if (d < date) continue;
+      const a = cnt?.available ?? 0;
+      remaining += a;
+      remainingTotal += cnt?.total ?? 0;
+      remainingBySeason[seasonOf(d)] += a;
+    }
+
     out.push({
       guid: e.guid,
       name: e.name,
@@ -129,6 +154,9 @@ readApi.get('/availability', async (c) => {
       available: counts?.available ?? null,
       reserved: counts?.reserved ?? null,
       total: counts?.total ?? null,
+      remaining,
+      remainingTotal,
+      remainingBySeason,
       collected_date: collDate,
     });
   }
