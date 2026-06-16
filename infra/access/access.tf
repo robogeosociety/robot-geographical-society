@@ -7,6 +7,14 @@
 resource "cloudflare_zero_trust_access_service_token" "dev" {
   account_id = var.account_id
   name       = "rgs-local-dev"
+
+  # The token's secret is only emitted at creation, so rotating it means a
+  # destroy+create (`terraform apply -replace=...`). Cloudflare refuses to delete a
+  # token still referenced by the app policy, so create the replacement first and
+  # let the app re-point to it before the old one is removed. See README.md.
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Self-hosted application on the backend hostname, with two policies: human SSO

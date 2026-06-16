@@ -30,6 +30,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
+      // rgs Vite port (registry: ~/.claude/vite-ports.json). CI overrides with --port 5173.
+      port: 5191,
+      strictPort: true,
       allowedHosts: true,
       fs: {
         allow: ['..'],
