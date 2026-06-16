@@ -28,9 +28,14 @@ vi.mock('mapbox-gl', () => {
   };
 
   const Map = vi.fn(() => makeMap());
+  const Marker = vi.fn(() => {
+    const m = { setLngLat: () => m, addTo: () => m, remove: () => {} };
+    return m;
+  });
   return {
-    default: { Map, NavigationControl: vi.fn(), accessToken: null },
+    default: { Map, Marker, NavigationControl: vi.fn(), accessToken: null },
     Map,
+    Marker,
     NavigationControl: vi.fn(),
   };
 });

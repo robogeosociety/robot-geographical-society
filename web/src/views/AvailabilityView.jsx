@@ -1,20 +1,22 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCircleLayer, rowsToFC, HOVER_PAINT } from '../map/useCircleLayer';
+import { useCampgroundBars } from '../map/useCampgroundBars';
 import { getAvailability, getSiteCalendar } from '../api';
-import { AGENCY_COLORS, agencyShort } from '../constants';
+import { AGENCY_COLORS, agencyShort, SEASONS } from '../constants';
 import AgencyLegend from '../components/AgencyLegend';
 import StalenessBanner from '../components/StalenessBanner';
 import SiteCalendar from '../components/SiteCalendar';
 import LocationPanes from '../panes/LocationPanes';
 
-const TODAY = '2026-06-08';
+// "Today" — the window of remaining availability is summed on/after this night.
+const TODAY = new Date().toISOString().slice(0, 10);
 
-// Pin color runs full (red) → open (green) on the available/total ratio.
+// Pin color runs none-left (red) → lots remaining (green) on the normalized metric.
 const AVAILABILITY_PAINT = {
   ...HOVER_PAINT,
   'circle-color': [
-    'interpolate', ['linear'], ['get', 'ratio'],
+    'interpolate', ['linear'], ['get', 'norm'],
     0, '#F85149',
     0.25, '#D29922',
     0.6, '#A6E22E',
@@ -24,40 +26,49 @@ const AVAILABILITY_PAINT = {
 
 export default function AvailabilityView() {
   const { map, ready } = useMap();
-  const [date, setDate] = useState(TODAY);
+  // Default metric is TOTAL REMAINING availability (summed across the window from
+  // today); the season filter narrows it to one season's remaining nights.
+  const [season, setSeason] = useState('all');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState(null); // a feature's properties
 
-  // Fetch the night's availability whenever the date changes.
   useEffect(() => {
     let live = true;
     setLoading(true);
     setError(null);
-    getAvailability(date)
+    getAvailability(TODAY)
       .then((data) => { if (live) setRows(data); })
       .catch((e) => { if (live) setError(e.message); })
       .finally(() => { if (live) setLoading(false); });
     return () => { live = false; };
-  }, [date]);
+  }, []);
 
-  const fc = useMemo(
-    () => rowsToFC(rows, (r) => ({
-      ratio: r.total > 0 ? r.available / r.total : 0,
-      agency_short: agencyShort(r.agency),
-    })),
-    [rows],
-  );
+  // Total remaining availability for the selected season (fallback to single-night
+  // `available` if the backend hasn't shipped the `remaining` fields yet).
+  const metricOf = useMemo(() => (r) => (
+    season === 'all' ? (r.remaining ?? r.available ?? 0) : (r.remainingBySeason?.[season] ?? 0)
+  ), [season]);
+
+  const fc = useMemo(() => {
+    const max = Math.max(1, ...rows.map(metricOf));
+    return rowsToFC(rows, (r) => {
+      const metric = metricOf(r);
+      return { metric, norm: metric / max, agency_short: agencyShort(r.agency) };
+    });
+  }, [rows, metricOf]);
+
+  const onSelect = (props) => {
+    setSelected(props);
+    if (map) map.flyTo({ center: [props.lng, props.lat], zoom: Math.max(map.getZoom(), 9) });
+  };
 
   useCircleLayer({
     map, ready, id: 'availability', features: fc, paint: AVAILABILITY_PAINT,
-    onSelect: (props) => {
-      setSelected(props);
-      if (map) map.flyTo({ center: [props.lng, props.lat], zoom: Math.max(map.getZoom(), 9) });
-    },
-    onEmptyClick: () => setSelected(null),
+    onSelect, onEmptyClick: () => setSelected(null),
   });
+  useCampgroundBars({ map, ready, features: fc, onSelect });
 
   const stalest = useMemo(
     () => rows.reduce((min, r) => (r.collected_date && (!min || r.collected_date < min) ? r.collected_date : min), null),
@@ -67,10 +78,12 @@ export default function AvailabilityView() {
   return (
     <>
       <div className="controls controls-left">
-        <label className="date-filter">
-          <span>Night of</span>
-          <input type="date" value={date} max="2026-12-31" min="2026-01-01"
-            onChange={(e) => setDate(e.target.value)} />
+        <label className="season-filter">
+          <span>Remaining</span>
+          <select value={season} onChange={(e) => setSeason(e.target.value)}>
+            <option value="all">all seasons</option>
+            {SEASONS.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
         </label>
         {loading && <span className="muted">loading…</span>}
         {error && <span className="error-text" role="alert">{error}</span>}
@@ -84,7 +97,7 @@ export default function AvailabilityView() {
         <CampgroundPanel
           guid={selected.guid}
           campground={selected}
-          date={date}
+          date={TODAY}
           onClose={() => setSelected(null)}
         />
       )}

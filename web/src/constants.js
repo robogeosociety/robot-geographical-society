@@ -41,3 +41,13 @@ export const STATE_STYLE = {
   quarantined: { color: '#F85149', label: 'Quarantined' },
   disabled: { color: '#6E7681', label: 'Disabled' },
 };
+
+// Availability ramp: 0 = full/none-left (red) → 1 = lots remaining (green).
+export function availabilityColor(t) {
+  if (t >= 0.6) return '#3FB950';
+  if (t >= 0.25) return '#D29922';
+  if (t > 0) return '#E0843B';
+  return '#F85149';
+}
+
+export const SEASONS = ['Winter', 'Spring', 'Summer', 'Fall'];

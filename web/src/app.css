@@ -388,6 +388,42 @@ body {
   color-scheme: dark;
 }
 
+/* Season / remaining-availability filter (map default) */
+.season-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 12px;
+}
+.season-filter select {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  color-scheme: dark;
+}
+
+/* Per-campground availability bar to the left of the map point */
+.cg-bar {
+  width: 5px;
+  height: 18px;
+  background: rgba(20, 20, 20, 0.55);
+  border-radius: 2px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+}
+.cg-bar-fill { width: 100%; border-radius: 2px 2px 0 0; }
+
 .muted { color: var(--text-muted); font-size: 12px; }
 .small { font-size: 11px; }
 .error-text { color: var(--pink); font-size: 12px; }

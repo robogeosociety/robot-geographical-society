@@ -42,12 +42,12 @@ describe('App shell', () => {
 
   it('redirects "/" to the availability view', async () => {
     renderAt('/');
-    await waitFor(() => expect(document.querySelector('.date-filter')).not.toBeNull());
+    await waitFor(() => expect(document.querySelector('.season-filter')).not.toBeNull());
   });
 
-  it('availability view shows the date filter and agency legend', async () => {
+  it('availability view shows the remaining/season filter and agency legend', async () => {
     renderAt('/availability');
-    await waitFor(() => expect(document.querySelector('.date-filter')).not.toBeNull());
+    await waitFor(() => expect(document.querySelector('.season-filter')).not.toBeNull());
     expect(screen.getByText(/WA State Parks/i)).toBeInTheDocument();
   });
 
