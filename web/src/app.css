@@ -558,6 +558,68 @@ body {
 .kv dt { color: var(--text-muted); }
 .kv dd { text-align: right; }
 
+/* ---- Per-location panes (swipeable views) ---- */
+.location-panes { margin-top: 4px; }
+
+.pane-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+.pane-tab {
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.pane-tab-on { color: var(--text); border-color: var(--cyan); background: rgba(102, 217, 239, 0.1); }
+
+.pane-filters { display: flex; gap: 6px; margin-bottom: 10px; }
+.pane-search, .pane-select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 8px;
+  color-scheme: dark;
+}
+.pane-search { flex: 1; min-width: 0; }
+
+.pane-viewport { overflow: hidden; }
+.pane-track { display: flex; transition: transform 0.25s ease; }
+.pane { flex: 0 0 100%; min-width: 100%; }
+.pane-empty { padding: 12px 0; }
+
+/* Survival runway list */
+.survival-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.survival-row {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 6px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--text);
+}
+.survival-row:hover { background: var(--bg-elevated); }
+.survival-meta { display: flex; flex-direction: column; line-height: 1.2; overflow: hidden; }
+.survival-label { font-size: 13px; font-weight: 700; }
+.survival-loop { max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.survival-stats { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.sparkline, .bars { display: block; }
+
+/* Availability bars view (day/week/month/season) */
+.bars-view { display: flex; flex-direction: column; }
+.gran-toggle { display: flex; gap: 6px; margin-bottom: 8px; }
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

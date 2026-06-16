@@ -22,6 +22,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `npm run build` — production build
 - **Campsite data:** `data/campsites.json` — GeoJSON FeatureCollection
 
+## Terminology — campground vs campsite (standardized)
+
+Use these terms consistently across code, UI, and docs. They follow the federal
+rec.gov / RIDB convention (the authoritative model shared by USFS, NPS, BLM, USACE);
+WA goingtocamp's `resourceLocation`/`mapId`/`resource` are **aliased onto them at the
+collector's ingestion boundary**.
+
+| Term | Meaning | Example | Provider sources |
+| --- | --- | --- | --- |
+| **campground** | The bookable place as a whole. | *Middle Fork* | RIDB `Facility`; rec.gov availability `campground`; WA `resourceLocation` |
+| **loop** | A named sub-grouping of campsites within a campground. | *Middle Fork — Riverbend* | rec.gov availability `loop`; WA `mapId`/map (null until enriched) |
+| **campsite** | An individual reservable unit; its number/label is the **`site`**. | *Middle Fork #24* (campsite, `site`=24) | RIDB `Campsite`/`CampsiteID`; rec.gov `campsite_id` + `site`; WA `resource`/`resourceId` |
+
+- "campground" is preferred over RIDB's formal "facility" (it's the public + availability-API word and matches existing code/R2 keys).
+- A bare "site" means the **campsite's number/label** (e.g. `label`/`site` = "24"), not the place. Avoid the ambiguous bare "site" for the place — say "campground".
+- The R2 `sites/<id>.json` key and the `siteId` field are the **internal** unit id (e.g. `81835`); the human label (`#24`) is `label`. (Existing field names like `siteId`/`label` are kept; the glossary governs prose, UI copy, and new identifiers.)
+
 ## Availability data (per-site, per-date)
 
 The collector (`backend/`) banks daily availability snapshots to the `campsite-raw` R2 bucket. Three objects per campground per collection day, **keyed by provider id** — rec.gov campground id (e.g. `233864`) or WA goingtocamp resourceLocation id (negative, e.g. `-2147483476`); **not** the `usfs/…`/`wa/…` slug from `campsites.json`:

@@ -46,6 +46,50 @@ export function getSiteCalendar(guid, siteId) {
   return getJSON(`/availability/${guid}/site/${siteId}`);
 }
 
+// Clear the in-memory caches (availability by date, series by guid). Test-only.
+export function _resetCaches() {
+  availabilityCache.clear();
+  seriesCache.clear();
+}
+
+// Run `fn` over `items` with at most `limit` in flight; preserves order.
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let i = 0;
+  async function worker() {
+    while (i < items.length) {
+      const idx = i++;
+      out[idx] = await fn(items[idx], idx);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return out;
+}
+
+// Every campsite in a campground with its FULL captured calendar — the per-location
+// time series the survival/runway views need:
+//   [{ siteId, label, loop, type, use, by_date: { 'YYYY-MM-DD': status } }]
+// v1 derives this from the deployed per-site endpoint (one call per campsite, capped
+// concurrency) so it works without a backend deploy; a bulk `?series=1` endpoint that
+// returns it in one R2 read is a planned optimization. Cached per guid (by_date is
+// date-independent).
+const seriesCache = new Map();
+export function getCampgroundSeries(guid, date) {
+  if (seriesCache.has(guid)) return seriesCache.get(guid);
+  const p = (async () => {
+    const { sites } = await getCampgroundSites(guid, date);
+    return mapLimit(sites || [], 8, async (s) => {
+      const cal = await getSiteCalendar(guid, s.siteId).catch(() => ({ by_date: {} }));
+      return {
+        siteId: s.siteId, label: s.label, loop: s.loop, type: s.type, use: s.use,
+        by_date: cal.by_date || {},
+      };
+    });
+  })().catch((err) => { seriesCache.delete(guid); throw err; });
+  seriesCache.set(guid, p);
+  return p;
+}
+
 // The dead-letter queue: quarantined collectors, keyed by provider id. Richer than
 // the `quarantined` rows in /collectors (carries failures + lastError + sinceISO),
 // so the fleet panel's quarantine list reads from here.
