@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
-import { useCircleLayer, rowsToFC, HOVER_PAINT } from '../map/useCircleLayer';
-import { useCampgroundBars } from '../map/useCampgroundBars';
+import { useCampgroundPies } from '../map/useCampgroundPies';
 import { getAvailability, getSiteCalendar } from '../api';
 import { AGENCY_COLORS, agencyShort, SEASONS } from '../constants';
 import AgencyLegend from '../components/AgencyLegend';
+import SeasonLegend from '../components/SeasonLegend';
 import StalenessBanner from '../components/StalenessBanner';
 import SiteCalendar from '../components/SiteCalendar';
 import LocationPanes from '../panes/LocationPanes';
@@ -12,27 +12,15 @@ import LocationPanes from '../panes/LocationPanes';
 // "Today" — the window of remaining availability is summed on/after this night.
 const TODAY = new Date().toISOString().slice(0, 10);
 
-// Pin color runs none-left (red) → lots remaining (green) on the normalized metric.
-const AVAILABILITY_PAINT = {
-  ...HOVER_PAINT,
-  'circle-color': [
-    'interpolate', ['linear'], ['get', 'norm'],
-    0, '#F85149',
-    0.25, '#D29922',
-    0.6, '#A6E22E',
-    1, '#3FB950',
-  ],
-};
-
 export default function AvailabilityView() {
   const { map, ready } = useMap();
-  // Default metric is TOTAL REMAINING availability (summed across the window from
-  // today); the season filter narrows it to one season's remaining nights.
+  // Each campground is a seasonal-availability pie (total remaining for the year,
+  // sliced by season). The season selector highlights one season's slice.
   const [season, setSeason] = useState('all');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selected, setSelected] = useState(null); // a feature's properties
+  const [selected, setSelected] = useState(null); // a campground row
 
   useEffect(() => {
     let live = true;
@@ -45,34 +33,15 @@ export default function AvailabilityView() {
     return () => { live = false; };
   }, []);
 
-  // Total remaining availability for the selected season (fallback to single-night
-  // `available` if the backend hasn't shipped the `remaining` fields yet).
-  const metricOf = useMemo(() => (r) => (
-    season === 'all' ? (r.remaining ?? r.available ?? 0) : (r.remainingBySeason?.[season] ?? 0)
-  ), [season]);
-
-  const fc = useMemo(() => {
-    // Total remaining availability spans orders of magnitude across campgrounds, so
-    // normalize on a log scale — otherwise the few huge campgrounds flatten the rest.
-    const max = Math.max(1, ...rows.map(metricOf));
-    const denom = Math.log1p(max);
-    return rowsToFC(rows, (r) => {
-      const metric = metricOf(r);
-      const norm = denom > 0 ? Math.log1p(metric) / denom : 0;
-      return { metric, norm, agency_short: agencyShort(r.agency) };
-    });
-  }, [rows, metricOf]);
-
-  const onSelect = (props) => {
-    setSelected(props);
-    if (map) map.flyTo({ center: [props.lng, props.lat], zoom: Math.max(map.getZoom(), 9) });
+  const onSelect = (row) => {
+    setSelected(row);
+    if (map) map.flyTo({ center: [row.lng, row.lat], zoom: Math.max(map.getZoom(), 9) });
   };
 
-  useCircleLayer({
-    map, ready, id: 'availability', features: fc, paint: AVAILABILITY_PAINT,
-    onSelect, onEmptyClick: () => setSelected(null),
+  useCampgroundPies({
+    map, ready, rows, highlightSeason: season,
+    onSelect, onEmpty: () => setSelected(null),
   });
-  useCampgroundBars({ map, ready, features: fc, onSelect });
 
   const stalest = useMemo(
     () => rows.reduce((min, r) => (r.collected_date && (!min || r.collected_date < min) ? r.collected_date : min), null),
@@ -83,7 +52,7 @@ export default function AvailabilityView() {
     <>
       <div className="controls controls-left">
         <label className="season-filter">
-          <span>Remaining</span>
+          <span>Season</span>
           <select value={season} onChange={(e) => setSeason(e.target.value)}>
             <option value="all">all seasons</option>
             {SEASONS.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -95,6 +64,7 @@ export default function AvailabilityView() {
       </div>
 
       <StalenessBanner date={stalest} />
+      <SeasonLegend highlight={season} />
       <AgencyLegend />
 
       {selected && (

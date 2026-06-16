@@ -410,19 +410,12 @@ body {
   color-scheme: dark;
 }
 
-/* Per-campground availability bar to the left of the map point */
-.cg-bar {
-  width: 5px;
-  height: 18px;
-  background: rgba(20, 20, 20, 0.55);
-  border-radius: 2px;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
-}
-.cg-bar-fill { width: 100%; border-radius: 2px 2px 0 0; }
+/* Per-campground seasonal-availability pie marker */
+.cg-pie { cursor: pointer; line-height: 0; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5)); }
+.cg-pie:hover { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6)); }
+
+/* Season color legend sits just above the agency legend */
+.season-legend { bottom: 56px; }
 
 .muted { color: var(--text-muted); font-size: 12px; }
 .small { font-size: 11px; }
