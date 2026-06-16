@@ -620,6 +620,46 @@ body {
 .bars-view { display: flex; flex-direction: column; }
 .gran-toggle { display: flex; gap: 6px; margin-bottom: 8px; }
 
+/* Campground season bar (panel header, map view) */
+.season-bar { margin-bottom: 12px; }
+.season-bar-title { margin-bottom: 2px; }
+.season-bar-label { fill: var(--text-muted); font-size: 9px; font-family: inherit; }
+
+/* Zoomed campsite cluster view */
+.cluster-map { display: flex; flex-direction: column; gap: 10px; }
+.cluster-note { margin-bottom: 2px; }
+.cluster {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.cluster-label { margin-bottom: 6px; text-transform: capitalize; }
+.cluster-cells { display: flex; flex-wrap: wrap; gap: 4px; }
+.cluster-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 26px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.cluster-bar-track {
+  position: relative;
+  width: 14px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cluster-bar { position: absolute; left: 0; bottom: 0; width: 100%; border-radius: 2px 2px 0 0; }
+.cluster-cell-label { font-size: 9px; color: var(--text-muted); max-width: 26px; overflow: hidden; text-overflow: ellipsis; }
+.cluster-cell:hover .cluster-cell-label { color: var(--text); }
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

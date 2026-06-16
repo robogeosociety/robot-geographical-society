@@ -75,6 +75,19 @@ describe('Middle Fork — per-location panes (the validated case)', () => {
     expect(within(row25).getByText('2')).toBeInTheDocument();
   });
 
+  it('shows the campground season-availability bar and a zoomed loop-cluster layout', async () => {
+    const user = userEvent.setup();
+    render(<CampgroundPanel guid={GUID} campground={CAMPGROUND} date={DATE} onClose={() => {}} />);
+    await waitFor(() => expect(screen.getByLabelText(/availability by season/i)).toBeInTheDocument());
+
+    // Layout pane: campsites clustered by loop, each an availability bar.
+    await user.click(screen.getByRole('tab', { name: 'Layout' }));
+    const pane = activePane();
+    expect(pane.getByText(/approximate layout/i)).toBeInTheDocument();
+    expect(pane.getByText('RIVERBEND · 2')).toBeInTheDocument(); // loop cluster + campsite count
+    expect(pane.getByRole('button', { name: /24/ })).toBeInTheDocument();
+  });
+
   it('status view: the grid colors campsite #24 reserved for the night', async () => {
     const user = userEvent.setup();
     render(<CampgroundPanel guid={GUID} campground={CAMPGROUND} date={DATE} onClose={() => {}} />);

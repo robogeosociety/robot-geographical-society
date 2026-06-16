@@ -53,3 +53,18 @@ export function bucketAvailability(byDate, granularity, { from } = {}) {
 
   return [...buckets.values()];
 }
+
+// Campground-level buckets: sum every campsite's per-bucket availability into one
+// series (campsite-nights available vs captured), sorted by period.
+export function aggregateBuckets(sites, granularity, opts) {
+  const merged = new Map();
+  for (const s of sites || []) {
+    for (const b of bucketAvailability(s.by_date, granularity, opts)) {
+      let m = merged.get(b.key);
+      if (!m) { m = { key: b.key, label: b.label, available: 0, total: 0 }; merged.set(b.key, m); }
+      m.available += b.available;
+      m.total += b.total;
+    }
+  }
+  return [...merged.values()].sort((a, b) => (a.key < b.key ? -1 : 1));
+}

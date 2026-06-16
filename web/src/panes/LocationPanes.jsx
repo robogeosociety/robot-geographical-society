@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getCampgroundSeries } from '../api';
+import CampgroundSeasonBar from '../components/CampgroundSeasonBar';
 import SiteSurvivalList from './SiteSurvivalList';
 import SiteAvailabilityBars from './SiteAvailabilityBars';
+import SiteClusterMap from './SiteClusterMap';
 import SiteStatusGrid from './SiteStatusGrid';
 
 // Registry of per-location (per-campground) data views. Add an entry to add a
 // swipeable pane — e.g. a model-predicted survival curve once predict/ readiness
-// clears, a loop summary, a price/amenity view. Each Component receives
+// clears, a price/amenity view. Each Component receives
 // { sites, date, onSelectSite } where `sites` is the filtered campsite series.
 export const VIEWS = [
   { key: 'survival', label: 'Survival', Component: SiteSurvivalList },
   { key: 'bars', label: 'Availability', Component: SiteAvailabilityBars },
+  { key: 'layout', label: 'Layout', Component: SiteClusterMap },
   { key: 'status', label: 'Status', Component: SiteStatusGrid },
 ];
 
@@ -67,6 +70,8 @@ export default function LocationPanes({ guid, date, onSelectSite }) {
 
   return (
     <div className="location-panes">
+      {!loading && !error && sites && <CampgroundSeasonBar sites={sites} from={date} />}
+
       <div className="pane-tabs" role="tablist">
         {VIEWS.map((v, i) => (
           <button key={v.key} role="tab" aria-selected={i === view}
