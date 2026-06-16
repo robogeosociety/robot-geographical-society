@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import AvailabilityBars from '../components/AvailabilityBars';
 import { bucketAvailability } from './buckets';
 
-const GRANULARITIES = ['day', 'week', 'month', 'season'];
+const GRANULARITIES = ['day', 'week', 'month'];
 
 // Per-location view: remaining-availability bar graphs per campsite, bucketed by
-// day / week / month / season (toggle shared across rows). A view in the LocationPanes
+// day / week / month (toggle shared across rows). A view in the LocationPanes
 // registry — receives the already-filtered campsite series + the selected night.
 export default function SiteAvailabilityBars({ sites, date, onSelectSite }) {
   const [gran, setGran] = useState('week');

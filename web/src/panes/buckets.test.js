@@ -1,6 +1,6 @@
-import { bucketAvailability, aggregateBuckets } from './buckets';
+import { bucketAvailability } from './buckets';
 
-// 9 nights spanning two ISO weeks and into July; mixed statuses.
+// Nights spanning two ISO weeks and several months; mixed statuses.
 const byDate = {
   '2026-06-29': 'available', // Mon (week A)
   '2026-06-30': 'reserved',  // Tue
@@ -9,14 +9,13 @@ const byDate = {
   '2026-07-06': 'reserved',  // Mon (week B)
   '2026-07-07': 'available', // Tue
   '2026-08-15': 'available', // Aug
-  '2026-09-23': 'reserved',  // Fall
-  '2026-12-21': 'available', // Winter (rolls to 2027)
+  '2026-09-23': 'reserved',  // Sep
 };
 
 describe('bucketAvailability', () => {
   it('day: one bucket per night, available=1/0', () => {
     const b = bucketAvailability(byDate, 'day');
-    expect(b).toHaveLength(9);
+    expect(b).toHaveLength(8);
     expect(b[0]).toMatchObject({ label: '6/29', available: 1, total: 1 });
     expect(b[1]).toMatchObject({ available: 0, total: 1 }); // reserved
   });
@@ -36,34 +35,8 @@ describe('bucketAvailability', () => {
     expect(b.find((x) => x.key === '2026-08')).toMatchObject({ label: 'Aug', available: 1 });
   });
 
-  it('season: Summer/Fall/Winter, December rolls into the next year', () => {
-    const b = bucketAvailability(byDate, 'season');
-    expect(b.find((x) => x.key === '2026-Summer')).toMatchObject({ available: 5, total: 7 });
-    expect(b.find((x) => x.key === '2026-Fall')).toMatchObject({ available: 0, total: 1 });
-    expect(b.find((x) => x.key === '2027-Winter')).toMatchObject({ label: 'Winter', available: 1 });
-  });
-
   it('honors the `from` cutoff', () => {
     const b = bucketAvailability(byDate, 'month', { from: '2026-08-01' });
-    expect(b.map((x) => x.key)).toEqual(['2026-08', '2026-09', '2026-12']);
-  });
-});
-
-describe('aggregateBuckets — campground-level (sum across campsites)', () => {
-  const sites = [
-    { by_date: { '2026-07-01': 'available', '2026-07-02': 'reserved' } },
-    { by_date: { '2026-07-01': 'available', '2026-07-02': 'available' } },
-  ];
-
-  it('sums available + total campsite-nights per period', () => {
-    const m = aggregateBuckets(sites, 'month');
-    expect(m).toHaveLength(1);
-    expect(m[0]).toMatchObject({ key: '2026-07', available: 3, total: 4 });
-  });
-
-  it('returns periods sorted by key', () => {
-    const multi = [{ by_date: { '2026-09-01': 'available', '2026-07-01': 'available' } }];
-    const m = aggregateBuckets(multi, 'season');
-    expect(m.map((x) => x.key)).toEqual(['2026-Fall', '2026-Summer']);
+    expect(b.map((x) => x.key)).toEqual(['2026-08', '2026-09']);
   });
 });

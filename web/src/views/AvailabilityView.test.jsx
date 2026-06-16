@@ -75,10 +75,10 @@ describe('Middle Fork — per-location panes (the validated case)', () => {
     expect(within(row25).getByText('2')).toBeInTheDocument();
   });
 
-  it('shows the campground season-availability bar and a zoomed loop-cluster layout', async () => {
+  it('shows a zoomed loop-cluster layout', async () => {
     const user = userEvent.setup();
     render(<CampgroundPanel guid={GUID} campground={CAMPGROUND} date={DATE} onClose={() => {}} />);
-    await waitFor(() => expect(screen.getByLabelText(/availability by season/i)).toBeInTheDocument());
+    await screen.findByRole('tab', { name: 'Layout' });
 
     // Layout pane: campsites clustered by loop, each an availability bar.
     await user.click(screen.getByRole('tab', { name: 'Layout' }));

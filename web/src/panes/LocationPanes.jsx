@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getCampgroundSeries } from '../api';
-import CampgroundSeasonBar from '../components/CampgroundSeasonBar';
 import SiteSurvivalList from './SiteSurvivalList';
 import SiteAvailabilityBars from './SiteAvailabilityBars';
 import SiteClusterMap from './SiteClusterMap';
@@ -70,8 +69,6 @@ export default function LocationPanes({ guid, date, onSelectSite }) {
 
   return (
     <div className="location-panes">
-      {!loading && !error && sites && <CampgroundSeasonBar sites={sites} from={date} />}
-
       <div className="pane-tabs" role="tablist">
         {VIEWS.map((v, i) => (
           <button key={v.key} role="tab" aria-selected={i === view}
