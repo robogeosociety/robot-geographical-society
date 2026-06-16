@@ -6,6 +6,13 @@ import { MAP_STYLE, WA_BOUNDS } from './constants';
 import AvailabilityView from './views/AvailabilityView';
 import CollectorsView from './views/CollectorsView';
 
+// The app is served at two gated subdomains; each lands on its own view (the nav tabs
+// still cross-navigate). collectors.* → /collectors, everything else → /availability.
+function defaultPath() {
+  const host = typeof window !== 'undefined' ? window.location.hostname : '';
+  return host.startsWith('collectors.') ? '/collectors' : '/availability';
+}
+
 // One Mapbox instance for the whole app. The container div is always mounted; the
 // routed views add/remove their own layers on top of it (see useCircleLayer), so
 // switching tabs swaps pins instead of re-initializing the map.
@@ -77,10 +84,10 @@ export default function App() {
           <div ref={containerRef} className="map-container" />
 
           <Routes>
-            <Route path="/" element={<Navigate to="/availability" replace />} />
+            <Route path="/" element={<Navigate to={defaultPath()} replace />} />
             <Route path="/availability" element={<AvailabilityView />} />
             <Route path="/collectors" element={<CollectorsView />} />
-            <Route path="*" element={<Navigate to="/availability" replace />} />
+            <Route path="*" element={<Navigate to={defaultPath()} replace />} />
           </Routes>
         </div>
       </div>
