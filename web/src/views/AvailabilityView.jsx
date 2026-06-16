@@ -2,21 +2,19 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCampgroundPies } from '../map/useCampgroundPies';
 import { getAvailability, getSiteCalendar } from '../api';
-import { AGENCY_COLORS, agencyShort, SEASONS } from '../constants';
+import { AGENCY_COLORS, agencyShort } from '../constants';
 import AgencyLegend from '../components/AgencyLegend';
-import SeasonLegend from '../components/SeasonLegend';
 import StalenessBanner from '../components/StalenessBanner';
 import SiteCalendar from '../components/SiteCalendar';
 import LocationPanes from '../panes/LocationPanes';
 
-// "Today" — the window of remaining availability is summed on/after this night.
+// "Today" — remaining availability is summed across nights on/after this (rest of year).
 const TODAY = new Date().toISOString().slice(0, 10);
 
 export default function AvailabilityView() {
   const { map, ready } = useMap();
-  // Each campground is a seasonal-availability pie (total remaining for the year,
-  // sliced by season). The season selector highlights one season's slice.
-  const [season, setSeason] = useState('all');
+  // Each campground is a small agency-colored disc; its pac-man fill = remaining
+  // availability for the rest of the year.
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -38,10 +36,7 @@ export default function AvailabilityView() {
     if (map) map.flyTo({ center: [row.lng, row.lat], zoom: Math.max(map.getZoom(), 9) });
   };
 
-  useCampgroundPies({
-    map, ready, rows, highlightSeason: season,
-    onSelect, onEmpty: () => setSelected(null),
-  });
+  useCampgroundPies({ map, ready, rows, onSelect, onEmpty: () => setSelected(null) });
 
   const stalest = useMemo(
     () => rows.reduce((min, r) => (r.collected_date && (!min || r.collected_date < min) ? r.collected_date : min), null),
@@ -51,20 +46,14 @@ export default function AvailabilityView() {
   return (
     <>
       <div className="controls controls-left">
-        <label className="season-filter">
-          <span>Season</span>
-          <select value={season} onChange={(e) => setSeason(e.target.value)}>
-            <option value="all">all seasons</option>
-            {SEASONS.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
-        </label>
-        {loading && <span className="muted">loading…</span>}
-        {error && <span className="error-text" role="alert">{error}</span>}
-        {!loading && !error && <span className="muted">{rows.length} campgrounds</span>}
+        {loading && <span className="muted control-chip">loading…</span>}
+        {error && <span className="error-text control-chip" role="alert">{error}</span>}
+        {!loading && !error && (
+          <span className="muted control-chip">{rows.length} campgrounds · fill = remaining availability</span>
+        )}
       </div>
 
       <StalenessBanner date={stalest} />
-      <SeasonLegend highlight={season} />
       <AgencyLegend />
 
       {selected && (

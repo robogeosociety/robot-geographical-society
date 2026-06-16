@@ -1,14 +1,13 @@
 import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { AGENCY_COLORS, agencyShort } from '../constants';
-import { pieMarkup } from './pie';
+import { pacmanMarkup } from './pie';
 
-// Renders each campground as a seasonal-availability PIE marker at its point: slices
-// sized by remainingBySeason, the disc radius scaled (log) by total remaining for the
-// year, an agency-colored ring. `highlightSeason` dims the other slices. Clicking a
-// pie selects the campground; clicking empty map deselects. Rebuilt when rows or the
-// highlight change; removed on cleanup.
-export function useCampgroundPies({ map, ready, rows, highlightSeason = 'all', onSelect, onEmpty }) {
+// Renders each campground as a small agency-colored "pac-man" disc at its point: the
+// filled wedge spans its remaining availability for the rest of the year
+// (remaining / remainingTotal). Color = agency; only the cutout shows availability.
+// Clicking a disc selects the campground; clicking empty map deselects.
+export function useCampgroundPies({ map, ready, rows, onSelect, onEmpty }) {
   const markersRef = useRef([]);
   const onSelectRef = useRef(onSelect);
   const onEmptyRef = useRef(onEmpty);
@@ -21,17 +20,17 @@ export function useCampgroundPies({ map, ready, rows, highlightSeason = 'all', o
     for (const m of markersRef.current) m.remove();
     markersRef.current = [];
 
-    const valid = (rows ?? []).filter((r) => Number.isFinite(r.lat) && Number.isFinite(r.lng));
-    const max = Math.max(1, ...valid.map((r) => r.remaining ?? 0));
-    const denom = Math.log1p(max);
-    const radiusFor = (rem) => Math.round(8 + (denom > 0 ? Math.log1p(Math.max(0, rem)) / denom : 0) * 14);
+    for (const r of rows ?? []) {
+      if (!Number.isFinite(r.lat) || !Number.isFinite(r.lng)) continue;
+      const color = AGENCY_COLORS[agencyShort(r.agency)] || '#888888';
+      const fraction = r.remainingTotal > 0
+        ? r.remaining / r.remainingTotal
+        : (r.total > 0 ? (r.available ?? 0) / r.total : 0);
 
-    for (const r of valid) {
-      const ring = AGENCY_COLORS[agencyShort(r.agency)] || '#888888';
       const el = document.createElement('div');
       el.className = 'cg-pie';
-      el.title = `${r.name}: ${r.remaining ?? 0} remaining`;
-      el.innerHTML = pieMarkup(r.remainingBySeason, { radius: radiusFor(r.remaining ?? 0), highlight: highlightSeason, ring });
+      el.title = `${r.name}: ${Math.round(fraction * 100)}% open the rest of the year`;
+      el.innerHTML = pacmanMarkup(fraction, { radius: 8, color });
       el.addEventListener('click', (e) => {
         e.stopPropagation();
         onSelectRef.current?.(r);
@@ -46,9 +45,9 @@ export function useCampgroundPies({ map, ready, rows, highlightSeason = 'all', o
       for (const m of markersRef.current) m.remove();
       markersRef.current = [];
     };
-  }, [map, ready, rows, highlightSeason]);
+  }, [map, ready, rows]);
 
-  // Deselect when clicking empty map (pie clicks stopPropagation, so this is canvas-only).
+  // Deselect when clicking empty map (disc clicks stopPropagation, so this is canvas-only).
   useEffect(() => {
     if (!map || !ready) return undefined;
     const handler = () => onEmptyRef.current?.();

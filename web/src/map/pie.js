@@ -1,5 +1,3 @@
-import { SEASONS, SEASON_COLORS } from '../constants';
-
 function polar(cx, cy, r, deg) {
   const a = ((deg - 90) * Math.PI) / 180;
   return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
@@ -12,37 +10,23 @@ function slicePath(cx, cy, r, start, end) {
   return `M${cx},${cy} L${x0.toFixed(2)},${y0.toFixed(2)} A${r},${r} 0 ${large} 1 ${x1.toFixed(2)},${y1.toFixed(2)} Z`;
 }
 
-// SVG markup for a campground's seasonal remaining-availability pie. Slices are sized
-// by `bySeason` (Winter/Spring/Summer/Fall) and colored by season; an optional agency
-// `ring` outlines it. `highlight` ('all' or a season) dims the non-selected slices.
-// A fully-booked campground (sum 0) renders a hollow grey ring.
-export function pieMarkup(bySeason, { radius = 14, highlight = 'all', ring = null } = {}) {
-  const vals = SEASONS.map((s) => Math.max(0, Number(bySeason?.[s]) || 0));
-  const sum = vals.reduce((a, b) => a + b, 0);
-  const size = radius * 2 + 4;
+// A small agency-colored disc drawn as a "pac-man" pie: the filled wedge spans
+// `fraction` of the circle (remaining availability for the rest of the year), so a
+// near-full disc = lots open, a thin wedge = mostly booked. Color carries agency;
+// only the cutout carries availability. A fully-booked campground is a hollow ring.
+export function pacmanMarkup(fraction, { radius = 8, color = '#888888' } = {}) {
+  const f = Math.max(0, Math.min(1, Number(fraction) || 0));
+  const size = radius * 2 + 2;
   const c = size / 2;
-  const op = (s) => (highlight === 'all' || highlight === s ? 1 : 0.18);
+  const stroke = 'stroke="rgba(0,0,0,0.45)" stroke-width="0.75"';
 
   let body;
-  if (sum === 0) {
-    body = `<circle cx="${c}" cy="${c}" r="${radius}" fill="none" stroke="#6E7681" stroke-width="2"/>`;
-  } else if (vals.filter((v) => v > 0).length === 1) {
-    const s = SEASONS[vals.findIndex((v) => v > 0)];
-    body = `<circle cx="${c}" cy="${c}" r="${radius}" fill="${SEASON_COLORS[s]}" fill-opacity="${op(s)}"/>`;
+  if (f <= 0) {
+    body = `<circle cx="${c}" cy="${c}" r="${radius}" fill="none" stroke="#6E7681" stroke-width="1.5"/>`;
+  } else if (f >= 1) {
+    body = `<circle cx="${c}" cy="${c}" r="${radius}" fill="${color}" ${stroke}/>`;
   } else {
-    let acc = 0;
-    body = SEASONS.map((s, i) => {
-      const v = vals[i];
-      if (v <= 0) return '';
-      const start = (acc / sum) * 360;
-      acc += v;
-      const end = (acc / sum) * 360;
-      return `<path d="${slicePath(c, c, radius, start, end)}" fill="${SEASON_COLORS[s]}" fill-opacity="${op(s)}"/>`;
-    }).join('');
+    body = `<path d="${slicePath(c, c, radius, 0, f * 360)}" fill="${color}" ${stroke}/>`;
   }
-
-  const outline = ring
-    ? `<circle cx="${c}" cy="${c}" r="${radius}" fill="none" stroke="${ring}" stroke-width="1.5" stroke-opacity="0.9"/>`
-    : '';
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${body}${outline}</svg>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${body}</svg>`;
 }

@@ -51,11 +51,3 @@ export function availabilityColor(t) {
 }
 
 export const SEASONS = ['Winter', 'Spring', 'Summer', 'Fall'];
-
-// Season colors for the per-campground availability pie (monokai palette).
-export const SEASON_COLORS = {
-  Winter: '#66D9EF',
-  Spring: '#A6E22E',
-  Summer: '#E6DB74',
-  Fall: '#FD971F',
-};

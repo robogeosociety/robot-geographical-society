@@ -1,32 +1,31 @@
-import { pieMarkup } from './pie';
+import { pacmanMarkup } from './pie';
 
-describe('pieMarkup — seasonal availability pie', () => {
-  it('renders one wedge path per season with remaining > 0', () => {
-    const svg = pieMarkup({ Winter: 1, Spring: 1, Summer: 1, Fall: 1 });
-    expect((svg.match(/<path /g) || []).length).toBe(4);
-  });
-
-  it('renders a full disc for a single-season campground', () => {
-    const svg = pieMarkup({ Summer: 10 });
-    expect(svg).not.toContain('<path');
+describe('pacmanMarkup — agency-colored availability disc', () => {
+  it('renders a full disc in the agency color when fully available', () => {
+    const svg = pacmanMarkup(1, { color: '#A6E22E' });
     expect(svg).toContain('<circle');
-    expect(svg).toContain('#E6DB74'); // Summer color
+    expect(svg).not.toContain('<path');
+    expect(svg).toContain('fill="#A6E22E"');
   });
 
-  it('renders a hollow grey ring when fully booked (sum 0)', () => {
-    const svg = pieMarkup({ Winter: 0, Spring: 0, Summer: 0, Fall: 0 });
+  it('renders a pac-man wedge for partial availability', () => {
+    const svg = pacmanMarkup(0.75, { color: '#FD971F' });
+    expect(svg).toContain('<path');
+    expect(svg).toContain('fill="#FD971F"');
+  });
+
+  it('renders a hollow grey ring when fully booked (fraction 0)', () => {
+    const svg = pacmanMarkup(0);
     expect(svg).toContain('stroke="#6E7681"');
     expect(svg).toContain('fill="none"');
   });
 
-  it('dims non-highlighted slices', () => {
-    const svg = pieMarkup({ Summer: 5, Fall: 5 }, { highlight: 'Summer' });
-    expect(svg).toContain('fill-opacity="1"');    // Summer
-    expect(svg).toContain('fill-opacity="0.18"'); // Fall dimmed
+  it('clamps out-of-range fractions', () => {
+    expect(pacmanMarkup(5)).toContain('<circle'); // >1 → full disc
+    expect(pacmanMarkup(-1)).toContain('fill="none"'); // <0 → hollow
   });
 
-  it('draws an agency ring when provided', () => {
-    const svg = pieMarkup({ Summer: 5 }, { ring: '#FD971F' });
-    expect(svg).toContain('stroke="#FD971F"');
+  it('honors the radius (icon size)', () => {
+    expect(pacmanMarkup(1, { radius: 8 })).toContain('width="18"'); // 8*2 + 2
   });
 });
