@@ -28,7 +28,9 @@ export function useCampgroundBars({ map, ready, features, onSelect }) {
       el.title = `${p.name}: ${p.metric ?? 0} remaining`;
       const fill = document.createElement('div');
       fill.className = 'cg-bar-fill';
-      fill.style.height = `${Math.round(norm * 100)}%`;
+      // Any nonzero remaining gets a visible floor so small campgrounds still read.
+      const pct = Number(p.metric) > 0 ? Math.max(14, Math.round(norm * 100)) : 0;
+      fill.style.height = `${pct}%`;
       fill.style.background = availabilityColor(norm);
       el.appendChild(fill);
       el.addEventListener('click', (e) => {

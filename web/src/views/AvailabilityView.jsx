@@ -52,10 +52,14 @@ export default function AvailabilityView() {
   ), [season]);
 
   const fc = useMemo(() => {
+    // Total remaining availability spans orders of magnitude across campgrounds, so
+    // normalize on a log scale — otherwise the few huge campgrounds flatten the rest.
     const max = Math.max(1, ...rows.map(metricOf));
+    const denom = Math.log1p(max);
     return rowsToFC(rows, (r) => {
       const metric = metricOf(r);
-      return { metric, norm: metric / max, agency_short: agencyShort(r.agency) };
+      const norm = denom > 0 ? Math.log1p(metric) / denom : 0;
+      return { metric, norm, agency_short: agencyShort(r.agency) };
     });
   }, [rows, metricOf]);
 
