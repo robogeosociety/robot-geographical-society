@@ -66,6 +66,11 @@ MAX_STALENESS_DAYS = "2"
 # /collect/reactivate?id=) can revive it.
 INACTIVE_AFTER_FAILURES = "5"
 
+# RBAC bootstrap: this Access email is always admin (gates the /collect/* mutations and
+# the reactivate UI). Other admins are granted via POST /admin/elevate. Not a secret —
+# it's an allowlisted identity, not a credential.
+BOOTSTRAP_ADMIN = "tommy.b.doerr@gmail.com"
+
 # No cron. The CollectorLoop self-perpetuates via continue-as-new; a hard crash
 # is surfaced by Grafana → Discord staleness alerting (observability repo), and a
 # human restarts it with POST /collect/start?force=1.

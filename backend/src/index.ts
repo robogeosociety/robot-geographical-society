@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 import campsites from './campsites-index.json';
 import { collectSite, HEARTBEAT_KEY, DLQ_PREFIX, listDlqIds, type WfEnv, type DlqEntry } from './workflows';
 import { readApi } from './read-api';
+import { whoami, adminOnly, ROLE_PREFIX } from './auth';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
 export { CollectorLoop, HotDateWatchWorkflow } from './workflows';
@@ -10,6 +11,7 @@ export { CollectorLoop, HotDateWatchWorkflow } from './workflows';
 type Bindings = WfEnv & {
   CAMPSITES: KVNamespace;
   WATCH_WF: Workflow;
+  BOOTSTRAP_ADMIN?: string; // email that is always admin (RBAC bootstrap)
 };
 
 // If no heartbeat younger than this, the loop is considered dead → (re)start it.
@@ -30,6 +32,36 @@ app.get('/', (c) => c.text('Robot Geographical Society Backend API'));
 // Read-only availability + collector-health endpoints (the two-view webapp).
 app.route('/', readApi);
 
+// --- Identity & RBAC ---------------------------------------------------------
+// Who the caller is (from the Access identity) and their role. The frontend uses this
+// to show/hide admin actions; the backend enforces regardless (adminOnly below).
+app.get('/me', async (c) => c.json(await whoami(c.env, c.req.raw)));
+
+// Admin-only role management. BOOTSTRAP_ADMIN is always admin (not stored); these grant
+// or revoke admin for other emails.
+app.get('/admin/users', adminOnly(), async (c) => {
+  const list = await c.env.CAMPSITES.list({ prefix: ROLE_PREFIX });
+  const users = list.keys.map((k) => ({ email: k.name.slice(ROLE_PREFIX.length), role: 'admin' }));
+  return c.json({ bootstrapAdmin: c.env.BOOTSTRAP_ADMIN ?? null, users });
+});
+
+app.post('/admin/elevate', adminOnly(), async (c) => {
+  const email = (c.req.query('email') ?? '').toLowerCase();
+  if (!email) return c.json({ error: 'need ?email=' }, 400);
+  await c.env.CAMPSITES.put(`${ROLE_PREFIX}${email}`, 'admin');
+  return c.json({ email, role: 'admin' });
+});
+
+app.post('/admin/demote', adminOnly(), async (c) => {
+  const email = (c.req.query('email') ?? '').toLowerCase();
+  if (!email) return c.json({ error: 'need ?email=' }, 400);
+  if (c.env.BOOTSTRAP_ADMIN && email === c.env.BOOTSTRAP_ADMIN.toLowerCase()) {
+    return c.json({ error: 'cannot demote the bootstrap admin' }, 400);
+  }
+  await c.env.CAMPSITES.delete(`${ROLE_PREFIX}${email}`);
+  return c.json({ email, role: 'viewer' });
+});
+
 // GET /campsite/:id - Fetch individual campsite details (agency-prefixed slash ids).
 app.get('/campsite/:id{.+}', async (c) => {
   const id = c.req.param('id');
@@ -39,7 +71,7 @@ app.get('/campsite/:id{.+}', async (c) => {
 });
 
 // POST /seed - Seed the KV store with data (dev only).
-app.post('/seed', async (c) => {
+app.post('/seed', adminOnly(), async (c) => {
   try {
     const data = await c.req.json();
     for (const item of data) await c.env.CAMPSITES.put(item.key, item.value);
@@ -57,7 +89,7 @@ app.get('/campsites', async (c) => {
 // Start the deadline-driven collector loop. No-op if a fresh heartbeat shows one
 // already alive, unless ?force=1 (use after a crash/terminate, e.g. in response to
 // a staleness alert — the heartbeat can read "alive" even when no instance runs).
-app.post('/collect/start', async (c) => {
+app.post('/collect/start', adminOnly(), async (c) => {
   const force = c.req.query('force') === '1';
   const { alive, hb } = await loopAlive(c.env);
   if (alive && !force) return c.json({ status: 'already-running', lastWakeISO: hb?.lastWakeISO });
@@ -96,7 +128,7 @@ app.get('/collect/dlq', async (c) => {
 // Reactivate a quarantined site: drop its DLQ entry. The CollectorLoop reconciles
 // against the DLQ each wake, so the site is re-armed for collection on the next
 // wake (or sooner via the daily probe). No-op-safe if the id isn't quarantined.
-app.post('/collect/reactivate', async (c) => {
+app.post('/collect/reactivate', adminOnly(), async (c) => {
   const id = c.req.query('id');
   if (!id) return c.json({ error: 'need ?id=<campsite id>' }, 400);
   const key = `${DLQ_PREFIX}${id}.json`;
@@ -107,7 +139,7 @@ app.post('/collect/reactivate', async (c) => {
 
 // Ad-hoc one-shot collection of a single campsite (backfill/debug) — independent
 // of the loop's schedule.
-app.post('/collect/site', async (c) => {
+app.post('/collect/site', adminOnly(), async (c) => {
   const id = c.req.query('id');
   const site = (campsites as any[]).find((s) => s.id === id);
   if (!site) return c.json({ error: 'need ?id=<campsite id>' }, 400);
@@ -121,7 +153,7 @@ app.post('/collect/site', async (c) => {
 });
 
 // Watch a single (campsite, target_date) with adaptive cadence until sold out.
-app.post('/watch', async (c) => {
+app.post('/watch', adminOnly(), async (c) => {
   const id = c.req.query('id');
   const date = c.req.query('date');
   const every = c.req.query('every') || undefined;
