@@ -1,5 +1,19 @@
 import '@testing-library/jest-dom';
 
+// This vitest jsdom env ships without Web Storage, so provide a tiny in-memory
+// localStorage (data keys are own-enumerable; the Storage methods live on the
+// prototype, so Object.keys(localStorage) returns just the keys, as in a browser).
+// The persistent api.js cache relies on it; real browsers have it natively.
+if (typeof window.localStorage === 'undefined') {
+  const storage = Object.create({
+    getItem(k) { return Object.prototype.hasOwnProperty.call(this, k) ? this[k] : null; },
+    setItem(k, v) { this[k] = String(v); },
+    removeItem(k) { delete this[k]; },
+    clear() { for (const k of Object.keys(this)) delete this[k]; },
+  });
+  Object.defineProperty(window, 'localStorage', { value: storage, configurable: true });
+}
+
 // Mock mapbox-gl for tests (it requires a browser canvas)
 vi.mock('mapbox-gl', () => {
   const makeMap = () => {

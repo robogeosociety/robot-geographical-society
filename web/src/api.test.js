@@ -1,5 +1,6 @@
-import { getAvailability, getCollectors, reactivate } from './api';
+import { getAvailability, getCollectors, reactivate, _resetCaches } from './api';
 
+beforeEach(() => _resetCaches()); // drop the persistent (localStorage) cache between cases
 afterEach(() => vi.restoreAllMocks());
 
 function jsonOk(body) {
@@ -22,6 +23,29 @@ describe('api data layer', () => {
     const dates = spy.mock.calls.map(([u]) => String(u));
     expect(dates.filter((u) => u.includes('2026-07-01'))).toHaveLength(1);
     expect(dates.filter((u) => u.includes('2026-07-02'))).toHaveLength(1);
+  });
+
+  it('getCollectors serves from the persistent cache — a reload-style repeat does not refetch', async () => {
+    const spy = vi.spyOn(global, 'fetch').mockReturnValue(jsonOk([{ guid: 'a' }]));
+    await getCollectors();
+    // getCollectors holds nothing in memory, so this second call only avoids the
+    // network if it read the body back out of localStorage — i.e. survives a reload.
+    const rows = await getCollectors();
+    expect(rows).toEqual([{ guid: 'a' }]);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('reactivate busts the fleet cache so the next read refetches', async () => {
+    const spy = vi
+      .spyOn(global, 'fetch')
+      .mockReturnValueOnce(jsonOk([{ guid: 'a', state: 'quarantined' }])) // getCollectors (cold)
+      .mockReturnValueOnce(jsonOk({ status: 'reactivated' }))             // reactivate POST
+      .mockReturnValueOnce(jsonOk([{ guid: 'a', state: 'healthy' }]));    // getCollectors (refetch)
+    await getCollectors();
+    await reactivate('247585');
+    const rows = await getCollectors();
+    expect(rows).toEqual([{ guid: 'a', state: 'healthy' }]);
+    expect(spy).toHaveBeenCalledTimes(3); // the cache was invalidated, so the reread went to network
   });
 
   it('reactivate POSTs /collect/reactivate keyed on provider id', async () => {
