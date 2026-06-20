@@ -33,7 +33,7 @@ resource "cloudflare_zero_trust_access_application" "backend" {
       name       = "Owner SSO"
       decision   = "allow"
       precedence = 1
-      include    = [{ email = { email = var.allow_email } }]
+      include    = [for e in var.allow_emails : { email = { email = e } }]
     },
     {
       name       = "Local dev service token"
