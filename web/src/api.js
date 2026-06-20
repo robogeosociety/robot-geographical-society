@@ -12,6 +12,12 @@ async function getJSON(path) {
   return res.json();
 }
 
+// The caller's identity + role from Cloudflare Access: { email, role, isAdmin }.
+// Drives which admin-only actions the UI shows (the backend enforces regardless).
+export function getMe() {
+  return getJSON('/me');
+}
+
 // Fleet health: one row per inventory site (156), already carrying lat/lng so the
 // map can render straight from this. Shape:
 //   { guid, name, agency, lat, lng, collect, state, lastCollectedDate, ageDays, dueMs, fails }

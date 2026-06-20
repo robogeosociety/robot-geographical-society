@@ -15,11 +15,14 @@ const DLQ = {
 };
 
 let reactivateCalls;
+let me; // /me response — set per test
 
 beforeEach(() => {
   reactivateCalls = [];
+  me = { email: 't@x', role: 'admin', isAdmin: true };
   vi.spyOn(global, 'fetch').mockImplementation((url) => {
     const u = String(url);
+    if (u.endsWith('/me')) return jsonOk(me);
     if (u.includes('/collect/reactivate')) { reactivateCalls.push(u); return jsonOk({ status: 'reactivated' }); }
     if (u.includes('/collect/dlq')) return jsonOk(DLQ);
     if (u.includes('/collectors')) return jsonOk(COLLECTORS);
@@ -45,7 +48,6 @@ describe('CollectorsView fleet panel', () => {
   it('summarizes fleet state counts', async () => {
     renderView();
     await waitFor(() => expect(screen.getByText('Fleet health')).toBeInTheDocument());
-    // Scope to the stat grid — state names like "Healthy" also appear in the legend.
     const grid = within(document.querySelector('.stat-grid'));
     const stat = (label) => grid.getByText(label).previousSibling.textContent;
     expect(stat('Total')).toBe('4');
@@ -54,13 +56,24 @@ describe('CollectorsView fleet panel', () => {
     expect(stat('Disabled')).toBe('1');
   });
 
-  it('lists quarantined collectors and reactivates by provider id', async () => {
+  it('admin: shows the role badge, lists quarantined collectors, reactivates by id', async () => {
     const user = userEvent.setup();
     renderView();
     await waitFor(() => expect(screen.getByText("Heart O' the Hills")).toBeInTheDocument());
+    expect(screen.getByText('admin')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /Reactivate/i }));
+    await user.click(await screen.findByRole('button', { name: /Reactivate/i }));
     await waitFor(() => expect(reactivateCalls.length).toBe(1));
     expect(reactivateCalls[0]).toMatch(/\/collect\/reactivate\?id=247585$/);
+  });
+
+  it('viewer: no reactivate button, shows the admin-only note + viewer badge', async () => {
+    me = { email: 'rando@x', role: 'viewer', isAdmin: false };
+    renderView();
+    await waitFor(() => expect(screen.getByText("Heart O' the Hills")).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('viewer')).toBeInTheDocument());
+
+    expect(screen.queryByRole('button', { name: /Reactivate/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/reactivate is admin-only/i)).toBeInTheDocument();
   });
 });

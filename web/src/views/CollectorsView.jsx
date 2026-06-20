@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCircleLayer, rowsToFC, HOVER_PAINT } from '../map/useCircleLayer';
-import { getCollectors, getDlq, reactivate } from '../api';
+import { getCollectors, getDlq, reactivate, getMe } from '../api';
 import { STATE_STYLE } from '../constants';
 
 const COLLECTOR_PAINT = {
@@ -23,6 +23,14 @@ export default function CollectorsView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false); // gates the reactivate action (backend enforces too)
+
+  // Resolve the caller's role; a /me failure just leaves the UI as viewer.
+  useEffect(() => {
+    let live = true;
+    getMe().then((me) => { if (live) setIsAdmin(!!me?.isAdmin); }).catch(() => {});
+    return () => { live = false; };
+  }, []);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -66,7 +74,7 @@ export default function CollectorsView() {
       </div>
 
       <FleetStatsPanel counts={counts} dlq={dlq} loading={loading} error={error}
-        onReactivate={onReactivate} />
+        onReactivate={onReactivate} isAdmin={isAdmin} />
 
       {selected && <CollectorPopup collector={selected} onClose={() => setSelected(null)} />}
     </>
@@ -89,10 +97,15 @@ function fmtDue(dueMs) {
   return `${Math.round(h / 24)} d`;
 }
 
-function FleetStatsPanel({ counts, dlq, loading, error, onReactivate }) {
+function FleetStatsPanel({ counts, dlq, loading, error, onReactivate, isAdmin }) {
   return (
     <div className="fleet-panel" aria-label="Fleet health">
-      <h2 className="panel-name">Fleet health</h2>
+      <div className="fleet-head">
+        <h2 className="panel-name">Fleet health</h2>
+        <span className={`role-badge ${isAdmin ? 'role-admin' : 'role-viewer'}`}>
+          {isAdmin ? 'admin' : 'viewer'}
+        </span>
+      </div>
       {loading && <div className="muted">loading…</div>}
       {error && <div className="error-text" role="alert">{error}</div>}
 
@@ -106,14 +119,16 @@ function FleetStatsPanel({ counts, dlq, loading, error, onReactivate }) {
 
       {dlq.length > 0 && (
         <div className="quarantine-list">
-          <h3>Quarantined ({dlq.length})</h3>
+          <h3>Quarantined ({dlq.length}){!isAdmin && <span className="muted small"> · reactivate is admin-only</span>}</h3>
           {dlq.map((s) => (
             <div key={s.id} className="quarantine-item">
               <div className="q-head">
                 <span className="q-name">{s.name}</span>
-                <button className="btn-reactivate" onClick={() => onReactivate(s.id)}>
-                  Reactivate
-                </button>
+                {isAdmin && (
+                  <button className="btn-reactivate" onClick={() => onReactivate(s.id)}>
+                    Reactivate
+                  </button>
+                )}
               </div>
               <div className="muted small">
                 {s.failures} fails · since {s.sinceISO?.slice(0, 10)}
