@@ -612,15 +612,20 @@ body {
 /* ---- Per-location panes (swipeable views) ---- */
 .location-panes { margin-top: 4px; }
 
-.pane-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
+/* All four tabs (Survival/Availability/Layout/Status) must fit the ~312px pane; tighter
+   pills keep them on one line, with overflow-x:auto as a safety net on very narrow panes. */
+.pane-tabs { display: flex; gap: 4px; margin-bottom: 10px; overflow-x: auto; scrollbar-width: none; }
+.pane-tabs::-webkit-scrollbar { display: none; }
 .pane-tab {
-  padding: 4px 12px;
+  padding: 4px 9px;
   border-radius: 20px;
   border: 1px solid var(--border);
   background: transparent;
   color: var(--text-muted);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
+  white-space: nowrap;
+  flex: 0 0 auto;
   cursor: pointer;
 }
 .pane-tab-on { color: var(--text); border-color: var(--cyan); background: rgba(102, 217, 239, 0.1); }
@@ -647,9 +652,11 @@ body {
 .survival-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
 .survival-row {
   display: grid;
-  grid-template-columns: 64px 1fr auto;
+  /* minmax(0,1fr) lets the sparkline column shrink (grid items default to min-width:auto),
+     so the fixed 96px stats column always fits "runs out MM-DD" without clipping. */
+  grid-template-columns: 56px minmax(0, 1fr) 96px;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   padding: 6px 6px;
   background: transparent;
@@ -665,7 +672,9 @@ body {
 .survival-label { font-size: 13px; font-weight: 700; }
 .survival-loop { max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .survival-stats { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; }
+.survival-stats > span { white-space: nowrap; }
 .sparkline, .bars { display: block; }
+.sparkline { width: 100%; }
 
 /* Availability bars view (day/week/month/season) */
 .bars-view { display: flex; flex-direction: column; }
