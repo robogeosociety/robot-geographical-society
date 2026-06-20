@@ -15,3 +15,20 @@ variable "allow_email" {
   type        = string
   default     = "tommy.b.doerr@gmail.com"
 }
+
+# Social IdP client secrets — sensitive, never committed. Pass at apply via
+# TF_VAR_github_client_secret / TF_VAR_google_client_secret (empty default so a
+# targeted apply of one IdP doesn't require the other's secret).
+variable "github_client_secret" {
+  description = "GitHub OAuth app client secret for the Access GitHub IdP."
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "google_client_secret" {
+  description = "Google OAuth client secret for the Access Google IdP."
+  type        = string
+  sensitive   = true
+  default     = ""
+}
