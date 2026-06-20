@@ -7,10 +7,14 @@ import { computeRunway } from '../panes/runway';
 export default function SurvivalSparkline({ byDate, from, width = 168, height = 38 }) {
   const { remaining, n, exhaustionIndex, availableNights } = computeRunway(byDate, { from });
 
+  // viewBox + width:100% so the sparkline flexes to its grid column (the `width`/`height`
+  // props define the coordinate system, not a fixed pixel size); non-scaling strokes keep
+  // line weights crisp under the non-uniform horizontal scale.
   if (n === 0 || availableNights === 0) {
-    return <svg className="sparkline" width={width} height={height} role="img"
-      aria-label="no availability"><line x1="0" y1={height - 1} x2={width} y2={height - 1}
-        stroke="#6E7681" strokeWidth="1" /></svg>;
+    return <svg className="sparkline" viewBox={`0 0 ${width} ${height}`} width="100%" height={height}
+      preserveAspectRatio="none" role="img" aria-label="no availability">
+      <line x1="0" y1={height - 1} x2={width} y2={height - 1}
+        stroke="#6E7681" strokeWidth="1" vectorEffect="non-scaling-stroke" /></svg>;
   }
 
   const pad = 2;
@@ -24,13 +28,14 @@ export default function SurvivalSparkline({ byDate, from, width = 168, height = 
   const area = `${pad},${pad + h} ${line} ${x(n - 1).toFixed(1)},${pad + h}`;
 
   return (
-    <svg className="sparkline" width={width} height={height} role="img"
+    <svg className="sparkline" viewBox={`0 0 ${width} ${height}`} width="100%" height={height}
+      preserveAspectRatio="none" role="img"
       aria-label={`${availableNights} available nights, runs out at horizon ${exhaustionIndex + 1} of ${n}`}>
       <polygon points={area} fill="rgba(166,226,46,0.12)" />
-      <polyline points={line} fill="none" stroke="#A6E22E" strokeWidth="1.5" />
+      <polyline points={line} fill="none" stroke="#A6E22E" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
       {exhaustionIndex >= 0 && (
         <line x1={x(exhaustionIndex).toFixed(1)} y1={pad} x2={x(exhaustionIndex).toFixed(1)} y2={pad + h}
-          stroke="#F85149" strokeWidth="1" strokeDasharray="2 2" />
+          stroke="#F85149" strokeWidth="1" strokeDasharray="2 2" vectorEffect="non-scaling-stroke" />
       )}
     </svg>
   );
