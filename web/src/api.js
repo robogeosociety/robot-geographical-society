@@ -101,6 +101,16 @@ export function getAvailability(date) {
   return p;
 }
 
+// Cross-campground demand aggregation over the upcoming nights (today forward),
+// computed by the Worker from the banked R2 `summary/` snapshots. Shape:
+//   { from, collected: { earliest, latest },
+//     nights: [{ night, available, reserved, total }],          // ascending
+//     campgrounds: [{ guid, name, agency, lat, lng, available, reserved, total }] }
+// Cached like availability — it's a daily snapshot, safe to hold for hours.
+export function getDemand() {
+  return getCachedJSON('/demand', AVAILABILITY_TTL);
+}
+
 // Per-site rows for one campground on a date:
 //   { sites: [{ siteId, label, loop, type, use, status }] }
 // status ∈ "available" | "reserved" | "other".

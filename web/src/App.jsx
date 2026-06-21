@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import { MapContext } from './map/MapContext';
 import { MAP_STYLE, WA_BOUNDS } from './constants';
 import AvailabilityView from './views/AvailabilityView';
+import DemandView from './views/DemandView';
 import CollectorsView from './views/CollectorsView';
 
 // The app is served at two gated subdomains; each lands on its own view (the nav tabs
@@ -71,6 +72,7 @@ export default function App() {
           <div className="brand">Robot Geographical Society</div>
           <nav className="nav-tabs">
             <NavLink to="/availability" className="nav-tab">Availability</NavLink>
+            <NavLink to="/demand" className="nav-tab">Demand</NavLink>
             <NavLink to="/collectors" className="nav-tab">Collectors</NavLink>
           </nav>
         </header>
@@ -86,6 +88,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Navigate to={defaultPath()} replace />} />
             <Route path="/availability" element={<AvailabilityView />} />
+            <Route path="/demand" element={<DemandView />} />
             <Route path="/collectors" element={<CollectorsView />} />
             <Route path="*" element={<Navigate to={defaultPath()} replace />} />
           </Routes>

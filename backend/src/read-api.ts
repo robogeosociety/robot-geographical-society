@@ -200,6 +200,72 @@ readApi.get('/availability', edgeCache(600), async (c) => {
   return c.json(out);
 });
 
+// GET /demand[?from=YYYY-MM-DD] — cross-campground demand aggregation over the
+// upcoming nights (default: today forward). The product sibling of /availability:
+// where /availability answers "what's open on one night", this answers "which
+// nights and which campgrounds are in demand right now", computed straight from the
+// banked R2 `summary/` snapshots (no Analytics Engine round-trip — it's a snapshot
+// aggregation, not a time series; see robot-geographical-society#107).
+//
+// Returns the raw aggregates; the webapp derives the ranked lenses (hottest nights,
+// most in-demand campgrounds, % booked) from them:
+//   { from, collected: {earliest, latest},
+//     nights: [{ night, available, reserved, total }],            // >= from, ascending
+//     campgrounds: [{ guid, name, agency, lat, lng, available, reserved, total }] }  // summed over those nights
+readApi.get('/demand', edgeCache(600), async (c) => {
+  const from = c.req.query('from') || new Date().toISOString().slice(0, 10);
+  if (!DATE_RE.test(from)) return c.json({ error: 'need ?from=YYYY-MM-DD' }, 400);
+
+  const { inventory } = await inventoryFor(c.env);
+  const latest = await latestByProvider(c.env, 'summary');
+
+  const nights = new Map<string, Counts>(); // night → summed counts across campgrounds
+  const campgrounds: any[] = [];
+  let earliest: string | null = null;
+  let collLatest: string | null = null;
+
+  for (const e of inventory) {
+    const collDate = latest.get(e.id);
+    if (!collDate) continue;
+    const snap = await getJson<{ by_date?: Record<string, Counts> }>(c.env, `summary/${collDate}/${e.id}.json`);
+    if (!snap) continue;
+
+    const cg: Counts = { available: 0, reserved: 0, total: 0 };
+    let sawNight = false;
+    for (const [night, cnt] of Object.entries(snap.by_date ?? {})) {
+      if (night < from) continue;
+      sawNight = true;
+      const a = cnt?.available ?? 0;
+      const r = cnt?.reserved ?? 0;
+      const t = cnt?.total ?? 0;
+      cg.available += a; cg.reserved += r; cg.total += t;
+      const n = nights.get(night) ?? { available: 0, reserved: 0, total: 0 };
+      n.available += a; n.reserved += r; n.total += t;
+      nights.set(night, n);
+    }
+    if (!sawNight) continue;
+
+    if (!earliest || collDate < earliest) earliest = collDate;
+    if (!collLatest || collDate > collLatest) collLatest = collDate;
+    campgrounds.push({
+      guid: e.guid,
+      name: e.name,
+      agency: e.agency_full ?? e.agency ?? null,
+      lat: e.lat ?? null,
+      lng: e.lng ?? null,
+      available: cg.available,
+      reserved: cg.reserved,
+      total: cg.total,
+    });
+  }
+
+  const nightRows = [...nights.entries()]
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([night, cnt]) => ({ night, ...cnt }));
+
+  return c.json({ from, collected: { earliest, latest: collLatest }, nights: nightRows, campgrounds });
+});
+
 // GET /availability/:guid/site/:siteId — one site's per-night status calendar.
 // :siteId is the internal R2 site id (e.g. 81835), NOT the human label ("24").
 readApi.get('/availability/:guid/site/:siteId', edgeCache(300), async (c) => {
