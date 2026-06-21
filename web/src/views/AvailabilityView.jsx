@@ -6,6 +6,7 @@ import { AGENCY_COLORS, agencyShort } from '../constants';
 import AgencyLegend from '../components/AgencyLegend';
 import StalenessBanner from '../components/StalenessBanner';
 import SiteCalendar from '../components/SiteCalendar';
+import ProgressBar from '../components/ProgressBar';
 import LocationPanes from '../panes/LocationPanes';
 
 // "Today" — remaining availability is summed across nights on/after this (rest of year).
@@ -16,14 +17,16 @@ export default function AvailabilityView() {
   // Each campground is a small agency-colored disc; its pac-man fill = remaining
   // availability for the rest of the year.
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // always fetches on mount — open on the bar
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState(null); // a campground row
+  const [placed, setPlaced] = useState(0);        // markers drawn so far (progressive)
 
   useEffect(() => {
     let live = true;
     setLoading(true);
     setError(null);
+    setPlaced(0);
     getAvailability(TODAY)
       .then((data) => { if (live) setRows(data); })
       .catch((e) => { if (live) setError(e.message); })
@@ -36,7 +39,18 @@ export default function AvailabilityView() {
     if (map) map.flyTo({ center: [row.lng, row.lat], zoom: Math.max(map.getZoom(), 9) });
   };
 
-  useCampgroundPies({ map, ready, rows, onSelect, onEmpty: () => setSelected(null) });
+  useCampgroundPies({
+    map, ready, rows, onSelect,
+    onEmpty: () => setSelected(null),
+    onProgress: (n) => setPlaced(n),
+  });
+
+  // How many rows are actually placeable (have coordinates) — the progress denominator.
+  const total = useMemo(
+    () => rows.filter((r) => Number.isFinite(r.lat) && Number.isFinite(r.lng)).length,
+    [rows],
+  );
+  const placing = !loading && !error && total > 0 && placed < total;
 
   const stalest = useMemo(
     () => rows.reduce((min, r) => (r.collected_date && (!min || r.collected_date < min) ? r.collected_date : min), null),
@@ -47,10 +61,21 @@ export default function AvailabilityView() {
     <>
       <div className="map-overlay-tl">
         <div className="control-row">
-          {loading && <span className="muted control-chip">loading…</span>}
           {error && <span className="error-text control-chip" role="alert">{error}</span>}
-          {!loading && !error && (
-            <span className="muted control-chip">{rows.length} campgrounds · fill = remaining availability</span>
+          {loading && (
+            <span className="control-chip control-chip--progress">
+              <ProgressBar indeterminate label="Loading campgrounds" />
+              <span className="muted">loading campgrounds…</span>
+            </span>
+          )}
+          {placing && (
+            <span className="control-chip control-chip--progress">
+              <ProgressBar value={placed / total} label="Placing campgrounds" />
+              <span className="muted">{placed}/{total} campgrounds</span>
+            </span>
+          )}
+          {!loading && !error && !placing && (
+            <span className="muted control-chip">{total} campgrounds · fill = remaining availability</span>
           )}
         </div>
         <StalenessBanner date={stalest} />

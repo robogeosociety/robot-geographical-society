@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCircleLayer, rowsToFC, HOVER_PAINT } from '../map/useCircleLayer';
 import { getCollectors, getDlq, reactivate, getMe } from '../api';
+import ProgressBar from '../components/ProgressBar';
 import { STATE_STYLE } from '../constants';
 
 const COLLECTOR_PAINT = {
@@ -106,7 +107,12 @@ function FleetStatsPanel({ counts, dlq, loading, error, onReactivate, isAdmin })
           {isAdmin ? 'admin' : 'viewer'}
         </span>
       </div>
-      {loading && <div className="muted">loading…</div>}
+      {loading && (
+        <div className="fleet-loading">
+          <ProgressBar indeterminate label="Loading fleet" />
+          <span className="muted">loading fleet…</span>
+        </div>
+      )}
       {error && <div className="error-text" role="alert">{error}</div>}
 
       <div className="stat-grid">
