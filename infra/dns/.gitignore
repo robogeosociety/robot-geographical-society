@@ -1,0 +1,9 @@
+# Terraform state can reference token-derived values — never commit it.
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+crash.log
+crash.*.log
+
+# Keep .terraform.lock.hcl committed for reproducible inits.
