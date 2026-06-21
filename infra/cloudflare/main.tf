@@ -28,3 +28,12 @@ resource "cloudflare_pages_project" "web" {
   name              = var.pages_project_name
   production_branch = var.pages_production_branch
 }
+
+# Shared Terraform remote-state bucket (S3-compatible R2). Created here because this root
+# holds the rgs-infra R2 Storage Write token; the consumer roots (this one, ../access,
+# ../dns, tommyroar/infra/mapbox) keep their state under distinct keys in it. tfvend stays
+# on local state (it vends the S3 creds for this bucket — see cloudflare-tfvend/state.tf).
+resource "cloudflare_r2_bucket" "tfstate" {
+  account_id = var.account_id
+  name       = "tommyroar-tfstate"
+}
