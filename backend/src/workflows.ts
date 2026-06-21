@@ -26,6 +26,8 @@ export interface WfEnv {
   AVAIL_AE?: AnalyticsEngineDataset; // per-site availability rollup
   WATCH_AE?: AnalyticsEngineDataset; // dense per-check watch points
   DEMAND_AE?: AnalyticsEngineDataset; // per-campground per-night demand → Grafana
+  READINESS_AE?: AnalyticsEngineDataset; // daily prediction-readiness gauge → Grafana
+  READINESS_WF: Workflow; // daily readiness Workflow (self-reference for continue-as-new)
 }
 
 // `collect: false` marks map-only / disabled sites (no rec/WA provider, or a

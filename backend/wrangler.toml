@@ -64,6 +64,17 @@ dataset = "campsite_watch"
 binding = "DEMAND_AE"
 dataset = "campsite_demand"
 
+# Daily prediction-readiness gauge (one singleton row per run). Written by the
+# ReadinessWorkflow, which scans ~60 days of R2 sites/ history. Replaces the host
+# observability ingest.py:compute_readiness. Schema:
+#   index="readiness"  blob1=band
+#   double1..13 = readiness, event_score, coverage, depth_score, events, active_cells,
+#     cells, median_depth, history_months, expected_accuracy, campgrounds, collect_days,
+#     ready_eta_days
+[[analytics_engine_datasets]]
+binding = "READINESS_AE"
+dataset = "campsite_readiness"
+
 [vars]
 # The one knob: every campsite is refreshed within this many days. No fixed schedule.
 MAX_STALENESS_DAYS = "2"
@@ -96,6 +107,13 @@ class_name = "CollectorLoop"
 name = "campsite-hot-date-watch"
 binding = "WATCH_WF"
 class_name = "HotDateWatchWorkflow"
+
+# Daily prediction-readiness scan (self-schedules via step.sleep 24h, continues-as-new).
+# Start once with POST /readiness/start.
+[[workflows]]
+name = "campsite-readiness"
+binding = "READINESS_WF"
+class_name = "ReadinessWorkflow"
 
 [observability]
 enabled = true
