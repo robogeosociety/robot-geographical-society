@@ -56,4 +56,12 @@ describe('Hono API Tests', () => {
     const body = await res.json();
     expect(body).toEqual(mockCampsite);
   });
+
+  test('GET /collect/dlq carries the cache directive (edge parity with /collectors)', async () => {
+    const RAW = { list: async () => ({ objects: [] }) };
+    const res = await app.request('/collect/dlq', {}, { RAW } as any);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('Cache-Control')).toBe('private, max-age=60');
+    expect(await res.json()).toEqual({ count: 0, sites: [] });
+  });
 });

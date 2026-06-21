@@ -39,7 +39,7 @@ import { loadInventory, type InventoryEntry } from './inventory';
 //     caches it across identities, while the browser still honors the TTL.
 // A no-op where the Cache API is absent (Node tests): it just stamps the browser
 // directive and passes through.
-function edgeCache(maxAge: number): MiddlewareHandler {
+export function edgeCache(maxAge: number): MiddlewareHandler {
   const browserCC = `private, max-age=${maxAge}`;
   const edgeCC = `max-age=${maxAge}`;
   const store = (): Cache | null =>
