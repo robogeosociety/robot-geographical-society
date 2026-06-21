@@ -26,7 +26,7 @@ flowchart LR
     watch["HotDateWatchWorkflow<br/>adaptive step.sleep loop"]
     wf & watch -->|plain fetch, 6 mo| src[recreation.gov / WA goingtocamp]
     wf -->|"PUT raw/ + summary/<date>/<id>"| r2[("R2 campsite-raw")]
-    watch -->|"PUT watch/<date>/<id>/<ts>"| r2
+    watch -->|"PUT watch/<id>/<targetDate> (fill-curve)"| r2
   end
   subgraph MAC["🖥️ Home Mac — observability repo (ingest)"]
     ingest["launchd 07:30<br/>campsites/ingest.py"] --> influx[("InfluxDB campsites")] --> graf["Grafana<br/>Campsite Availability"]
@@ -39,7 +39,7 @@ flowchart LR
 | `scheduled()` | cron trigger | create the daily collector workflow |
 | `CampsiteCollectorWorkflow` | Workflow `COLLECTOR_WF` | one `step.do` per site (per-step retry/resume) → R2 |
 | `HotDateWatchWorkflow` | Workflow `WATCH_WF` | adaptive `step.sleep` watch of one (site, date) → R2 `watch/` |
-| `RAW` | R2 `campsite-raw` | `raw/`, `summary/<date>/<id>.json`, `sites/<date>/<id>.json`, `watch/<date>/<id>/<ts>.json`, `dlq/<id>.json` |
+| `RAW` | R2 `campsite-raw` | `raw/`, `summary/<date>/<id>.json`, `sites/<date>/<id>.json`, `watch/<id>/<targetDate>.json`, `dlq/<id>.json` |
 | `CAMPSITES` | KV | the campsite API |
 
 ## R2 object layout
@@ -53,7 +53,7 @@ goingtocamp resourceLocation id (negative, e.g. `-2147483476`) — **not** the
 | `raw/<date>/<agency>/<id>.json` | untouched upstream payload | audit trail; two un-normalized schemas (rec.gov vs goingtocamp) |
 | `summary/<date>/<id>.json` | `{id,name,agency,kind, by_date: {date → {available,reserved,total}}}` | campground rollup; consumed by the Mac ingest |
 | `sites/<date>/<id>.json` | `{id,name,agency,kind,collected_date, sites: {siteId → {label,loop,type,use, by_date}}}` | **per individual site**; `by_date[date]` ∈ `available\|reserved\|other` |
-| `watch/<date>/<id>/<ts>.json` | dense adaptive watch point | hot-date burn-down |
+| `watch/<id>/<targetDate>.json` | `{id,name,agency,kind,target_date,lat,lng,started_at,updated_at,done,sold_out, points: [{ts,available,reserved,total}]}` | hot-date **fill-curve** (one object per (campground, target night); read-modify-write append). Read by the webapp's `GET /watch` (was the `campsite_watch` Analytics Engine dataset — re-plumbed AE → R2, #107). |
 | `dlq/<id>.json` | quarantine marker | presence == site skipped until reactivated |
 
 `summary/` and `sites/` are normalized **identically across both providers** —
@@ -101,7 +101,8 @@ sequenceDiagram
   U->>W: create({ site, targetDate })
   loop until sold out or date passes
     W->>S: fetch availability for targetDate
-    W->>R2: PUT watch/<date>/<id>/<ts>.json  (dense point)
+    W->>R2: GET watch/<id>/<targetDate>.json  (prev curve)
+    W->>R2: PUT watch/<id>/<targetDate>.json  (append point)
     Note over W: cadence = hourly if near/filling, else daily
     W->>W: step.sleep(interval)
   end
@@ -109,7 +110,10 @@ sequenceDiagram
 
 This emits *dense, adaptive* burn-down data for the specific high-demand dates
 you care about — what uniform daily snapshots can't — for materially better
-sell-out projections. Durable: survives eviction and resumes mid-loop.
+sell-out projections. Durable: survives eviction and resumes mid-loop. The series
+is banked as one read-modify-write **fill-curve** object per (campground, target
+night) so the webapp reads it back in a single `GET /watch/:guid/:date` — re-plumbed
+off the `campsite_watch` Analytics Engine dataset (now droppable; #107, work item 2).
 
 ## Dev
 

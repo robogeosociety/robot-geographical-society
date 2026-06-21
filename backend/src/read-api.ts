@@ -266,6 +266,98 @@ readApi.get('/demand', edgeCache(600), async (c) => {
   return c.json({ from, collected: { earliest, latest: collLatest }, nights: nightRows, campgrounds });
 });
 
+// --- hot-date Watch fill-curves -------------------------------------------------
+// The HotDateWatchWorkflow banks an adaptive series of observations for one
+// (campground, target night) to a single R2 object `watch/<id>/<targetDate>.json`
+// (was the campsite_watch Analytics Engine dataset — re-plumbed AE → R2 so the webapp
+// reads the curve directly; robot-geographical-society#107, work item 2). Shape:
+//   { id, name, agency, kind, target_date, lat, lng, started_at, updated_at,
+//     done, sold_out, points: [{ ts, available, reserved, total }] }
+// keyed by provider id; we translate id ↔ guid here so the browser only ever sees guid.
+
+const WATCH_PREFIX = 'watch/';
+
+type WatchPoint = { ts: string; available: number; reserved: number; total: number };
+type WatchCurve = {
+  id: string; name?: string; agency?: string; kind?: string; target_date: string;
+  lat?: number | null; lng?: number | null; started_at?: string; updated_at?: string;
+  done?: boolean; sold_out?: boolean; points?: WatchPoint[];
+};
+
+// Latest point of a curve, for the list summary (current fill / booked counts).
+function watchSummary(curve: WatchCurve) {
+  const points = curve.points ?? [];
+  const last = points[points.length - 1] ?? { available: 0, reserved: 0, total: 0, ts: curve.updated_at };
+  const fill = last.total > 0 ? last.reserved / last.total : 0;
+  return { last, fill, observations: points.length };
+}
+
+// GET /watch — every active/completed fill-curve, keyed by guid, one row per
+// (campground, target night). The list summary carries the latest point so the
+// webapp can rank by current fill without fetching each full curve.
+readApi.get('/watch', edgeCache(120), async (c) => {
+  const { inventory } = await inventoryFor(c.env);
+  const byId = new Map(inventory.map((e) => [e.id, e]));
+
+  const { objects } = await listAll(c.env, { prefix: WATCH_PREFIX });
+  const rows: any[] = [];
+  for (const o of objects) {
+    if (!o.key.endsWith('.json')) continue;
+    const curve = await getJson<WatchCurve>(c.env, o.key);
+    if (!curve) continue;
+    const entry = byId.get(curve.id);
+    const { last, fill, observations } = watchSummary(curve);
+    rows.push({
+      guid: entry?.guid ?? null,
+      id: curve.id,
+      name: entry?.name ?? curve.name ?? null,
+      agency: entry?.agency_full ?? entry?.agency ?? curve.agency ?? null,
+      lat: entry?.lat ?? curve.lat ?? null,
+      lng: entry?.lng ?? curve.lng ?? null,
+      target_date: curve.target_date,
+      started_at: curve.started_at ?? null,
+      updated_at: curve.updated_at ?? null,
+      done: curve.done ?? false,
+      sold_out: curve.sold_out ?? false,
+      observations,
+      available: last.available,
+      reserved: last.reserved,
+      total: last.total,
+      fill,
+    });
+  }
+  // Hottest (most booked) first, then soonest target night.
+  rows.sort((a, b) => b.fill - a.fill || (a.target_date < b.target_date ? -1 : a.target_date > b.target_date ? 1 : 0));
+  return c.json({ watches: rows });
+});
+
+// GET /watch/:guid/:date — one campground/target-night fill-curve (the full series of
+// observations over the life of the watch). :date is the target night, YYYY-MM-DD.
+readApi.get('/watch/:guid/:date', edgeCache(120), async (c) => {
+  const { byGuid } = await inventoryFor(c.env);
+  const entry = byGuid.get(c.req.param('guid'));
+  if (!entry) return c.json({ error: 'unknown guid' }, 404);
+  const date = c.req.param('date');
+  if (!DATE_RE.test(date)) return c.json({ error: 'need a YYYY-MM-DD target date' }, 400);
+
+  const curve = await getJson<WatchCurve>(c.env, `${WATCH_PREFIX}${entry.id}/${date}.json`);
+  if (!curve) return c.json({ error: 'no watch for that campground/date' }, 404);
+
+  return c.json({
+    guid: entry.guid,
+    name: entry.name ?? curve.name ?? null,
+    agency: entry.agency_full ?? entry.agency ?? curve.agency ?? null,
+    lat: entry.lat ?? curve.lat ?? null,
+    lng: entry.lng ?? curve.lng ?? null,
+    target_date: curve.target_date,
+    started_at: curve.started_at ?? null,
+    updated_at: curve.updated_at ?? null,
+    done: curve.done ?? false,
+    sold_out: curve.sold_out ?? false,
+    points: curve.points ?? [],
+  });
+});
+
 // GET /availability/:guid/site/:siteId — one site's per-night status calendar.
 // :siteId is the internal R2 site id (e.g. 81835), NOT the human label ("24").
 readApi.get('/availability/:guid/site/:siteId', edgeCache(300), async (c) => {
