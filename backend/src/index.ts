@@ -7,6 +7,7 @@ import { whoami, adminOnly, ROLE_PREFIX } from './auth';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
 export { CollectorLoop, HotDateWatchWorkflow } from './workflows';
+export { ReadinessWorkflow } from './readiness-workflow';
 
 type Bindings = WfEnv & {
   CAMPSITES: KVNamespace;
@@ -95,6 +96,15 @@ app.post('/collect/start', adminOnly(), async (c) => {
   if (alive && !force) return c.json({ status: 'already-running', lastWakeISO: hb?.lastWakeISO });
   const i = await c.env.COLLECTOR_WF.create({ params: {} });
   return c.json({ status: 'started', instanceId: i.id, forced: force });
+});
+
+// Start (or re-kick) the daily prediction-readiness Workflow. Like the collector
+// loop it self-perpetuates via continue-as-new, so this is normally a one-time start
+// (e.g. after first deploy or a crash). Idempotent enough: a duplicate instance just
+// writes the same singleton campsite_readiness row.
+app.post('/readiness/start', adminOnly(), async (c) => {
+  const i = await c.env.READINESS_WF.create({ params: {} });
+  return c.json({ status: 'started', instanceId: i.id });
 });
 
 // Freshness/observability snapshot (the loop's heartbeat).
