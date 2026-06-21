@@ -177,3 +177,29 @@ describe('/collectors — fleet health (current state, no history)', () => {
     expect(body[0]).toMatchObject({ guid: 'guid-kv-only', name: 'KV-only Camp' });
   });
 });
+
+// The Cache-API edge layer is a no-op under Node tests (no `caches` global), but the
+// browser-facing Cache-Control directive is still stamped — that's what lets the
+// browser HTTP cache honor the same TTL as the localStorage layer. Errors stay
+// uncached so a bad request is never sticky.
+describe('read endpoints — browser cache directives', () => {
+  test('a 200 read carries a private, max-age Cache-Control', async () => {
+    const RAW = seedR2();
+    const avail = await app.request(`/availability?date=${DATE}`, {}, { RAW } as any);
+    expect(avail.headers.get('Cache-Control')).toBe('private, max-age=600');
+
+    const fleet = await app.request('/collectors', {}, { RAW } as any);
+    expect(fleet.headers.get('Cache-Control')).toBe('private, max-age=60');
+  });
+
+  test('errors are not stamped (no sticky 400/404)', async () => {
+    const RAW = seedR2();
+    const bad = await app.request('/availability', {}, { RAW } as any); // 400, missing ?date=
+    expect(bad.status).toBe(400);
+    expect(bad.headers.get('Cache-Control')).toBeNull();
+
+    const missing = await app.request(`/availability/not-a-guid?date=${DATE}`, {}, { RAW } as any); // 404
+    expect(missing.status).toBe(404);
+    expect(missing.headers.get('Cache-Control')).toBeNull();
+  });
+});
