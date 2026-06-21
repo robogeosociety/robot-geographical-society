@@ -178,6 +178,80 @@ describe('/collectors — fleet health (current state, no history)', () => {
   });
 });
 
+describe('/demand — cross-campground demand aggregation', () => {
+  // Colonial Creek North (NPS, rec.gov id 246855) — a second campground so the
+  // night totals sum across campgrounds. Both share the night 2026-06-06.
+  const CC_ID = '246855';
+  const CC_GUID = '526a9c1d-814b-5019-991b-1abb73c7340d';
+
+  function seedDemand() {
+    return makeR2({
+      [`summary/2026-06-04/${MF_ID}.json`]: {
+        id: MF_ID,
+        by_date: {
+          '2026-06-03': { available: 5, reserved: 0, total: 5 }, // BEFORE from → excluded
+          '2026-06-05': { available: 2, reserved: 8, total: 10 },
+          '2026-06-06': { available: 1, reserved: 9, total: 10 },
+        },
+      },
+      [`summary/2026-06-04/${CC_ID}.json`]: {
+        id: CC_ID,
+        by_date: {
+          '2026-06-06': { available: 4, reserved: 1, total: 5 },
+          '2026-06-07': { available: 5, reserved: 0, total: 5 },
+        },
+      },
+    });
+  }
+
+  test('sums each night across campgrounds; excludes nights before ?from', async () => {
+    const RAW = seedDemand();
+    const res = await app.request('/demand?from=2026-06-05', {}, { RAW } as any);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as any;
+
+    // 06-03 (before from) is gone; nights ascending.
+    expect(body.nights.map((n: any) => n.night)).toEqual(['2026-06-05', '2026-06-06', '2026-06-07']);
+    // 06-06 is the cross-campground sum: MF (1/9/10) + CC (4/1/5).
+    const jun6 = body.nights.find((n: any) => n.night === '2026-06-06');
+    expect(jun6).toMatchObject({ available: 5, reserved: 10, total: 15 });
+  });
+
+  test('campground rows carry totals summed over the upcoming nights (+ coords for the map)', async () => {
+    const RAW = seedDemand();
+    const res = await app.request('/demand?from=2026-06-05', {}, { RAW } as any);
+    const body = (await res.json()) as any;
+
+    const mf = body.campgrounds.find((c: any) => c.guid === MF_GUID);
+    // MF over 06-05 + 06-06 (06-03 excluded): reserved 8+9, total 10+10.
+    expect(mf).toMatchObject({ name: 'Middle Fork', available: 3, reserved: 17, total: 20 });
+    expect(Number.isFinite(mf.lat) && Number.isFinite(mf.lng)).toBe(true);
+
+    const cc = body.campgrounds.find((c: any) => c.guid === CC_GUID);
+    expect(cc).toMatchObject({ available: 9, reserved: 1, total: 10 });
+  });
+
+  test('defaults ?from to today and validates the date', async () => {
+    const RAW = seedDemand();
+    const bad = await app.request('/demand?from=nope', {}, { RAW } as any);
+    expect(bad.status).toBe(400);
+
+    // No ?from → today; all fixture nights are in the past, so no campgrounds qualify.
+    const dflt = await app.request('/demand', {}, { RAW } as any);
+    expect(dflt.status).toBe(200);
+    const body = (await dflt.json()) as any;
+    expect(body.from).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(body.campgrounds).toEqual([]);
+    expect(body.nights).toEqual([]);
+  });
+
+  test('carries the 600s browser cache directive', async () => {
+    const RAW = seedDemand();
+    const res = await app.request('/demand?from=2026-06-05', {}, { RAW } as any);
+    expect(res.headers.get('Cache-Control')).toBe('private, max-age=600');
+  });
+});
+
 // The Cache-API edge layer is a no-op under Node tests (no `caches` global), but the
 // browser-facing Cache-Control directive is still stamped — that's what lets the
 // browser HTTP cache honor the same TTL as the localStorage layer. Errors stay

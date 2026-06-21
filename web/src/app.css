@@ -625,6 +625,30 @@ body {
 }
 .btn-reactivate:hover { background: rgba(166, 226, 46, 0.12); }
 
+/* Demand view — ranked lists of nights / campgrounds, each with a % bar. Reuses the
+   .fleet-panel shell on the right. */
+.demand-section { margin-top: 14px; }
+.demand-section:first-of-type { margin-top: 8px; }
+.demand-section h3 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.demand-row {
+  display: grid; grid-template-columns: 40% 1fr; align-items: center; gap: 8px;
+  width: 100%; padding: 3px 0; background: none; border: none; color: inherit;
+  font-family: inherit; text-align: left;
+}
+button.demand-row { cursor: pointer; }
+button.demand-row:hover .demand-row-name { color: var(--text); }
+.demand-row-name { font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.demand-bar { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px; }
+.demand-bar-track {
+  height: 8px; border-radius: 4px; background: var(--bg-surface, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--border); overflow: hidden;
+}
+.demand-bar-fill { display: block; height: 100%; border-radius: 4px; }
+.demand-bar-label { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
 .state-badge {
   display: inline-block;
   padding: 3px 10px;
