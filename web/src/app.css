@@ -649,6 +649,22 @@ button.demand-row:hover .demand-row-name { color: var(--text); }
 .demand-bar-fill { display: block; height: 100%; border-radius: 4px; }
 .demand-bar-label { white-space: nowrap; font-variant-numeric: tabular-nums; }
 
+/* Watch view — one card per watched (campground, target night) with its fill-curve.
+   Reuses the .fleet-panel shell on the right. */
+.watch-section { margin-top: 8px; display: flex; flex-direction: column; gap: 10px; }
+.watch-row {
+  display: block; width: 100%; text-align: left; padding: 8px;
+  background: var(--bg-surface, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border); border-radius: 6px;
+  color: inherit; font-family: inherit; cursor: pointer;
+}
+.watch-row:hover { border-color: var(--text-muted); }
+.watch-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.watch-row-name { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.watch-row-fill { font-size: 12px; font-variant-numeric: tabular-nums; font-weight: 600; }
+.watch-row-date { margin: 1px 0 4px; }
+.watch-curve { display: block; width: 100%; }
+
 .state-badge {
   display: inline-block;
   padding: 3px 10px;

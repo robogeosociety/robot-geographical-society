@@ -111,6 +111,23 @@ export function getDemand() {
   return getCachedJSON('/demand', AVAILABILITY_TTL);
 }
 
+// Hot-date Watch fill-curves: the adaptive series the watcher banks to R2 for one
+// (campground, target night), re-plumbed off Analytics Engine so the webapp reads it
+// directly (#107, work item 2). The list summary carries each watch's latest point:
+//   { watches: [{ guid, name, agency, lat, lng, target_date, started_at, updated_at,
+//                 done, sold_out, observations, available, reserved, total, fill }] }
+// Short TTL (the watcher updates a curve every few hours).
+export function getWatches() {
+  return getCachedJSON('/watch', FLEET_TTL);
+}
+
+// One campground/target-night fill-curve — the full observation series:
+//   { guid, name, agency, target_date, started_at, updated_at, done, sold_out,
+//     points: [{ ts, available, reserved, total }] }
+export function getWatchCurve(guid, date) {
+  return getJSON(`/watch/${guid}/${date}`);
+}
+
 // Per-site rows for one campground on a date:
 //   { sites: [{ siteId, label, loop, type, use, status }] }
 // status ∈ "available" | "reserved" | "other".

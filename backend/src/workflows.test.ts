@@ -12,7 +12,8 @@ vi.mock('./availability', () => ({
   })),
 }));
 
-import { collectSite, type WfEnv } from './workflows';
+import { collectSite, appendWatchPoint, watchKey, type WfEnv, type WatchCurve } from './workflows';
+import { makeR2 } from '../test/stubs/r2';
 
 function spyEnv() {
   const calls = { collector: 0, avail: 0, demand: 0 };
@@ -38,5 +39,52 @@ describe('collectSite AE writes — bounded per invocation', () => {
     expect(calls.collector).toBe(1);
     expect(calls.avail).toBe(1);
     expect(calls.demand).toBe(0); // must NOT spam DEMAND_AE from the hot path
+  });
+});
+
+const WATCH_SITE = {
+  id: '233864', name: 'Kalaloch', agency: 'nps', kind: 'rec', ref: '233864',
+  targetDate: '2026-07-04', lat: 47.6, lng: -124.4,
+} as never;
+
+describe('appendWatchPoint — fill-curve banked to R2 (AE → R2 re-plumb, #107 item 2)', () => {
+  // The hot-date watcher no longer writes the campsite_watch Analytics Engine dataset;
+  // it appends each observation to ONE R2 object (watch/<id>/<targetDate>.json) so the
+  // webapp can read the whole fill-curve in a single get. There is no AE binding in the
+  // env here — if the workflow still tried to write AE, it would throw.
+  test('seeds the curve object on the first observation', async () => {
+    const RAW = makeR2();
+    const env = { RAW } as unknown as WfEnv;
+    const curve = await appendWatchPoint(
+      env, WATCH_SITE,
+      { ts: '2026-06-21T10:00:00.000Z', available: 8, reserved: 2, total: 10 },
+      false, false,
+    );
+    expect(curve).toMatchObject({
+      id: '233864', name: 'Kalaloch', agency: 'nps', kind: 'rec',
+      target_date: '2026-07-04', lat: 47.6, lng: -124.4, done: false, sold_out: false,
+    });
+    expect(curve.started_at).toBe('2026-06-21T10:00:00.000Z');
+    expect(curve.points).toEqual([{ ts: '2026-06-21T10:00:00.000Z', available: 8, reserved: 2, total: 10 }]);
+
+    // It really landed in R2 at the documented key.
+    const stored = (await (await RAW.get(watchKey('233864', '2026-07-04')))!.json()) as WatchCurve;
+    expect(stored.points).toHaveLength(1);
+  });
+
+  test('read-modify-writes: appends to the existing series and keeps started_at', async () => {
+    const RAW = makeR2();
+    const env = { RAW } as unknown as WfEnv;
+    await appendWatchPoint(env, WATCH_SITE, { ts: '2026-06-21T10:00:00.000Z', available: 8, reserved: 2, total: 10 }, false, false);
+    const curve = await appendWatchPoint(
+      env, WATCH_SITE,
+      { ts: '2026-06-21T16:00:00.000Z', available: 0, reserved: 10, total: 10 },
+      true, true,
+    );
+    expect(curve.started_at).toBe('2026-06-21T10:00:00.000Z'); // preserved from the first point
+    expect(curve.updated_at).toBe('2026-06-21T16:00:00.000Z');
+    expect(curve.done).toBe(true);
+    expect(curve.sold_out).toBe(true);
+    expect(curve.points.map((p) => p.reserved)).toEqual([2, 10]);
   });
 });

@@ -40,12 +40,18 @@ test.describe('Robot Geographical Society - Integration', () => {
     await page.goto(`${BASE_URL}/availability`, { waitUntil: 'domcontentloaded' });
     await expect(page.getByRole('link', { name: /Availability/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /Demand/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Watch/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /Collectors/i })).toBeVisible();
   });
 
   test('demand view renders the demand panel', async ({ page }) => {
     await page.goto(`${BASE_URL}/demand`, { waitUntil: 'domcontentloaded' });
     await expect(page.getByRole('heading', { name: 'Demand' })).toBeVisible();
+  });
+
+  test('watch view renders the watch panel', async ({ page }) => {
+    await page.goto(`${BASE_URL}/watch`, { waitUntil: 'domcontentloaded' });
+    await expect(page.getByRole('heading', { name: 'Watch' })).toBeVisible();
   });
 
   test('availability view renders the map controls and agency legend', async ({ page }) => {

@@ -252,6 +252,76 @@ describe('/demand — cross-campground demand aggregation', () => {
   });
 });
 
+describe('/watch — hot-date fill-curves (AE → R2 re-plumb, #107 item 2)', () => {
+  const TARGET = '2026-07-04';
+  // A second campground (Colonial Creek North, rec.gov 246855) so /watch lists more
+  // than one curve and the hottest-first sort is exercised.
+  const CC_ID = '246855';
+  const CC_GUID = '526a9c1d-814b-5019-991b-1abb73c7340d';
+
+  function seedWatch() {
+    return makeR2({
+      // MF: filling but not sold out (60% booked at the latest point).
+      [`watch/${MF_ID}/${TARGET}.json`]: {
+        id: MF_ID, name: 'Middle Fork', agency: 'usfs', kind: 'rec', target_date: TARGET,
+        started_at: '2026-06-20T10:00:00.000Z', updated_at: '2026-06-21T10:00:00.000Z',
+        done: false, sold_out: false,
+        points: [
+          { ts: '2026-06-20T10:00:00.000Z', available: 8, reserved: 2, total: 10 },
+          { ts: '2026-06-21T10:00:00.000Z', available: 4, reserved: 6, total: 10 },
+        ],
+      },
+      // CC: sold out (100% booked) — must sort ahead of MF.
+      [`watch/${CC_ID}/${TARGET}.json`]: {
+        id: CC_ID, name: 'Colonial Creek North', agency: 'nps', kind: 'rec', target_date: TARGET,
+        started_at: '2026-06-20T10:00:00.000Z', updated_at: '2026-06-21T11:00:00.000Z',
+        done: true, sold_out: true,
+        points: [{ ts: '2026-06-21T11:00:00.000Z', available: 0, reserved: 5, total: 5 }],
+      },
+    });
+  }
+
+  test('lists every curve keyed by guid, hottest first, with the latest-point summary', async () => {
+    const RAW = seedWatch();
+    const res = await app.request('/watch', {}, { RAW } as any);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as any;
+
+    expect(body.watches.map((w: any) => w.guid)).toEqual([CC_GUID, MF_GUID]); // sold-out CC first
+    const mf = body.watches.find((w: any) => w.guid === MF_GUID);
+    expect(mf).toMatchObject({
+      name: 'Middle Fork', target_date: TARGET, done: false, sold_out: false,
+      observations: 2, available: 4, reserved: 6, total: 10, fill: 0.6,
+    });
+    expect(Number.isFinite(mf.lat) && Number.isFinite(mf.lng)).toBe(true); // coords for the map
+  });
+
+  test('GET /watch/:guid/:date returns the full fill-curve series', async () => {
+    const RAW = seedWatch();
+    const res = await app.request(`/watch/${MF_GUID}/${TARGET}`, {}, { RAW } as any);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as any;
+    expect(body.guid).toBe(MF_GUID);
+    expect(body.points.map((p: any) => p.reserved)).toEqual([2, 6]);
+    expect(body.started_at).toBe('2026-06-20T10:00:00.000Z');
+  });
+
+  test('unknown guid → 404; bad date → 400; missing curve → 404', async () => {
+    const RAW = seedWatch();
+    expect((await app.request(`/watch/not-a-guid/${TARGET}`, {}, { RAW } as any)).status).toBe(404);
+    expect((await app.request(`/watch/${MF_GUID}/nope`, {}, { RAW } as any)).status).toBe(400);
+    expect((await app.request(`/watch/${MF_GUID}/2099-01-01`, {}, { RAW } as any)).status).toBe(404);
+  });
+
+  test('carries the 120s browser cache directive', async () => {
+    const RAW = seedWatch();
+    const list = await app.request('/watch', {}, { RAW } as any);
+    expect(list.headers.get('Cache-Control')).toBe('private, max-age=120');
+    const one = await app.request(`/watch/${MF_GUID}/${TARGET}`, {}, { RAW } as any);
+    expect(one.headers.get('Cache-Control')).toBe('private, max-age=120');
+  });
+});
+
 // The Cache-API edge layer is a no-op under Node tests (no `caches` global), but the
 // browser-facing Cache-Control directive is still stamped — that's what lets the
 // browser HTTP cache honor the same TTL as the localStorage layer. Errors stay

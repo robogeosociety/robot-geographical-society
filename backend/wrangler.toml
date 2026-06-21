@@ -47,12 +47,10 @@ dataset = "campsite_collector_runs"
 binding = "AVAIL_AE"
 dataset = "campsite_availability"
 
-# Dense per-check hot-date watch points. Schema:
-#   index=site.id  blob1=targetDate blob2=agency blob3=name
-#   double1=available double2=reserved double3=total
-[[analytics_engine_datasets]]
-binding = "WATCH_AE"
-dataset = "campsite_watch"
+# (Removed) WATCH_AE / campsite_watch — the hot-date watcher now banks its fill-curve
+# to R2 (watch/<id>/<targetDate>.json) so the webapp reads it directly with no AE
+# round-trip (robot-geographical-society#107, work item 2). The campsite_watch dataset
+# is unused; drop it in observability-config (follow-up).
 
 # Per-campground per-night demand (one row per campground per target night per
 # run, soonest 240 nights). Feeds the Campsite Demand dashboard (booking heatmap,
