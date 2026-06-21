@@ -25,6 +25,7 @@ export interface WfEnv {
   RUNS_AE?: AnalyticsEngineDataset; // (kept for compatibility)
   AVAIL_AE?: AnalyticsEngineDataset; // per-site availability rollup
   WATCH_AE?: AnalyticsEngineDataset; // dense per-check watch points
+  DEMAND_AE?: AnalyticsEngineDataset; // per-campground per-night demand → Grafana
 }
 
 // `collect: false` marks map-only / disabled sites (no rec/WA provider, or a
@@ -112,6 +113,23 @@ export async function collectSite(env: WfEnv, site: Site, date: string) {
     blobs: [date, site.agency, site.name],
     doubles: [av, rs, tot, open],
   });
+  // Per-campground per-night demand → campsite_demand: one row per target night,
+  // feeding the Campsite Demand dashboard (booking heatmap, hottest nights,
+  // in-demand campgrounds) now that it reads Analytics Engine instead of the host
+  // InfluxDB ingest. AE caps writeDataPoint() at 250/invocation and we already
+  // spend 2 above, so write only the soonest 240 nights — the demand-relevant
+  // horizon (far-out nights aren't "in demand" yet) and a hard guard against the
+  // cap for long booking windows (WA goingtocamp opens ~9 months out).
+  const nights = Object.entries(a.by)
+    .sort(([d1], [d2]) => (d1 < d2 ? -1 : 1))
+    .slice(0, 240);
+  for (const [targetDate, c] of nights) {
+    env.DEMAND_AE?.writeDataPoint({
+      indexes: [site.id],
+      blobs: [targetDate, site.agency, site.name],
+      doubles: [c.available, c.reserved, c.total],
+    });
+  }
   return { id: site.id, dates: Object.keys(a.by).length };
 }
 

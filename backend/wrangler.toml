@@ -54,6 +54,16 @@ dataset = "campsite_availability"
 binding = "WATCH_AE"
 dataset = "campsite_watch"
 
+# Per-campground per-night demand (one row per campground per target night per
+# run, soonest 240 nights). Feeds the Campsite Demand dashboard (booking heatmap,
+# hottest nights, in-demand campgrounds) after the 2026-06 move off the host
+# InfluxDB ingest. Schema:
+#   index=site.id  blob1=targetDate blob2=agency blob3=name
+#   double1=available double2=reserved double3=total
+[[analytics_engine_datasets]]
+binding = "DEMAND_AE"
+dataset = "campsite_demand"
+
 [vars]
 # The one knob: every campsite is refreshed within this many days. No fixed schedule.
 MAX_STALENESS_DAYS = "2"
