@@ -115,23 +115,13 @@ export async function collectSite(env: WfEnv, site: Site, date: string) {
     blobs: [date, site.agency, site.name],
     doubles: [av, rs, tot, open],
   });
-  // Per-campground per-night demand → campsite_demand: one row per target night,
-  // feeding the Campsite Demand dashboard (booking heatmap, hottest nights,
-  // in-demand campgrounds) now that it reads Analytics Engine instead of the host
-  // InfluxDB ingest. AE caps writeDataPoint() at 250/invocation and we already
-  // spend 2 above, so write only the soonest 240 nights — the demand-relevant
-  // horizon (far-out nights aren't "in demand" yet) and a hard guard against the
-  // cap for long booking windows (WA goingtocamp opens ~9 months out).
-  const nights = Object.entries(a.by)
-    .sort(([d1], [d2]) => (d1 < d2 ? -1 : 1))
-    .slice(0, 240);
-  for (const [targetDate, c] of nights) {
-    env.DEMAND_AE?.writeDataPoint({
-      indexes: [site.id],
-      blobs: [targetDate, site.agency, site.name],
-      doubles: [c.available, c.reserved, c.total],
-    });
-  }
+  // NOTE: per-campground per-night demand (campsite_demand) is NOT written here.
+  // The loop collects multiple sites per workflow invocation, and writing one AE row
+  // per target night (~240/site) blew the Analytics Engine cap of 250 writeDataPoint()
+  // calls *per invocation* once a wake collected more than one site → the whole
+  // CollectorLoop errored out. Demand is re-homed in a separate daily Workflow that
+  // writes one campground per step (≤240 writes/step, under the cap). The DEMAND_AE
+  // binding stays for that Workflow. (Regression from #103; reverted here.)
   return { id: site.id, dates: Object.keys(a.by).length };
 }
 
