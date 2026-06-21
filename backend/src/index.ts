@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import campsites from './campsites-index.json';
 import { collectSite, HEARTBEAT_KEY, DLQ_PREFIX, listDlqIds, type WfEnv, type DlqEntry } from './workflows';
-import { readApi } from './read-api';
+import { readApi, edgeCache } from './read-api';
 import { whoami, adminOnly, ROLE_PREFIX } from './auth';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
@@ -115,8 +115,11 @@ app.get('/scheduler/status', async (c) => {
 });
 
 // The dead-letter queue: sites quarantined after too many consecutive failures.
-// Each entry is dlq/<id>.json in R2 (the source of truth for "inactive").
-app.get('/collect/dlq', async (c) => {
+// Each entry is dlq/<id>.json in R2 (the source of truth for "inactive"). Edge-cached
+// for 60s to match /collectors — the fleet view loads the two together, and this is
+// shared, identity-independent data. reactivate() busts the browser copy; the edge
+// self-heals within the short TTL.
+app.get('/collect/dlq', edgeCache(60), async (c) => {
   const list = await c.env.RAW.list({ prefix: DLQ_PREFIX });
   const entries = await Promise.all(
     list.objects.map(async (o) => (await c.env.RAW.get(o.key))?.json<DlqEntry>()),
