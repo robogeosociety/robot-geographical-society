@@ -7,8 +7,18 @@
 TFVEND ?= /Volumes/dev/cloudflare-tfvend
 ENVFILE ?= ../../web/.env.local
 export CLOUDFLARE_API_TOKEN := $(shell terraform -chdir=$(TFVEND) output -raw rgs_access_admin_token 2>/dev/null)
+# Remote-state (R2 S3 backend) credentials — the vended tfstate-r2 token.
+export AWS_ACCESS_KEY_ID := $(shell terraform -chdir=$(TFVEND) output -raw tfstate_r2_access_key_id 2>/dev/null)
+export AWS_SECRET_ACCESS_KEY := $(shell terraform -chdir=$(TFVEND) output -raw tfstate_r2_secret_access_key 2>/dev/null)
 
-.PHONY: help check plan apply envfile destroy
+.PHONY: help check init migrate plan apply envfile destroy
+
+init: check
+	terraform init
+
+# One-time migration of existing local state into the R2 backend.
+migrate: check
+	terraform init -migrate-state
 
 help:
 	@echo "make plan      # terraform plan"
