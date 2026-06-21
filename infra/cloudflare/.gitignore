@@ -1,0 +1,8 @@
+# Local Terraform state holds resource metadata (and, for some roots, secrets) — never
+# commit it. Only *.tf + the provider lock file are tracked.
+.terraform/
+.terraform.lock.hcl.bak
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
