@@ -11,10 +11,14 @@ function slicePath(cx, cy, r, start, end) {
 }
 
 // A small agency disc: a light-filled circle (the clickable point) with an
-// agency-colored outline, over which a "pac-man" wedge — also agency-colored — spans
-// `fraction` of the circle (remaining availability for the rest of the year). So a
-// near-full disc = lots open, a thin wedge = mostly booked, an (almost) empty light
-// disc = fully booked. Color carries agency; only the wedge carries availability.
+// agency-colored outline. The disc reads like a draining gauge — it starts full and
+// empties *clockwise* from 12 o'clock as the campground books up. The remaining
+// availability is the solid agency-colored wedge (the tail of the clockwise sweep);
+// the drained/booked portion is the same color at low opacity. So a near-full solid
+// disc = lots open, a thin solid wedge = mostly booked, an all-faint disc = fully
+// booked. Color carries agency; the solid/faint split carries availability.
+const EMPTY_OPACITY = 0.22;
+
 export function pacmanMarkup(fraction, { radius = 8, color = '#888888' } = {}) {
   const f = Math.max(0, Math.min(1, Number(fraction) || 0));
   const size = radius * 2 + 2;
@@ -22,11 +26,14 @@ export function pacmanMarkup(fraction, { radius = 8, color = '#888888' } = {}) {
 
   // Light background disc → the whole circle reads (and clicks) as a point.
   let svg = `<circle cx="${c}" cy="${c}" r="${radius}" fill="rgba(255,255,255,0.82)"/>`;
-  // Availability wedge in the agency color.
+  // Faint full disc in the agency color: the drained (booked) fill, shown at low opacity.
+  svg += `<circle cx="${c}" cy="${c}" r="${radius}" fill="${color}" fill-opacity="${EMPTY_OPACITY}"/>`;
+  // Remaining-availability wedge at full opacity. The empty portion drains clockwise from
+  // the top, so the solid wedge occupies the tail of the sweep: [(1 - f)·360°, 360°].
   if (f >= 1) {
     svg += `<circle cx="${c}" cy="${c}" r="${radius}" fill="${color}"/>`;
   } else if (f > 0) {
-    svg += `<path d="${slicePath(c, c, radius, 0, f * 360)}" fill="${color}"/>`;
+    svg += `<path d="${slicePath(c, c, radius, (1 - f) * 360, 360)}" fill="${color}"/>`;
   }
   // Agency-color outline around the circle.
   svg += `<circle cx="${c}" cy="${c}" r="${radius}" fill="none" stroke="${color}" stroke-width="1.5"/>`;
