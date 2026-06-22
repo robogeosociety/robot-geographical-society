@@ -580,6 +580,70 @@ body {
 }
 .cal-cell.cal-reserved, .cal-cell.cal-other { color: rgba(255, 255, 255, 0.7); }
 
+/* Calendar view — month-grid panel */
+.calendar-panel {
+  position: absolute;
+  top: 56px;
+  right: 16px;
+  width: var(--panel-width);
+  max-height: calc(100% - 80px);
+  overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.calx-controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; }
+.calx-control { display: flex; flex-direction: column; gap: 3px; flex: 1 1 150px; }
+.calx-control select {
+  background: var(--bg-elevated);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 5px 6px;
+  font-family: inherit;
+  font-size: 12px;
+  max-width: 100%;
+}
+.calx-legend {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  font-size: 11px; color: var(--text-muted); margin-bottom: 10px;
+}
+.calx-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+.calx-month { margin-bottom: 14px; }
+.calx-month-label { font-size: 11px; color: var(--text-muted); margin-bottom: 5px; }
+.calx-dow, .calx-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.calx-week { margin-bottom: 3px; }
+.calx-dow-cell {
+  text-align: center; font-size: 9px; color: var(--text-muted);
+  padding-bottom: 2px;
+}
+.calx-cell {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05); /* booked/empty remainder behind the fill */
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.calx-fill { position: absolute; top: 0; left: 0; right: 0; } /* hangs from the top; height set inline */
+.calx-day {
+  position: relative;
+  font-size: 9px;
+  color: var(--text);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
+}
+.calx-empty { background: rgba(255, 255, 255, 0.02); }
+.calx-empty .calx-day, .calx-empty { color: var(--text-muted); }
+.calx-pad { background: none; }
+.calx-solid.cal-available { background: #3FB950; }
+.calx-solid.cal-reserved  { background: #F85149; }
+.calx-solid.cal-other     { background: #6E7681; }
+
 /* Collectors fleet panel */
 .fleet-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
 .role-badge { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 20px; }

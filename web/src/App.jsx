@@ -5,6 +5,7 @@ import { MapContext } from './map/MapContext';
 import { MAP_STYLE, WA_BOUNDS } from './constants';
 import AvailabilityView from './views/AvailabilityView';
 import DemandView from './views/DemandView';
+import CalendarView from './views/CalendarView';
 import WatchView from './views/WatchView';
 import CollectorsView from './views/CollectorsView';
 
@@ -74,6 +75,7 @@ export default function App() {
           <nav className="nav-tabs">
             <NavLink to="/availability" className="nav-tab">Availability</NavLink>
             <NavLink to="/demand" className="nav-tab">Demand</NavLink>
+            <NavLink to="/calendar" className="nav-tab">Calendar</NavLink>
             <NavLink to="/watch" className="nav-tab">Watch</NavLink>
             <NavLink to="/collectors" className="nav-tab">Collectors</NavLink>
           </nav>
@@ -91,6 +93,7 @@ export default function App() {
             <Route path="/" element={<Navigate to={defaultPath()} replace />} />
             <Route path="/availability" element={<AvailabilityView />} />
             <Route path="/demand" element={<DemandView />} />
+            <Route path="/calendar" element={<CalendarView />} />
             <Route path="/watch" element={<WatchView />} />
             <Route path="/collectors" element={<CollectorsView />} />
             <Route path="*" element={<Navigate to={defaultPath()} replace />} />
