@@ -129,3 +129,20 @@ npx wrangler workflows instances describe campsite-collector <id>
 Workflows: `src/workflows.ts`. Plain-fetch clients: `src/availability.ts`.
 Campsite set: `src/campsites-index.json` (61 reservable: 39 rec.gov, 22 WA).
 Ingest side: `observability/campsites/`.
+
+## Discord availability alerts
+
+After each successful `collectSite()`, the `CollectorLoop` compares the new
+`summary/<date>/<id>.json` against the most recent prior snapshot (R2 lookback ≤7d)
+and posts a green Discord embed for any night that went **0 → available** (gains
+only — fill-ups are silent). Logic lives in `src/discord.ts`
+(`detectChanges` · `buildEmbed` · `notifyAvailabilityChanges`); it is **opt-in and
+non-blocking** — a no-op when the secret is unset, and a webhook failure never fails
+collection (it runs in its own replay-safe `step.do`, so a retry can't double-post).
+
+Enable it by setting the webhook URL as a Wrangler **secret** (never commit a real
+value):
+
+```sh
+npx wrangler secret put DISCORD_WEBHOOK_URL    # paste the channel's webhook URL
+```

@@ -90,6 +90,11 @@ INACTIVE_AFTER_FAILURES = "5"
 # it's an allowlisted identity, not a credential.
 BOOTSTRAP_ADMIN = "tommy.b.doerr@gmail.com"
 
+# Discord availability alerts (src/discord.ts). The webhook URL is a SECRET — set it
+# with `npx wrangler secret put DISCORD_WEBHOOK_URL`, never a [vars] entry. When unset
+# the collector simply skips notification (no-op). On each successful collect the loop
+# posts a green embed for nights that newly opened up (0 → available; gains only).
+
 # No cron. The CollectorLoop self-perpetuates via continue-as-new; a hard crash
 # is surfaced by Grafana → Discord staleness alerting (observability repo), and a
 # human restarts it with POST /collect/start?force=1.
