@@ -14,6 +14,7 @@ import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:work
 import { loadInventory } from "./inventory";
 import { fetchAvailability, type Counts } from "./availability";
 import { type DueMap, type FailMap, seedDue, mergeDue, selectDue, nextSleepMs, jitterMs, retryBackoffMs } from "./scheduler";
+import { notifyAvailabilityChanges, type SiteInfo } from "./discord";
 
 export interface WfEnv {
   RAW: R2Bucket;
@@ -29,11 +30,35 @@ export interface WfEnv {
   DEMAND_AE?: AnalyticsEngineDataset; // per-campground per-night demand → Grafana
   READINESS_AE?: AnalyticsEngineDataset; // daily prediction-readiness gauge → Grafana
   READINESS_WF: Workflow; // daily readiness Workflow (self-reference for continue-as-new)
+  DISCORD_WEBHOOK_URL?: string; // wrangler secret; when set, the loop posts "newly available" alerts
 }
 
 // `collect: false` marks map-only / disabled sites (no rec/WA provider, or a
 // deliberately-paused collector) — they appear on the map but the loop skips them.
-type Site = { id: string; kind: "rec" | "wa"; ref: string | number; name: string; agency: string; collect?: boolean };
+type Site = {
+  id: string;
+  kind: "rec" | "wa";
+  ref: string | number;
+  name: string;
+  agency: string;
+  collect?: boolean;
+  // Carried from the inventory for the Discord alert's "Book Now" link (best-effort).
+  reservation_url?: string | null;
+  lat?: number | null;
+  lng?: number | null;
+};
+
+// Project a collector Site onto the metadata the Discord notifier needs.
+const toSiteInfo = (s: Site): SiteInfo => ({
+  id: s.id,
+  name: s.name,
+  agency: s.agency,
+  kind: s.kind,
+  ref: s.ref,
+  lat: s.lat ?? null,
+  lng: s.lng ?? null,
+  reservation_url: s.reservation_url ?? null,
+});
 
 export const HEARTBEAT_KEY = "scheduler/heartbeat.json";
 export const DLQ_PREFIX = "dlq/"; // dlq/<siteId>.json — presence == site is quarantined
@@ -244,6 +269,15 @@ export class CollectorLoop extends WorkflowEntrypoint<WfEnv, LoopPayload> {
           due[id] = plan.now + X + jitterMs(id);
           fails[id] = 0;
           collectedTotal++;
+          // Discord alert on newly-opened availability. Its own step so the webhook
+          // POST fires exactly once (memoized on replay, not re-sent on a collect
+          // retry). Guarded on the secret so no empty step is created when unset, and
+          // non-throwing internally so a webhook failure never fails the collection.
+          if (this.env.DISCORD_WEBHOOK_URL) {
+            await step.do(`notify-${i}-${id}`, () =>
+              notifyAvailabilityChanges(this.env, toSiteInfo(site), date),
+            );
+          }
         } catch (err) {
           const n = (fails[id] ?? 0) + 1;
           fails[id] = n;
