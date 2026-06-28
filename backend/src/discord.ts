@@ -1,16 +1,17 @@
 /**
  * Discord webhook notifications for campsite availability changes.
  *
- * Subscription model: after each collection, per-site availability is compared
- * against the previous snapshot. Changes that match an active subscription
- * (campground + optional site label + date/weekday filters) fire a targeted
- * Discord embed. Bulk (unfiltered) notifications are disabled.
+ * Two notification paths:
+ *  1. Subscriptions — per-site changes matching an active subscription
+ *     (campground + optional site label + date/weekday filters).
+ *  2. "Hottest" feed — any availability opening at a high-demand campground
+ *     (fill rate ≥ threshold). Enabled by default, no subscription needed.
  *
  * Integration: called from the CollectorLoop after a successful collectSite().
  * Requires the DISCORD_WEBHOOK_URL env var (a secret — add via `wrangler secret`).
  */
 
-import type { BySite } from "./availability";
+import type { ByDate, BySite } from "./availability";
 import { listSubscriptions, matchSubscriptions, type Subscription, type SiteMatch } from "./subscriptions";
 
 // --- Types -------------------------------------------------------------------
@@ -67,6 +68,103 @@ function agencyLabel(site: SiteInfo): string {
     blm: "Bureau of Land Management",
   };
   return labels[site.agency] ?? site.agency;
+}
+
+// --- Fill-rate / "hottest" feed -----------------------------------------------
+
+const HOT_FILL_DEFAULT = 0.9;
+const FIRE = 0xff4500; // orange-red
+
+export function computeFillRate(byDate: ByDate, today: string): number {
+  const entries = Object.entries(byDate).filter(([d]) => d >= today);
+  if (entries.length === 0) return 0;
+  const full = entries.filter(([, c]) => c.available === 0).length;
+  return full / entries.length;
+}
+
+export function buildHotEmbed(
+  site: SiteInfo,
+  fillRate: number,
+  matches: SiteMatch[],
+): DiscordEmbed {
+  const pct = Math.round(fillRate * 100);
+  const lines = matches.slice(0, 15).map((m) => {
+    const siteStr = m.label ? `Site ${m.label}` : `Site ${m.siteId}`;
+    return `**${formatDate(m.date)}** — ${siteStr}`;
+  });
+  if (matches.length > 15) {
+    lines.push(`_…and ${matches.length - 15} more_`);
+  }
+  const url = reservationUrl(site);
+  return {
+    title: `🔥 ${site.name} — Rare Opening!`,
+    description: `This campground is **${pct}% full** across all future dates. **${matches.length}** site-night${matches.length === 1 ? "" : "s"} just opened up — book fast.`,
+    color: FIRE,
+    url: url ?? undefined,
+    fields: [
+      { name: "Park / Agency", value: agencyLabel(site), inline: true },
+      { name: "Fill Rate", value: `${pct}%`, inline: true },
+      { name: "Availability", value: lines.join("\n"), inline: false },
+      ...(url ? [{ name: "Book Now", value: `[Reserve →](${url})`, inline: false }] : []),
+    ],
+    footer: { text: "Robot Geographical Society • Hot Campground Alert" },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export async function notifyHotCampground(
+  env: NotifyEnv & { HOT_FILL_THRESHOLD?: string },
+  site: SiteInfo,
+  date: string,
+): Promise<{ notified: boolean; hot: boolean; fillRate: number }> {
+  const webhookUrl = env.DISCORD_WEBHOOK_URL;
+  if (!webhookUrl) return { notified: false, hot: false, fillRate: 0 };
+
+  try {
+    const summaryObj = await env.RAW.get(`summary/${date}/${site.id}.json`);
+    if (!summaryObj) return { notified: false, hot: false, fillRate: 0 };
+    const summary = await summaryObj.json<{ by_date?: ByDate }>();
+    const byDate = summary?.by_date ?? {};
+
+    const fillRate = computeFillRate(byDate, date);
+    const threshold = parseFloat(env.HOT_FILL_THRESHOLD ?? "") || HOT_FILL_DEFAULT;
+    if (fillRate < threshold) return { notified: false, hot: false, fillRate };
+
+    // Hot campground — check for reserved→available transitions
+    const currentObj = await env.RAW.get(`sites/${date}/${site.id}.json`);
+    if (!currentObj) return { notified: false, hot: true, fillRate };
+    const currentSnap = await currentObj.json<{ sites?: BySite }>();
+    const currentSites = currentSnap?.sites ?? {};
+
+    const previousSites = await loadPreviousSites(env.RAW, site.id, date);
+
+    const matches: SiteMatch[] = [];
+    for (const [siteId, info] of Object.entries(currentSites)) {
+      for (const [d, status] of Object.entries(info.by_date)) {
+        if (d < date) continue;
+        if (status !== "available") continue;
+        const prev = previousSites?.[siteId]?.by_date?.[d];
+        if (prev && prev === "available") continue; // already was available
+        matches.push({ siteId, label: info.label, date: d, status });
+      }
+    }
+
+    if (matches.length === 0) return { notified: false, hot: true, fillRate };
+
+    matches.sort((a, b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label));
+
+    const embed = buildHotEmbed(site, fillRate, matches);
+    const payload: DiscordWebhookPayload = {
+      username: "Campsite Bot",
+      avatar_url: "https://em-content.zobj.net/source/apple/391/national-park_1f3de-fe0f.png",
+      embeds: [embed],
+    };
+    const sent = await sendWebhook(webhookUrl, payload);
+    return { notified: sent, hot: true, fillRate };
+  } catch (err) {
+    console.error(`notifyHotCampground failed for ${site.id}: ${err}`);
+    return { notified: false, hot: false, fillRate: 0 };
+  }
 }
 
 // --- Subscription embed building ---------------------------------------------

@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   buildSubscriptionEmbed,
+  buildHotEmbed,
+  computeFillRate,
+  notifyHotCampground,
   sendWebhook,
   notifySubscriptionMatches,
   loadPreviousSites,
@@ -288,5 +291,210 @@ describe("notifySubscriptionMatches", () => {
     const result = await notifySubscriptionMatches(env as any, site, "2026-06-27");
     expect(result).toEqual({ notified: 0, matches: 0 });
     expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+});
+
+// --- computeFillRate ---------------------------------------------------------
+
+describe("computeFillRate", () => {
+  it("returns 1.0 when all future dates are full", () => {
+    const byDate = {
+      "2026-07-01": { available: 0, reserved: 50, total: 50 },
+      "2026-07-02": { available: 0, reserved: 50, total: 50 },
+      "2026-07-03": { available: 0, reserved: 50, total: 50 },
+    };
+    expect(computeFillRate(byDate, "2026-07-01")).toBe(1.0);
+  });
+
+  it("returns 0 when all future dates have availability", () => {
+    const byDate = {
+      "2026-07-01": { available: 10, reserved: 40, total: 50 },
+      "2026-07-02": { available: 5, reserved: 45, total: 50 },
+    };
+    expect(computeFillRate(byDate, "2026-07-01")).toBe(0);
+  });
+
+  it("excludes past dates", () => {
+    const byDate = {
+      "2026-06-25": { available: 0, reserved: 50, total: 50 }, // past
+      "2026-07-01": { available: 10, reserved: 40, total: 50 },
+    };
+    expect(computeFillRate(byDate, "2026-07-01")).toBe(0);
+  });
+
+  it("computes the correct ratio", () => {
+    const byDate = {
+      "2026-07-01": { available: 0, reserved: 50, total: 50 },
+      "2026-07-02": { available: 0, reserved: 50, total: 50 },
+      "2026-07-03": { available: 0, reserved: 50, total: 50 },
+      "2026-07-04": { available: 0, reserved: 50, total: 50 },
+      "2026-07-05": { available: 0, reserved: 50, total: 50 },
+      "2026-07-06": { available: 0, reserved: 50, total: 50 },
+      "2026-07-07": { available: 0, reserved: 50, total: 50 },
+      "2026-07-08": { available: 0, reserved: 50, total: 50 },
+      "2026-07-09": { available: 0, reserved: 50, total: 50 },
+      "2026-07-10": { available: 5, reserved: 45, total: 50 },
+    };
+    expect(computeFillRate(byDate, "2026-07-01")).toBe(0.9);
+  });
+
+  it("returns 0 for empty byDate", () => {
+    expect(computeFillRate({}, "2026-07-01")).toBe(0);
+  });
+});
+
+// --- buildHotEmbed -----------------------------------------------------------
+
+describe("buildHotEmbed", () => {
+  const site: SiteInfo = {
+    id: "247592",
+    name: "Hoh Rain Forest",
+    agency: "nps",
+    kind: "rec",
+    ref: 247592,
+  };
+
+  it("builds an orange-red embed with fill rate", () => {
+    const matches = [
+      { siteId: "s1", label: "A1", date: "2026-07-04", status: "available" as const },
+    ];
+    const embed = buildHotEmbed(site, 0.95, matches);
+    expect(embed.color).toBe(0xff4500);
+    expect(embed.title).toContain("🔥");
+    expect(embed.title).toContain("Hoh Rain Forest");
+    expect(embed.description).toContain("95%");
+    const fillField = embed.fields.find((f) => f.name === "Fill Rate");
+    expect(fillField).toBeDefined();
+    expect(fillField!.value).toBe("95%");
+  });
+});
+
+// --- notifyHotCampground (integration) ---------------------------------------
+
+describe("notifyHotCampground", () => {
+  beforeEach(() => vi.restoreAllMocks());
+
+  const site: SiteInfo = {
+    id: "247592",
+    name: "Hoh Rain Forest",
+    agency: "nps",
+    kind: "rec",
+    ref: 247592,
+  };
+
+  it("skips when fill rate is below threshold", async () => {
+    const byDate: Record<string, any> = {};
+    for (let i = 1; i <= 10; i++) {
+      byDate[`2026-07-${String(i).padStart(2, "0")}`] = { available: 5, reserved: 45, total: 50 };
+    }
+    const raw = mockR2Bucket({
+      "summary/2026-06-28/247592.json": { by_date: byDate },
+    });
+    const kv = mockKVNamespace({});
+    const env = { RAW: raw, CAMPSITES: kv, DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/test" };
+    const result = await notifyHotCampground(env as any, site, "2026-06-28");
+    expect(result.hot).toBe(false);
+    expect(result.notified).toBe(false);
+  });
+
+  it("notifies when fill rate exceeds threshold and availability opens", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(null, { status: 204 }));
+
+    // 9 fully booked + 1 open = 90% fill rate
+    const byDate: Record<string, any> = {};
+    for (let i = 1; i <= 9; i++) {
+      byDate[`2026-07-${String(i).padStart(2, "0")}`] = { available: 0, reserved: 50, total: 50 };
+    }
+    byDate["2026-07-10"] = { available: 2, reserved: 48, total: 50 };
+
+    const raw = mockR2Bucket({
+      "summary/2026-06-28/247592.json": { by_date: byDate },
+      "sites/2026-06-28/247592.json": {
+        sites: {
+          s1: { label: "A1", loop: null, type: null, use: null, by_date: { "2026-07-10": "available" } },
+        },
+      },
+      "sites/2026-06-27/247592.json": {
+        sites: {
+          s1: { label: "A1", loop: null, type: null, use: null, by_date: { "2026-07-10": "reserved" } },
+        },
+      },
+    });
+
+    const kv = mockKVNamespace({});
+    const env = { RAW: raw, CAMPSITES: kv, DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/test" };
+    const result = await notifyHotCampground(env as any, site, "2026-06-28");
+    expect(result.hot).toBe(true);
+    expect(result.notified).toBe(true);
+    expect(result.fillRate).toBe(0.9);
+    expect(globalThis.fetch).toHaveBeenCalledOnce();
+  });
+
+  it("does not notify when hot but no new availability", async () => {
+    const byDate: Record<string, any> = {};
+    for (let i = 1; i <= 10; i++) {
+      byDate[`2026-07-${String(i).padStart(2, "0")}`] = { available: 0, reserved: 50, total: 50 };
+    }
+
+    const raw = mockR2Bucket({
+      "summary/2026-06-28/247592.json": { by_date: byDate },
+      "sites/2026-06-28/247592.json": {
+        sites: {
+          s1: { label: "A1", loop: null, type: null, use: null, by_date: { "2026-07-01": "reserved" } },
+        },
+      },
+      "sites/2026-06-27/247592.json": {
+        sites: {
+          s1: { label: "A1", loop: null, type: null, use: null, by_date: { "2026-07-01": "reserved" } },
+        },
+      },
+    });
+
+    const kv = mockKVNamespace({});
+    const env = { RAW: raw, CAMPSITES: kv, DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/test" };
+    const result = await notifyHotCampground(env as any, site, "2026-06-28");
+    expect(result.hot).toBe(true);
+    expect(result.notified).toBe(false);
+  });
+
+  it("alerts on first collection (no previous snapshot)", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(null, { status: 204 }));
+
+    const byDate: Record<string, any> = {};
+    for (let i = 1; i <= 10; i++) {
+      byDate[`2026-07-${String(i).padStart(2, "0")}`] = { available: 0, reserved: 50, total: 50 };
+    }
+    byDate["2026-07-10"] = { available: 1, reserved: 49, total: 50 };
+
+    const raw = mockR2Bucket({
+      "summary/2026-06-28/247592.json": { by_date: byDate },
+      "sites/2026-06-28/247592.json": {
+        sites: {
+          s1: { label: "A1", loop: null, type: null, use: null, by_date: { "2026-07-10": "available" } },
+        },
+      },
+    });
+
+    const kv = mockKVNamespace({});
+    const env = { RAW: raw, CAMPSITES: kv, DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/test" };
+    const result = await notifyHotCampground(env as any, site, "2026-06-28");
+    expect(result.hot).toBe(true);
+    expect(result.notified).toBe(true);
+  });
+
+  it("respects custom threshold via HOT_FILL_THRESHOLD", async () => {
+    const byDate: Record<string, any> = {};
+    for (let i = 1; i <= 10; i++) {
+      byDate[`2026-07-${String(i).padStart(2, "0")}`] = { available: 0, reserved: 50, total: 50 };
+    }
+    byDate["2026-07-10"] = { available: 2, reserved: 48, total: 50 };
+    // 90% fill — below 0.95 threshold
+    const raw = mockR2Bucket({
+      "summary/2026-06-28/247592.json": { by_date: byDate },
+    });
+    const kv = mockKVNamespace({});
+    const env = { RAW: raw, CAMPSITES: kv, DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/test", HOT_FILL_THRESHOLD: "0.95" };
+    const result = await notifyHotCampground(env as any, site, "2026-06-28");
+    expect(result.hot).toBe(false);
   });
 });

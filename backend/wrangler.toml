@@ -77,6 +77,11 @@ dataset = "campsite_readiness"
 # The one knob: every campsite is refreshed within this many days. No fixed schedule.
 MAX_STALENESS_DAYS = "2"
 
+# Fill-rate threshold for the "hottest" feed (0–1). Campgrounds with this fraction
+# of future dates fully booked trigger automatic Discord alerts on any availability
+# opening — no subscription needed. Default 0.9 (90% full). Set to "1.0" to disable.
+HOT_FILL_THRESHOLD = "0.90"
+
 # Consecutive failures before a site is quarantined: removed from the schedule,
 # written to the DLQ (dlq/<id>.json in R2), and emitted as an "inactive" state
 # change in the campsite_collector AE dataset. Failed sites back off exponentially
