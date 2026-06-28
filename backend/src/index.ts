@@ -4,6 +4,8 @@ import campsites from './campsites-index.json';
 import { collectSite, HEARTBEAT_KEY, DLQ_PREFIX, listDlqIds, type WfEnv, type DlqEntry } from './workflows';
 import { readApi, edgeCache } from './read-api';
 import { whoami, adminOnly, ROLE_PREFIX } from './auth';
+import { listSubscriptions, getSubscription, putSubscription, deleteSubscription, type Subscription } from './subscriptions';
+import { handleInteraction } from './discord-interactions';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
 export { CollectorLoop, HotDateWatchWorkflow } from './workflows';
@@ -13,6 +15,7 @@ type Bindings = WfEnv & {
   CAMPSITES: KVNamespace;
   WATCH_WF: Workflow;
   BOOTSTRAP_ADMIN?: string; // email that is always admin (RBAC bootstrap)
+  DISCORD_APP_PUBLIC_KEY?: string; // for verifying Discord interaction signatures
 };
 
 // If no heartbeat younger than this, the loop is considered dead → (re)start it.
@@ -26,6 +29,13 @@ async function loopAlive(env: Bindings): Promise<{ alive: boolean; hb?: any }> {
 }
 
 export const app = new Hono<{ Bindings: Bindings }>();
+
+// Discord interactions endpoint — signature-verified, no Access identity needed.
+// Must be registered before CORS/auth middleware.
+app.post('/discord/interactions', async (c) => {
+  return handleInteraction(c.req.raw, c.env);
+});
+
 app.use('/*', cors());
 
 app.get('/', (c) => c.text('Robot Geographical Society Backend API'));
@@ -174,6 +184,51 @@ app.post('/watch', adminOnly(), async (c) => {
   if (!site || !date) return c.json({ error: 'need ?id=<campsite id>&date=YYYY-MM-DD [&every=]' }, 400);
   const i = await c.env.WATCH_WF.create({ params: { ...site, targetDate: date, every } });
   return c.json({ workflow: 'campsite-hot-date-watch', instanceId: i.id, watching: site.name, targetDate: date, every });
+});
+
+// --- Subscriptions -----------------------------------------------------------
+
+app.get('/subscriptions', adminOnly(), async (c) => {
+  const subs = await listSubscriptions(c.env.CAMPSITES);
+  return c.json({ count: subs.length, subscriptions: subs });
+});
+
+app.get('/subscriptions/:id', adminOnly(), async (c) => {
+  const sub = await getSubscription(c.env.CAMPSITES, c.req.param('id'));
+  if (!sub) return c.json({ error: 'Subscription not found' }, 404);
+  return c.json(sub);
+});
+
+app.post('/subscriptions', adminOnly(), async (c) => {
+  const body = await c.req.json<Partial<Subscription>>();
+  if (!body.campgroundId) return c.json({ error: 'campgroundId is required' }, 400);
+
+  const known = (campsites as any[]).find((s) => s.id === body.campgroundId);
+  if (!known) return c.json({ error: `Unknown campground: ${body.campgroundId}` }, 400);
+
+  if (body.weekdays?.length) {
+    if (body.weekdays.some((d) => d < 0 || d > 6)) {
+      return c.json({ error: 'weekdays must be 0 (Sun) – 6 (Sat)' }, 400);
+    }
+  }
+
+  const sub: Subscription = {
+    id: body.id ?? crypto.randomUUID(),
+    campgroundId: body.campgroundId,
+    siteLabel: body.siteLabel ?? null,
+    dates: body.dates ?? undefined,
+    weekdays: body.weekdays ?? undefined,
+    note: body.note ?? undefined,
+    createdAt: new Date().toISOString(),
+  };
+  await putSubscription(c.env.CAMPSITES, sub);
+  return c.json(sub, 201);
+});
+
+app.delete('/subscriptions/:id', adminOnly(), async (c) => {
+  const id = c.req.param('id');
+  const existed = await deleteSubscription(c.env.CAMPSITES, id);
+  return c.json({ status: existed ? 'deleted' : 'not-found', id });
 });
 
 // No scheduled() handler / cron. The CollectorLoop self-perpetuates via

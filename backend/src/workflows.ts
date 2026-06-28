@@ -14,7 +14,7 @@ import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:work
 import { loadInventory } from "./inventory";
 import { fetchAvailability, type Counts } from "./availability";
 import { type DueMap, type FailMap, seedDue, mergeDue, selectDue, nextSleepMs, jitterMs, retryBackoffMs } from "./scheduler";
-import { notifyAvailabilityChanges, type SiteInfo } from "./discord";
+import { notifySubscriptionMatches, type SiteInfo } from "./discord";
 
 export interface WfEnv {
   RAW: R2Bucket;
@@ -269,13 +269,16 @@ export class CollectorLoop extends WorkflowEntrypoint<WfEnv, LoopPayload> {
           due[id] = plan.now + X + jitterMs(id);
           fails[id] = 0;
           collectedTotal++;
-          // Discord alert on newly-opened availability. Its own step so the webhook
-          // POST fires exactly once (memoized on replay, not re-sent on a collect
-          // retry). Guarded on the secret so no empty step is created when unset, and
-          // non-throwing internally so a webhook failure never fails the collection.
-          if (this.env.DISCORD_WEBHOOK_URL) {
+          // Subscription-based Discord alerts: check per-site availability changes
+          // against active subscriptions in KV. Its own step so the webhook POST
+          // fires exactly once (memoized on replay). Non-throwing internally.
+          if (this.env.DISCORD_WEBHOOK_URL && this.env.CAMPSITES) {
             await step.do(`notify-${i}-${id}`, () =>
-              notifyAvailabilityChanges(this.env, toSiteInfo(site), date),
+              notifySubscriptionMatches(
+                { RAW: this.env.RAW, CAMPSITES: this.env.CAMPSITES!, DISCORD_WEBHOOK_URL: this.env.DISCORD_WEBHOOK_URL },
+                toSiteInfo(site),
+                date,
+              ),
             );
           }
         } catch (err) {
