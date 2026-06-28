@@ -151,7 +151,7 @@ export async function notifyHotCampground(
 
     if (matches.length === 0) return { notified: false, hot: true, fillRate };
 
-    matches.sort((a, b) => a.date.localeCompare(b.date) || a.label.localeCompare(b.label));
+    matches.sort((a, b) => a.date.localeCompare(b.date) || (a.label ?? "").localeCompare(b.label ?? ""));
 
     const embed = buildHotEmbed(site, fillRate, matches);
     const payload: DiscordWebhookPayload = {
