@@ -77,6 +77,11 @@ dataset = "campsite_readiness"
 # The one knob: every campsite is refreshed within this many days. No fixed schedule.
 MAX_STALENESS_DAYS = "2"
 
+# Fill-rate threshold for the "hottest" feed (0–1). Campgrounds with this fraction
+# of future dates fully booked trigger automatic Discord alerts on any availability
+# opening — no subscription needed. Default 0.9 (90% full). Set to "1.0" to disable.
+HOT_FILL_THRESHOLD = "0.90"
+
 # Consecutive failures before a site is quarantined: removed from the schedule,
 # written to the DLQ (dlq/<id>.json in R2), and emitted as an "inactive" state
 # change in the campsite_collector AE dataset. Failed sites back off exponentially
@@ -90,10 +95,16 @@ INACTIVE_AFTER_FAILURES = "5"
 # it's an allowlisted identity, not a credential.
 BOOTSTRAP_ADMIN = "tommy.b.doerr@gmail.com"
 
-# Discord availability alerts (src/discord.ts). The webhook URL is a SECRET — set it
-# with `npx wrangler secret put DISCORD_WEBHOOK_URL`, never a [vars] entry. When unset
-# the collector simply skips notification (no-op). On each successful collect the loop
-# posts a green embed for nights that newly opened up (0 → available; gains only).
+# Discord subscription alerts (src/discord.ts) + slash commands (src/discord-interactions.ts).
+# Both are SECRETS — set via `npx wrangler secret put`:
+#   DISCORD_WEBHOOK_URL       — webhook URL for posting alerts to the channel
+#   DISCORD_APP_PUBLIC_KEY    — Ed25519 public key for verifying slash command signatures
+# When unset, the collector skips notification and the interactions endpoint returns 500.
+# Slash commands: /subscribe, /subscriptions, /unsubscribe — registered via
+# scripts/register-discord-commands.sh (needs DISCORD_APP_ID + DISCORD_BOT_TOKEN).
+# Interactions endpoint: POST /discord/interactions (set as the app's Interactions URL
+# in the Discord Developer Portal). The Cloudflare Access policy must bypass this path
+# (add a Service Auth → Bypass rule for path=/discord/interactions in infra/access).
 
 # No cron. The CollectorLoop self-perpetuates via continue-as-new; a hard crash
 # is surfaced by Grafana → Discord staleness alerting (observability repo), and a
