@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCircleLayer, rowsToFC, HOVER_PAINT } from '../map/useCircleLayer';
 import { getWatches, getWatchCurve } from '../api';
-import { AGENCY_COLORS, agencyShort } from '../constants';
+import { Legend, AgencyTag, StateBadge, FillCurve } from '../ds';
+import { flyToCampground } from '../map/camera';
 import StalenessBanner from '../components/StalenessBanner';
 import ProgressBar from '../components/ProgressBar';
-import { latestFill, curveGeometry, rankWatches, fillColor } from '../panes/watch';
+import { latestFill, rankWatches, fillColor } from '../panes/watch';
 
 // Hot-date Watch — "watch this date fill up". The collector's HotDateWatchWorkflow
 // densely re-checks one (campground, target night) on an adaptive cadence and banks the
@@ -58,9 +59,7 @@ export default function WatchView() {
 
   const onSelect = (props) => {
     setSelected(props);
-    if (map && Number.isFinite(props.lat) && Number.isFinite(props.lng)) {
-      map.flyTo({ center: [props.lng, props.lat], zoom: Math.max(map.getZoom(), 9) });
-    }
+    flyToCampground(map, props.lng, props.lat);
   };
 
   useCircleLayer({
@@ -97,19 +96,13 @@ export default function WatchView() {
 }
 
 function WatchLegend() {
-  const items = [
-    ['#3FB950', 'Mostly open'],
-    ['#D29922', 'Filling'],
-    ['#F85149', 'Mostly booked'],
-  ];
   return (
-    <div className="legend legend-states" aria-label="Watch legend">
-      {items.map(([color, label]) => (
-        <span key={label} className="legend-item">
-          <span className="legend-dot" style={{ backgroundColor: color }} />
-          {label}
-        </span>
-      ))}
+    <div className="legend-anchor legend-anchor--bl" aria-label="Watch legend">
+      <Legend items={[
+        { color: 'var(--avail-high)', label: 'Mostly open' },
+        { color: 'var(--avail-mid)', label: 'Filling' },
+        { color: 'var(--avail-none)', label: 'Mostly booked' },
+      ]} />
     </div>
   );
 }
@@ -147,33 +140,12 @@ function WatchPanel({ watches, onSelect }) {
                 </span>
               </div>
               <div className="watch-row-date muted small">{weekday(w.target_date)}</div>
-              <FillCurve points={w.points} fill={fill} />
+              <FillCurve points={w.points} fill={fill} width={260} height={42} />
             </button>
           );
         })}
       </section>
     </div>
-  );
-}
-
-// A small SVG fill-curve: x = observation order across the watch, y = % booked
-// (0% at the bottom). `points` may be absent on the list rows (the summary only
-// carries the latest point) — then we render a flat line at the current fill.
-function FillCurve({ points, fill, width = 200, height = 48 }) {
-  const series = points && points.length
-    ? points
-    : [{ reserved: 0, total: 1 }, { reserved: fill, total: 1 }];
-  const g = curveGeometry(series, { width, height, pad: 2 });
-  const color = fillColor(fill);
-  if (!g) return null;
-  return (
-    <svg
-      className="watch-curve" viewBox={`0 0 ${width} ${height}`} width="100%" height={height}
-      preserveAspectRatio="none" role="img" aria-label={`${pct(fill)} booked`}
-    >
-      <polygon points={g.area} fill={color} fillOpacity="0.12" />
-      <polyline points={g.line} fill="none" stroke={color} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-    </svg>
   );
 }
 
@@ -199,14 +171,12 @@ function WatchDetail({ watch, onClose }) {
   return (
     <div className="detail-panel" role="dialog" aria-label="Hot-date watch">
       <button className="panel-close" onClick={onClose} aria-label="Close panel">✕</button>
-      <div className="panel-agency" style={{ color: AGENCY_COLORS[agencyShort(watch.agency)] }}>
-        {watch.agency}
-      </div>
+      <AgencyTag agency={watch.agency} style={{ marginBottom: 4 }} />
       <h2 className="panel-name">{watch.name}</h2>
       <div className="muted small">Target night · {weekday(watch.target_date)}</div>
-      <div className="state-badge" style={{ background: fillColor(fill) }}>
+      <StateBadge color={fillColor(fill)} style={{ margin: '8px 0 12px' }}>
         {watch.sold_out ? 'Sold out' : `${pct(fill)} booked`}
-      </div>
+      </StateBadge>
 
       {err && <div className="error-text" role="alert">{err}</div>}
       <FillCurve points={points} fill={fill} width={260} height={96} />

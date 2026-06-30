@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCircleLayer, rowsToFC, HOVER_PAINT } from '../map/useCircleLayer';
 import { getDemand } from '../api';
-import { AGENCY_COLORS, agencyShort } from '../constants';
+import { Legend, RankBar, AgencyTag, StateBadge } from '../ds';
+import { flyToCampground } from '../map/camera';
 import StalenessBanner from '../components/StalenessBanner';
 import ProgressBar from '../components/ProgressBar';
 import {
@@ -56,9 +57,7 @@ export default function DemandView() {
 
   const onSelect = (props) => {
     setSelected(props);
-    if (map && Number.isFinite(props.lat) && Number.isFinite(props.lng)) {
-      map.flyTo({ center: [props.lng, props.lat], zoom: Math.max(map.getZoom(), 9) });
-    }
+    flyToCampground(map, props.lng, props.lat);
   };
 
   useCircleLayer({
@@ -97,19 +96,13 @@ export default function DemandView() {
 }
 
 function DemandLegend() {
-  const items = [
-    ['#3FB950', 'Mostly open'],
-    ['#D29922', 'Filling'],
-    ['#F85149', 'Mostly booked'],
-  ];
   return (
-    <div className="legend legend-states" aria-label="Demand legend">
-      {items.map(([color, label]) => (
-        <span key={label} className="legend-item">
-          <span className="legend-dot" style={{ backgroundColor: color }} />
-          {label}
-        </span>
-      ))}
+    <div className="legend-anchor legend-anchor--bl" aria-label="Demand legend">
+      <Legend items={[
+        { color: 'var(--avail-high)', label: 'Mostly open' },
+        { color: 'var(--avail-mid)', label: 'Filling' },
+        { color: 'var(--avail-none)', label: 'Mostly booked' },
+      ]} />
     </div>
   );
 }
@@ -141,47 +134,25 @@ function DemandPanel({ nights, campgrounds, onSelect }) {
       <section className="demand-section">
         <h3>Most in-demand campgrounds</h3>
         {inDemand.map((c) => (
-          <button key={c.guid} className="demand-row" onClick={() => onSelect(c)}>
-            <span className="demand-row-name">{c.name}</span>
-            <DemandBar ratio={demandRatio(c)} label={pct(demandRatio(c))} />
-          </button>
+          <RankBar key={c.guid} name={c.name} ratio={demandRatio(c)} onClick={() => onSelect(c)} />
         ))}
       </section>
 
       <section className="demand-section">
         <h3>Hottest upcoming nights</h3>
         {hottest.map((n) => (
-          <div key={n.night} className="demand-row">
-            <span className="demand-row-name">{weekday(n.night)}</span>
-            <DemandBar ratio={bookedPct(n)} label={`${n.reserved} booked · ${pct(bookedPct(n))}`} />
-          </div>
+          <RankBar key={n.night} name={weekday(n.night)} ratio={bookedPct(n)}
+            label={`${n.reserved} booked · ${pct(bookedPct(n))}`} />
         ))}
       </section>
 
       <section className="demand-section">
         <h3>% booked by night</h3>
         {upcoming.map((n) => (
-          <div key={n.night} className="demand-row">
-            <span className="demand-row-name small">{weekday(n.night)}</span>
-            <DemandBar ratio={bookedPct(n)} label={pct(bookedPct(n))} />
-          </div>
+          <RankBar key={n.night} name={weekday(n.night)} ratio={bookedPct(n)} />
         ))}
       </section>
     </div>
-  );
-}
-
-function DemandBar({ ratio, label }) {
-  return (
-    <span className="demand-bar" title={label}>
-      <span className="demand-bar-track">
-        <span
-          className="demand-bar-fill"
-          style={{ width: pct(ratio), background: demandColor(ratio) }}
-        />
-      </span>
-      <span className="demand-bar-label muted small">{label}</span>
-    </span>
   );
 }
 
@@ -190,11 +161,9 @@ function CampgroundDemandPopup({ campground, onClose }) {
   return (
     <div className="detail-panel" role="dialog" aria-label="Campground demand">
       <button className="panel-close" onClick={onClose} aria-label="Close panel">✕</button>
-      <div className="panel-agency" style={{ color: AGENCY_COLORS[agencyShort(campground.agency)] }}>
-        {campground.agency}
-      </div>
+      <AgencyTag agency={campground.agency} style={{ marginBottom: 4 }} />
       <h2 className="panel-name">{campground.name}</h2>
-      <div className="state-badge" style={{ background: demandColor(ratio) }}>{pct(ratio)} booked</div>
+      <StateBadge color={demandColor(ratio)} style={{ marginBottom: 12 }}>{pct(ratio)} booked</StateBadge>
       <dl className="kv">
         <dt>Reserved (upcoming)</dt><dd>{campground.reserved}</dd>
         <dt>Open (upcoming)</dt><dd>{campground.available}</dd>

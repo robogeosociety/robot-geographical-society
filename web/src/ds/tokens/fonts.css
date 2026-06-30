@@ -1,0 +1,6 @@
+/* Webfonts.
+   SUBSTITUTION FLAG: the product references SF Pro (Apple system font, not
+   redistributable) for its humanist sans. We substitute Inter, the closest
+   open humanist sans, plus JetBrains Mono for the tabular numeric face.
+   Swap these for real SF Pro / brand binaries when licensed files are available. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Code+Pro:wght@400;500;600;700&display=swap");

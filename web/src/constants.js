@@ -1,6 +1,11 @@
 // Shared map + agency constants, used by both views and the MapShell.
 
-export const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12';
+// The valley: Mapbox Standard (3D terrain + buildings) lit at dusk and pitched
+// oblique, so the map reads as a secret alpine basin glimpsed through glass.
+export const MAP_STYLE = 'mapbox://styles/mapbox/standard';
+export const MAP_LIGHT_PRESET = 'dusk';
+export const MAP_PITCH = 55;
+export const TERRAIN_EXAGGERATION = 1.4;
 export const WA_BOUNDS = [[-124.83, 45.54], [-116.92, 49.00]];
 
 // Agency keys match the backend's `agency` short code on /collectors and

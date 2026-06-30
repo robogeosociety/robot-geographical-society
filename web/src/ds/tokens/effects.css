@@ -1,0 +1,98 @@
+/* ============================================================================
+   EFFECTS — the glass material, beacons, vignette, shadows.
+   The whole UI is "a HUD seen through a misted pane": data floats on frosted
+   panels in front of an oblique valley. These tokens are the recipe.
+   ============================================================================ */
+:root {
+  /* ---- Backdrop blur / saturation (Apple vibrancy, liquid-glass tuned) ---- */
+  --blur-glass:     30px;   /* heavy refraction holds legibility at near-clear fills */
+  --blur-chip:      16px;
+  --blur-heavy:     34px;
+  --saturate-glass: 185%;   /* punchy color bleed-through */
+
+  --glass-filter:      blur(var(--blur-glass)) saturate(var(--saturate-glass)) brightness(1.06);
+  --glass-filter-chip: blur(var(--blur-chip)) saturate(var(--saturate-glass)) brightness(1.04);
+
+  /* ---- Shadows: soft drop + faint top inner-glow for real depth ---- */
+  --shadow-glass:
+    0 8px 32px rgba(5, 12, 18, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-panel:
+    0 16px 48px rgba(5, 12, 18, 0.55),
+    0 2px 8px rgba(5, 12, 18, 0.40);
+  --shadow-chip:
+    0 4px 16px rgba(5, 12, 18, 0.35);
+  --inner-highlight:
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 0 0 1px var(--glass-stroke-soft),
+    inset 0 -14px 30px -10px rgba(255, 255, 255, 0.10),
+    inset 0 18px 36px -22px rgba(255, 255, 255, 0.45); /* liquid specular core */
+
+  /* Full glass elevation = drop shadow + hairline + inner top-glow together. */
+  --elevation-glass: var(--shadow-glass), var(--inner-highlight);
+  --elevation-panel: var(--shadow-panel), var(--inner-highlight);
+
+  /* ---- Beacon glow (campgrounds = luminous discs seated in terrain) ---- */
+  --beacon-size: 16px;
+  --beacon-glow-soft: 0 0 12px 2px; /* @kind shadow */
+  --beacon-glow-hot:  0 0 20px 4px; /* @kind shadow */
+
+  /* ---- Edge vignette ("peeking through an opening") ---- */
+  --vignette:
+    radial-gradient(120% 90% at 50% 38%,
+      transparent 0%,
+      transparent 52%,
+      rgba(10, 20, 29, 0.35) 78%,
+      rgba(10, 20, 29, 0.72) 100%); /* @kind other */
+
+  /* ---- Atmospheric valley fallback (gradient stand-in for an oblique render;
+          drop a real golden/blue-hour terrain image behind it when available) ---- */
+  --valley-sky:
+    linear-gradient(180deg,
+      #1a3346 0%,
+      #224a5e 26%,
+      #2d5d6e 44%,
+      #3a6f76 60%,
+      #2b4f5a 78%,
+      #16323f 100%); /* @kind other */
+  --valley-haze:
+    radial-gradient(140% 70% at 50% 64%,
+      rgba(242, 177, 90, 0.20) 0%,
+      rgba(242, 177, 90, 0.06) 30%,
+      transparent 58%); /* @kind other */
+
+  /* The live Mapbox map (Standard style, dusk light preset, 3D terrain) IS the
+     oblique valley in production — tinted to alpine dusk by the overlays below.
+     --valley-sky is the gradient fallback shown until the first tiles paint. */
+}
+
+/* ----------------------------------------------------------------------------
+   Reusable surface utilities. Components may use these classes OR read the
+   tokens directly — both are supported.
+   -------------------------------------------------------------------------- */
+.rgs-glass {
+  background: var(--glass-sheen), var(--surface-glass);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  border: var(--hairline) solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-glass);
+}
+
+.rgs-glass-strong {
+  background: var(--glass-sheen), var(--surface-glass-strong);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  border: var(--hairline) solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-panel);
+}
+
+.rgs-chip {
+  background: var(--glass-sheen), var(--surface-chip);
+  -webkit-backdrop-filter: var(--glass-filter-chip);
+  backdrop-filter: var(--glass-filter-chip);
+  border: var(--hairline) solid var(--border-faint);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-chip);
+}

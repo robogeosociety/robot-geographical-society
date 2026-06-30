@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { getDemand, getCampgroundSites, getCampgroundSeries, getSiteCalendar } from '../api';
+import { GlassSelect } from '../ds';
+import { flyToCampground } from '../map/camera';
 import { nightsToValues, aggregateSeries, monthGrid } from '../panes/calendar';
 import StalenessBanner from '../components/StalenessBanner';
 import ProgressBar from '../components/ProgressBar';
@@ -42,9 +44,7 @@ export default function CalendarView() {
     setGuid(g);
     setSiteId('');
     const cg = campgrounds.find((c) => c.guid === g);
-    if (map && cg && Number.isFinite(cg.lat) && Number.isFinite(cg.lng)) {
-      map.flyTo({ center: [cg.lng, cg.lat], zoom: Math.max(map.getZoom(), 9) });
-    }
+    if (cg) flyToCampground(map, cg.lng, cg.lat);
   };
 
   return (
@@ -70,15 +70,14 @@ export default function CalendarView() {
           <h2 className="panel-name">Calendar</h2>
 
           <div className="calx-controls">
-            <label className="calx-control">
-              <span className="muted small">Campground</span>
-              <select value={guid} onChange={(e) => onPickCampground(e.target.value)}>
-                <option value="">All campgrounds (total)</option>
-                {campgrounds.map((c) => (
-                  <option key={c.guid} value={c.guid}>{c.name}</option>
-                ))}
-              </select>
-            </label>
+            <GlassSelect
+              label="Campground" value={guid} onChange={onPickCampground}
+              style={{ flex: '1 1 150px' }}
+              options={[
+                { value: '', label: 'All campgrounds (total)' },
+                ...campgrounds.map((c) => ({ value: c.guid, label: c.name })),
+              ]}
+            />
             {guid && (
               <CampsitePicker guid={guid} date={firstNight} value={siteId} onChange={setSiteId} />
             )}
@@ -107,18 +106,16 @@ function CampsitePicker({ guid, date, value, onChange }) {
   }, [guid, date]);
 
   return (
-    <label className="calx-control">
-      <span className="muted small">Campsite</span>
-      <select value={value} onChange={(e) => onChange(e.target.value)} disabled={!sites}>
-        <option value="">All sites (aggregate)</option>
-        {(sites || []).map((s) => (
-          <option key={s.siteId} value={s.siteId}>
-            #{s.label}{s.loop ? ` · ${s.loop}` : ''}
-          </option>
-        ))}
-      </select>
+    <div style={{ flex: '1 1 130px', minWidth: 0 }}>
+      <GlassSelect
+        label="Campsite" value={value} onChange={onChange} disabled={!sites}
+        options={[
+          { value: '', label: 'All sites (aggregate)' },
+          ...(sites || []).map((s) => ({ value: s.siteId, label: `#${s.label}${s.loop ? ` · ${s.loop}` : ''}` })),
+        ]}
+      />
       {err && <span className="error-text small">{err}</span>}
-    </label>
+    </div>
   );
 }
 

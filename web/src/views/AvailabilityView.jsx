@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCampgroundPies } from '../map/useCampgroundPies';
 import { getAvailability, getSiteCalendar } from '../api';
-import { AGENCY_COLORS, agencyShort } from '../constants';
+import { AgencyTag, AvailabilityPill } from '../ds';
+import { flyToCampground } from '../map/camera';
 import AgencyLegend from '../components/AgencyLegend';
 import StalenessBanner from '../components/StalenessBanner';
 import SiteCalendar from '../components/SiteCalendar';
@@ -36,11 +37,12 @@ export default function AvailabilityView() {
 
   const onSelect = (row) => {
     setSelected(row);
-    if (map) map.flyTo({ center: [row.lng, row.lat], zoom: Math.max(map.getZoom(), 9) });
+    flyToCampground(map, row.lng, row.lat);
   };
 
   useCampgroundPies({
     map, ready, rows, onSelect,
+    selectedGuid: selected?.guid,
     onEmpty: () => setSelected(null),
     onProgress: (n) => setPlaced(n),
   });
@@ -95,12 +97,6 @@ export default function AvailabilityView() {
   );
 }
 
-function ratioColor(ratio) {
-  if (ratio >= 0.6) return '#3FB950';
-  if (ratio >= 0.25) return '#D29922';
-  return '#F85149';
-}
-
 export function CampgroundPanel({ guid, campground, date, onClose }) {
   const [siteId, setSiteId] = useState(null); // a selected individual campsite
 
@@ -110,21 +106,16 @@ export function CampgroundPanel({ guid, campground, date, onClose }) {
   const available = campground.available ?? 0;
   const reserved = campground.reserved ?? 0;
   const total = campground.total ?? 0;
-  const ratio = total > 0 ? available / total : 0;
 
   return (
     <div className="detail-panel" role="dialog" aria-label="Campground availability">
       <button className="panel-close" onClick={onClose} aria-label="Close panel">✕</button>
 
-      <div className="panel-agency" style={{ color: AGENCY_COLORS[agencyShort(campground.agency)] }}>
-        {campground.agency}
-      </div>
+      <AgencyTag agency={campground.agency} style={{ marginBottom: 4 }} />
       <h2 className="panel-name">{campground.name}</h2>
 
       <div className="avail-summary">
-        <span className="avail-pill" style={{ background: ratioColor(ratio) }}>
-          {available} open
-        </span>
+        <AvailabilityPill open={available} total={total} />
         <span className="muted">{reserved} reserved · {total} campsites</span>
         <div className="muted small">night of {date}
           {campground.collected_date && campground.collected_date !== date

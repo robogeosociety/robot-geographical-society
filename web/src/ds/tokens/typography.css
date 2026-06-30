@@ -1,0 +1,57 @@
+/* ============================================================================
+   TYPOGRAPHY
+   Clean humanist sans (Inter ⟵ SF Pro) for everything.
+   Tabular mono (JetBrains Mono) for NUMERICS ONLY — counts, percentages, dates,
+   coordinates. Never set running prose in mono; that is the old dashboard feel
+   we are dropping.
+   ============================================================================ */
+:root {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  /* Wordmark / technical-society lockup — monospaced for the "instrument" feel. */
+  --font-wordmark: "Source Code Pro", ui-monospace, "JetBrains Mono", monospace;
+
+  /* Type scale (px) — humanist, generous. */
+  --text-display: 34px;  /* hero numerals / view stat */
+  --text-title:   20px;  /* panel / campground name */
+  --text-lg:      16px;
+  --text-md:      14px;  /* body default */
+  --text-sm:      13px;
+  --text-xs:      11px;  /* captions, legend, tags */
+  --text-2xs:     10px;  /* micro labels (uppercase) */
+
+  --leading-tight: 1.2;
+  --leading-snug:  1.35;
+  --leading-body:  1.55;
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold: 600;
+  --weight-bold:    700;
+
+  /* Tracking */
+  --tracking-tight:  -0.01em;
+  --tracking-normal: 0;
+  --tracking-label:  0.08em;  /* uppercase micro labels */
+  --tracking-wide:   0.14em;  /* wordmark / spaced caps */
+
+  /* Numeric helper — apply to any element showing figures. */
+  --numeric: "tnum" 1, "lnum" 1; /* @kind other */
+}
+
+/* Convenience utility classes (optional; tokens are the contract). */
+.rgs-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: var(--numeric);
+  letter-spacing: var(--tracking-tight);
+}
+
+.rgs-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-muted);
+}

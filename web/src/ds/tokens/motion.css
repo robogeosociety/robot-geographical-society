@@ -1,0 +1,49 @@
+/* ============================================================================
+   MOTION — cinematic, eased, atmospheric. Camera moves bank and settle; glass
+   panels blur-in and cross-fade. Nothing snaps; nothing bounces hard.
+   ============================================================================ */
+:root {
+  /* Easing */
+  --ease-fly:   cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
+  --ease-glass: cubic-bezier(0.32, 0.72, 0, 1); /* @kind other */
+  --ease-soft:  cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+
+  /* Durations */
+  --dur-fast:   140ms; /* @kind other */
+  --dur-base:   240ms; /* @kind other */
+  --dur-slow:   560ms; /* @kind other */
+  --dur-fly:    1400ms; /* @kind other */
+
+  /* Standard transitions */
+  --transition-hover: color var(--dur-fast) var(--ease-soft),
+                      background-color var(--dur-fast) var(--ease-soft),
+                      border-color var(--dur-fast) var(--ease-soft),
+                      opacity var(--dur-fast) var(--ease-soft); /* @kind other */
+}
+
+/* Glass panel materialize: blur + fade + slight rise. */
+@keyframes rgs-glass-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); filter: blur(8px); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0); }
+}
+
+/* Detail panel slide-up (mobile) / slide-in (desktop). */
+@keyframes rgs-slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes rgs-slide-in { from { transform: translateX(28px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* Beacon pulse — a slow living glow on the map. */
+@keyframes rgs-beacon-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1; }
+}
+
+/* Drifting haze — subtle atmosphere over the valley. */
+@keyframes rgs-haze-drift {
+  0%   { transform: translateX(-2%); opacity: 0.6; }
+  50%  { transform: translateX(2%);  opacity: 0.9; }
+  100% { transform: translateX(-2%); opacity: 0.6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+}

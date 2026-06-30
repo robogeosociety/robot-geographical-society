@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMap } from '../map/MapContext';
 import { useCircleLayer, rowsToFC, HOVER_PAINT } from '../map/useCircleLayer';
 import { getCollectors, getDlq, reactivate, getMe } from '../api';
+import { Legend, Stat, StateBadge, GlassButton } from '../ds';
 import ProgressBar from '../components/ProgressBar';
 import { STATE_STYLE } from '../constants';
 
@@ -65,13 +66,8 @@ export default function CollectorsView() {
 
   return (
     <>
-      <div className="legend legend-states" aria-label="Collector state legend">
-        {Object.entries(STATE_STYLE).map(([k, v]) => (
-          <span key={k} className="legend-item">
-            <span className="legend-dot" style={{ backgroundColor: v.color }} />
-            {v.label}
-          </span>
-        ))}
+      <div className="legend-anchor legend-anchor--bl" aria-label="Collector state legend">
+        <Legend items={Object.values(STATE_STYLE).map((v) => ({ color: v.color, label: v.label }))} />
       </div>
 
       <FleetStatsPanel counts={counts} dlq={dlq} loading={loading} error={error}
@@ -116,11 +112,11 @@ function FleetStatsPanel({ counts, dlq, loading, error, onReactivate, isAdmin })
       {error && <div className="error-text" role="alert">{error}</div>}
 
       <div className="stat-grid">
-        <Stat label="Total" value={counts.total} />
-        <Stat label="Healthy" value={counts.healthy} color={STATE_STYLE.healthy.color} />
-        <Stat label="Overdue" value={counts.overdue} color={STATE_STYLE.overdue.color} />
-        <Stat label="Quarantined" value={counts.quarantined} color={STATE_STYLE.quarantined.color} />
-        <Stat label="Disabled" value={counts.disabled} color={STATE_STYLE.disabled.color} />
+        <Stat size="sm" label="Total" value={counts.total} />
+        <Stat size="sm" label="Healthy" value={counts.healthy} color={STATE_STYLE.healthy.color} />
+        <Stat size="sm" label="Overdue" value={counts.overdue} color={STATE_STYLE.overdue.color} />
+        <Stat size="sm" label="Quarantined" value={counts.quarantined} color={STATE_STYLE.quarantined.color} />
+        <Stat size="sm" label="Disabled" value={counts.disabled} color={STATE_STYLE.disabled.color} />
       </div>
 
       {dlq.length > 0 && (
@@ -131,9 +127,10 @@ function FleetStatsPanel({ counts, dlq, loading, error, onReactivate, isAdmin })
               <div className="q-head">
                 <span className="q-name">{s.name}</span>
                 {isAdmin && (
-                  <button className="btn-reactivate" onClick={() => onReactivate(s.id)}>
+                  <GlassButton variant="primary" size="sm" accent="var(--state-healthy)"
+                    onClick={() => onReactivate(s.id)}>
                     Reactivate
-                  </button>
+                  </GlassButton>
                 )}
               </div>
               <div className="muted small">
@@ -148,15 +145,6 @@ function FleetStatsPanel({ counts, dlq, loading, error, onReactivate, isAdmin })
   );
 }
 
-function Stat({ label, value, color }) {
-  return (
-    <div className="stat">
-      <div className="stat-value" style={color ? { color } : undefined}>{value}</div>
-      <div className="stat-label">{label}</div>
-    </div>
-  );
-}
-
 function CollectorPopup({ collector, onClose }) {
   const style = STATE_STYLE[collector.state] || { color: '#ccc', label: collector.state };
   return (
@@ -164,7 +152,7 @@ function CollectorPopup({ collector, onClose }) {
       <button className="panel-close" onClick={onClose} aria-label="Close panel">✕</button>
       <div className="panel-agency">{collector.agency}</div>
       <h2 className="panel-name">{collector.name}</h2>
-      <div className="state-badge" style={{ background: style.color }}>{style.label}</div>
+      <StateBadge color={style.color} style={{ marginBottom: 12 }}>{style.label}</StateBadge>
       <dl className="kv">
         <dt>Last collected</dt><dd>{collector.lastCollectedDate || '—'} ({fmtAge(collector.ageDays)})</dd>
         <dt>Next due</dt><dd>{fmtDue(collector.dueMs)}</dd>
