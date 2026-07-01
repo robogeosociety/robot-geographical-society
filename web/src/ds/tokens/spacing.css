@@ -1,0 +1,32 @@
+/* ============================================================================
+   SPACING, RADII, SIZING
+   4px base rhythm. Large corner radii sell the visionOS / Control-Center glass.
+   ============================================================================ */
+:root {
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Corner radii — glass panels are softly rounded (~16–22px). */
+  --radius-xs:   6px;   /* tight cells, calendar squares */
+  --radius-sm:   10px;  /* tags, small chips */
+  --radius-md:   16px;  /* glass cards / detail panel */
+  --radius-lg:   22px;  /* large floating overlays */
+  --radius-pill: 999px; /* nav tabs, status chips, pills */
+
+  /* Hairline width */
+  --hairline: 1px;
+
+  /* Layout */
+  --panel-width: 360px;
+  --topbar-height: 52px;
+  --overlay-gap: 12px;   /* float gap from the viewport edge */
+}

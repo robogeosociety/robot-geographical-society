@@ -35,7 +35,13 @@ vi.mock('mapbox-gl', () => {
       queryRenderedFeatures: vi.fn(() => []),
       getCanvas: vi.fn(() => ({ style: {} })),
       getZoom: vi.fn(() => 7),
+      getCenter: vi.fn(() => ({ lat: 47.5, lng: -120.5 })),
+      getPitch: vi.fn(() => 55),
+      getBearing: vi.fn(() => 0),
       flyTo: vi.fn(),
+      jumpTo: vi.fn(),
+      setConfigProperty: vi.fn(),
+      setTerrain: vi.fn(),
       isStyleLoaded: vi.fn(() => true),
       loaded: vi.fn(() => true),
     };

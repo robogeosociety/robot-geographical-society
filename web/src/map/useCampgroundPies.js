@@ -17,20 +17,25 @@ const unschedule = typeof cancelAnimationFrame === 'function' ? cancelAnimationF
 // fan onto the map instead of the main thread janking on ~156 DOM markers at once.
 // `onProgress(placed, total)` fires after each batch (and once with (0, total) up
 // front), driving the determinate loading bar; `batchSize` tunes the fan-in cadence.
-export function useCampgroundPies({ map, ready, rows, onSelect, onEmpty, onProgress, batchSize = 16 }) {
+export function useCampgroundPies({ map, ready, rows, onSelect, onEmpty, onProgress, selectedGuid, batchSize = 16 }) {
   const markersRef = useRef([]);
+  const elsRef = useRef(new Map()); // guid → marker element, for selection styling
   const onSelectRef = useRef(onSelect);
   const onEmptyRef = useRef(onEmpty);
   const onProgressRef = useRef(onProgress);
+  const selectedGuidRef = useRef(selectedGuid);
   onSelectRef.current = onSelect;
   onEmptyRef.current = onEmpty;
   onProgressRef.current = onProgress;
+  selectedGuidRef.current = selectedGuid;
 
   useEffect(() => {
     if (!map || !ready) return undefined;
 
+    const els = elsRef.current; // stable Map; captured for the cleanup closure
     for (const m of markersRef.current) m.remove();
     markersRef.current = [];
+    els.clear();
 
     const points = (rows ?? []).filter((r) => Number.isFinite(r.lat) && Number.isFinite(r.lng));
     const total = points.length;
@@ -49,8 +54,16 @@ export function useCampgroundPies({ map, ready, rows, onSelect, onEmpty, onProgr
 
         const el = document.createElement('div');
         el.className = 'cg-pie';
+        // The agency hue drives the CSS glow (drop-shadow) + selected pulse — the
+        // beacon treatment lives in app.css keyed on this custom property.
+        el.style.setProperty('--beacon-color', color);
         el.title = `${r.name}: ${Math.round(fraction * 100)}% open the rest of the year`;
         el.innerHTML = pacmanMarkup(fraction, { radius: 8, color });
+        if (r.guid != null) {
+          el.dataset.guid = r.guid;
+          els.set(r.guid, el);
+          if (r.guid === selectedGuidRef.current) el.classList.add('cg-pie--selected');
+        }
         el.addEventListener('click', (e) => {
           e.stopPropagation();
           onSelectRef.current?.(r);
@@ -69,8 +82,16 @@ export function useCampgroundPies({ map, ready, rows, onSelect, onEmpty, onProgr
       if (frame) unschedule(frame);
       for (const m of markersRef.current) m.remove();
       markersRef.current = [];
+      els.clear();
     };
   }, [map, ready, rows, batchSize]);
+
+  // Light up the selected campground's beacon without rebuilding the marker layer.
+  useEffect(() => {
+    for (const [guid, el] of elsRef.current) {
+      el.classList.toggle('cg-pie--selected', guid === selectedGuid);
+    }
+  }, [selectedGuid, rows]);
 
   // Deselect when clicking empty map (disc clicks stopPropagation, so this is canvas-only).
   useEffect(() => {

@@ -1,0 +1,79 @@
+/* ============================================================================
+   COLORS — "a peek into a secret mountain valley"
+   Alpine dusk / golden-blue hour. Deep twilight teal-blues + glacier frost as
+   the field; saturated agency / availability / collector colors that GLOW as
+   data against terrain. The semantic colors encode meaning — never repurpose.
+   ============================================================================ */
+:root {
+  /* ---- Twilight field (the valley, behind the glass) ---- */
+  --twilight-900: #0a141d;   /* deepest basin shadow / vignette */
+  --twilight-800: #0f1e2a;
+  --twilight-700: #142a39;
+  --twilight-600: #1c3a4c;
+  --twilight-500: #275064;   /* mid terrain */
+  --haze-400:     #3d6e84;   /* atmospheric haze band */
+  --haze-300:     #5d8ca0;
+
+  /* ---- Glacier / frost (text + light glass) ---- */
+  --glacier-50:  #f4f9fb;
+  --glacier-100: #e8f1f6;    /* primary frosted text */
+  --glacier-200: #cfe0e9;
+  --mist-400:    #93acba;    /* muted / secondary text */
+  --mist-500:    #6f8896;    /* faintest captions */
+
+  /* ---- Dusk accents (atmosphere, low sun) ---- */
+  --sun-amber:   #f2b15a;    /* golden-hour rim light */
+  --sky-cyan:    #66d9ef;    /* sky reflection / interactive accent */
+
+  /* ---- Agency colors (semantic — match backend agency codes) ---- */
+  --agency-wa-parks: #a6e22e; /* WA State Parks   (green)  */
+  --agency-nps:      #fd971f; /* National Park Service (orange) */
+  --agency-usfs:     #66d9ef; /* US Forest Service (cyan)  */
+  --agency-blm:      #e6db74; /* Bureau of Land Management (yellow) */
+
+  /* ---- Availability ramp (lots remaining → none remaining) ---- */
+  --avail-high: #3fb950;     /* lots open       */
+  --avail-mid:  #d29922;     /* filling         */
+  --avail-low:  #e0843b;     /* nearly full     */
+  --avail-none: #f85149;     /* none remaining  */
+
+  /* ---- Collector fleet health ---- */
+  --state-healthy:     #3fb950;
+  --state-overdue:     #d29922;
+  --state-quarantined: #f85149;
+  --state-disabled:    #6e7681;
+
+  /* ---- Glass material (translucent foreground panels) — liquid-glass tuned ---- */
+  --glass-fill:        rgba(236, 244, 249, 0.05); /* near-clear frost over dark terrain */
+  --glass-fill-strong: rgba(236, 244, 249, 0.07);
+  --glass-fill-deep:   rgba(12, 24, 34, 0.42);    /* darker chip over bright terrain */
+  --glass-stroke:      rgba(255, 255, 255, 0.30); /* bright specular hairline */
+  --glass-stroke-soft: rgba(255, 255, 255, 0.14);
+  --glass-highlight:   rgba(255, 255, 255, 0.62); /* top inner-glow / specular */
+  --glass-sheen:       linear-gradient(157deg, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0.07) 42%, rgba(255,255,255,0.03) 62%, rgba(255,255,255,0.12) 100%); /* @kind other */
+
+  /* ============================================================
+     SEMANTIC ALIASES — reach for these in components.
+     ============================================================ */
+  --text-primary:   var(--glacier-100);
+  --text-secondary: var(--glacier-200);
+  --text-muted:     var(--mist-400);
+  --text-faint:     var(--mist-500);
+  --text-on-accent: var(--twilight-900); /* dark text on a bright pill */
+
+  --accent:         var(--sky-cyan);     /* interactive / selection accent */
+  --accent-warm:    var(--sun-amber);
+
+  --field-base:     var(--twilight-800);
+  --field-deep:     var(--twilight-900);
+
+  --surface-glass:        var(--glass-fill);
+  --surface-glass-strong: var(--glass-fill-strong);
+  --surface-chip:         var(--glass-fill-deep);
+  --border-hairline:      var(--glass-stroke);
+  --border-faint:         var(--glass-stroke-soft);
+
+  --danger:  var(--avail-none);
+  --warning: var(--avail-mid);
+  --success: var(--avail-high);
+}

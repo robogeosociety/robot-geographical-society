@@ -2,12 +2,47 @@ import { useEffect, useRef, useState } from 'react';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import { MapContext } from './map/MapContext';
-import { MAP_STYLE, WA_BOUNDS } from './constants';
+import {
+  MAP_STYLE, MAP_LIGHT_PRESET, MAP_PITCH, TERRAIN_EXAGGERATION, WA_BOUNDS,
+} from './constants';
+import logoUrl from './ds/assets/logo.svg';
 import AvailabilityView from './views/AvailabilityView';
 import DemandView from './views/DemandView';
 import CalendarView from './views/CalendarView';
 import WatchView from './views/WatchView';
 import CollectorsView from './views/CollectorsView';
+
+// The cockpit telemetry strip etched along the bottom edge — live camera readout
+// (the Oblivion/bubbleship cue), rendered as our own HUD. Updates on map move.
+function TelemetryStrip({ map }) {
+  const [cam, setCam] = useState(null);
+  useEffect(() => {
+    if (!map) return undefined;
+    const read = () => {
+      const c = map.getCenter?.();
+      if (!c) return;
+      setCam({ lat: c.lat, lng: c.lng, pitch: map.getPitch?.() ?? 0, bearing: map.getBearing?.() ?? 0 });
+    };
+    read();
+    map.on('move', read);
+    return () => { map.off('move', read); };
+  }, [map]);
+  if (!cam) return null;
+  const ns = cam.lat >= 0 ? 'N' : 'S';
+  const ew = cam.lng >= 0 ? 'E' : 'W';
+  const cells = [
+    `${Math.abs(cam.lat).toFixed(3)}°${ns} ${Math.abs(cam.lng).toFixed(3)}°${ew}`,
+    `PITCH ${Math.round(cam.pitch)}°`,
+    `BEARING ${(Math.round(cam.bearing) + 360) % 360}°`,
+    'LIGHT DUSK',
+    'FLEET ◴ NOMINAL',
+  ];
+  return (
+    <div className="telemetry-strip" aria-hidden="true">
+      {cells.map((c, i) => <span key={i}>{c}</span>)}
+    </div>
+  );
+}
 
 // The app is served at two gated subdomains; each lands on its own view (the nav tabs
 // still cross-navigate). collectors.* → /collectors, everything else → /availability.
@@ -39,7 +74,8 @@ export default function App() {
         container: containerRef.current,
         style: MAP_STYLE,
         bounds: WA_BOUNDS,
-        fitBoundsOptions: { padding: 40 },
+        fitBoundsOptions: { padding: 40, pitch: MAP_PITCH },
+        pitch: MAP_PITCH,
         failIfMajorPerformanceCaveat: false,
       });
     } catch (e) {
@@ -57,7 +93,23 @@ export default function App() {
       if (loaded) { console.error('Mapbox error:', msg); return; }
       setMapError(`Map failed to load: ${msg}`);
     });
-    instance.on('load', () => { loaded = true; setMapError(null); setReady(true); });
+    instance.on('load', () => {
+      loaded = true; setMapError(null); setReady(true);
+      // Dress the live map as the dusk valley: golden-hour light + 3D terrain.
+      // Wrapped — a URL-restricted token or style hiccup shouldn't blank the UI.
+      try {
+        instance.setConfigProperty?.('basemap', 'lightPreset', MAP_LIGHT_PRESET);
+        if (!instance.getSource('mapbox-dem')) {
+          instance.addSource('mapbox-dem', {
+            type: 'raster-dem', url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+            tileSize: 512, maxzoom: 14,
+          });
+          instance.setTerrain({ source: 'mapbox-dem', exaggeration: TERRAIN_EXAGGERATION });
+        }
+      } catch (e) {
+        console.warn('Valley map config skipped:', e?.message || e);
+      }
+    });
     setMap(instance);
 
     return () => {
@@ -71,7 +123,10 @@ export default function App() {
     <MapContext.Provider value={{ map, ready }}>
       <div className="app">
         <header className="topbar">
-          <div className="brand">Robot Geographical Society</div>
+          <div className="brand">
+            <img className="brand-logo" src={logoUrl} alt="" aria-hidden="true" />
+            Robot Geographical Society
+          </div>
           <nav className="nav-tabs">
             <NavLink to="/availability" className="nav-tab">Availability</NavLink>
             <NavLink to="/demand" className="nav-tab">Demand</NavLink>
@@ -88,6 +143,12 @@ export default function App() {
             </div>
           )}
           <div ref={containerRef} className="map-container" />
+
+          {/* The valley dressing — drifting golden haze, edge vignette, and the
+              cockpit telemetry strip. All pointer-events:none, below the overlays. */}
+          <div className="valley-haze" aria-hidden="true" />
+          <div className="valley-vignette" aria-hidden="true" />
+          <TelemetryStrip map={map} />
 
           <Routes>
             <Route path="/" element={<Navigate to={defaultPath()} replace />} />
