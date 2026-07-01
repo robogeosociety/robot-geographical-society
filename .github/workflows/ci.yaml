@@ -9,6 +9,7 @@ on:
     branches: [ main ]
     paths-ignore:
       - 'data/**'
+  workflow_dispatch: {}   # manual re-deploy (runs the deploy job when on main)
 
 jobs:
   lint-test-build:
@@ -76,3 +77,64 @@ jobs:
             "cd ../backend && npx wrangler dev --port 8787 --local --ip 127.0.0.1" \
             "npx vite --port 5173 --host 127.0.0.1" \
             "./node_modules/.bin/wait-on -t 90000 http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
+
+  # Continuous deploy to Cloudflare — production only. Runs after the tests pass, and
+  # only on main (a push there, or a manual re-run). Builds the web bundle with the
+  # real Mapbox token and ships it to Pages, then deploys the backend Worker. Auth is
+  # the CLOUDFLARE_API_TOKEN secret (needs Pages:Edit + Workers Scripts:Edit); account
+  # id is not sensitive. Mirrors the gate-if-unset style of deploy-kv.yaml.
+  deploy:
+    name: Deploy to Cloudflare (production)
+    needs: lint-test-build
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: d7adee58513c1b2f770ccaac90cf114f
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      # Stay green before the deploy token is configured: skip the live deploy if unset.
+      - id: gate
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "CLOUDFLARE_API_TOKEN not set — skipping Cloudflare deploy (configure the deploy token to enable)."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install dependencies
+        if: steps.gate.outputs.go == 'true'
+        run: |
+          cd backend && npm install
+          cd ../web && npm install
+
+      - name: Build web (production bundle)
+        if: steps.gate.outputs.go == 'true'
+        working-directory: web
+        env:
+          # The real public rgs_web token (allowlisted to the production domains).
+          VITE_MAPBOX_ACCESS_TOKEN: ${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }}
+        # `vite build` directly — `npm run build`'s postbuild runs the Playwright e2e.
+        run: npx vite build
+
+      - name: Deploy frontend → Cloudflare Pages
+        if: steps.gate.outputs.go == 'true'
+        working-directory: web
+        run: >
+          npx --yes wrangler@4 pages deploy dist
+          --project-name robot-geographical-society-web
+          --branch main
+
+      - name: Deploy backend → Cloudflare Worker
+        if: steps.gate.outputs.go == 'true'
+        working-directory: backend
+        run: npx --yes wrangler@4 deploy --minify
