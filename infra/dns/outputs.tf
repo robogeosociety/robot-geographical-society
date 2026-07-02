@@ -1,4 +1,4 @@
-output "frontend_records" {
-  description = "The managed frontend CNAMEs (hostname → target)."
-  value       = { for h, r in cloudflare_dns_record.frontend : h => "${r.type} → ${r.content} (proxied=${r.proxied})" }
+output "wall_records" {
+  description = "The 404-wall parking records (hostname → placeholder; the Worker route answers)."
+  value       = { for h, r in cloudflare_dns_record.wall : h => "${r.type} → ${r.content} (proxied=${r.proxied})" }
 }

@@ -20,10 +20,12 @@ REPO="$HOME/dev/robot-geographical-society"
 DIST="$REPO/web/dist"
 TAILNET="tommys-mac-mini.tail59a169.ts.net"
 
-# Vend the Access service-token headers (CF_ACCESS_CLIENT_ID/SECRET) for the /api proxy.
-# Hard-fail if vending breaks — a serve without a working /api is worse than a restart.
-eval "$($HOME/.local/bin/rgs-vend env)" || { echo "rgs-vend failed — no API credentials"; exit 1; }
-[[ -n "$CF_ACCESS_CLIENT_ID" && -n "$CF_ACCESS_CLIENT_SECRET" ]] || { echo "vended env empty"; exit 1; }
+# Vend the /api credentials: the 404-wall key (RGS_KEY → X-RGS-Key) and, during the
+# Phase-2 transition, the legacy Access service-token headers if still vendable.
+# Hard-fail if nothing vends — a serve without a working /api is worse than a restart.
+eval "$($HOME/.local/bin/rgs-vend env)" || true
+[[ -n "$RGS_KEY" || ( -n "$CF_ACCESS_CLIENT_ID" && -n "$CF_ACCESS_CLIENT_SECRET" ) ]] \
+  || { echo "rgs-vend produced no credentials (no RGS_KEY, no Access token)"; exit 1; }
 
 [[ -f "$DIST/index.html" ]] || echo "$(date '+%F %T') warning: $DIST/index.html missing — build web/dist first"
 

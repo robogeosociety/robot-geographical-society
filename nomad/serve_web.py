@@ -42,9 +42,13 @@ class Handler(SimpleHTTPRequestHandler):
 
     # ---- /api reverse proxy --------------------------------------------------
     def _proxy(self):
+        # Auth to the walled Worker: the pre-shared key (X-RGS-Key). During the
+        # Phase-2 transition the vended Access headers are sent too when present —
+        # inert once the Access apps are deleted.
+        key = os.environ.get("RGS_KEY")
         cid = os.environ.get("CF_ACCESS_CLIENT_ID")
         sec = os.environ.get("CF_ACCESS_CLIENT_SECRET")
-        if not cid or not sec:
+        if not key and not (cid and sec):
             self.send_error(502, "proxy credentials not configured")
             return
         upstream = BACKEND + self.path[len("/api"):]  # strip the /api prefix (backend routes are bare)
@@ -56,8 +60,11 @@ class Handler(SimpleHTTPRequestHandler):
         for k, v in self.headers.items():
             if k.lower() not in _SKIP:
                 req.add_header(k, v)
-        req.add_header("CF-Access-Client-Id", cid)
-        req.add_header("CF-Access-Client-Secret", sec)
+        if key:
+            req.add_header("X-RGS-Key", key)
+        if cid and sec:
+            req.add_header("CF-Access-Client-Id", cid)
+            req.add_header("CF-Access-Client-Secret", sec)
         try:
             with urllib.request.urlopen(req, timeout=60) as r:
                 data = r.read()

@@ -3,15 +3,27 @@ main = "src/index.ts"
 compatibility_date = "2026-03-16"
 compatibility_flags = ["nodejs_compat"]
 
-# PRIVATE project: the Worker is reachable ONLY via the Access-protected custom
-# domain below. The *.workers.dev route stays disabled (no ungated public path);
-# api.robogeosociety.xyz is fronted by the Cloudflare Access app defined in
-# infra/access (Terraform). Do not enable workers_dev without a gate in front.
+# PRIVATE project: the Worker itself is the auth boundary (the "404 wall", tailnet
+# migration Phase 2 — Cloudflare Access retired). Every request without the
+# X-RGS-Key pre-shared header (wrangler secret RGS_KEY; canonical copy on the mini,
+# distributed by rgs-vend) gets a blank 404 — except Discord's signature-verified
+# POST /discord/interactions. The *.workers.dev route stays disabled.
 workers_dev = false
 
 [[routes]]
 pattern        = "api.robogeosociety.xyz"
 custom_domain  = true
+
+# The 404 wall also answers the apex + www (parking DNS records in infra/dns), so
+# strangers see an identical blank 404 anywhere on the domain. atlas.robogeosociety.xyz
+# (the public travel wiki) has no route here and keeps serving via Pages.
+[[routes]]
+pattern   = "robogeosociety.xyz/*"
+zone_name = "robogeosociety.xyz"
+
+[[routes]]
+pattern   = "www.robogeosociety.xyz/*"
+zone_name = "robogeosociety.xyz"
 
 [[kv_namespaces]]
 binding = "CAMPSITES"
@@ -103,8 +115,9 @@ BOOTSTRAP_ADMIN = "tommy.b.doerr@gmail.com"
 # Slash commands: /subscribe, /subscriptions, /unsubscribe — registered via
 # scripts/register-discord-commands.sh (needs DISCORD_APP_ID + DISCORD_BOT_TOKEN).
 # Interactions endpoint: POST /discord/interactions (set as the app's Interactions URL
-# in the Discord Developer Portal). The Cloudflare Access policy must bypass this path
-# (add a Service Auth → Bypass rule for path=/discord/interactions in infra/access).
+# in the Discord Developer Portal). It is the 404 wall's one public carve-out — the
+# route registers before the wall middleware and Ed25519 signature verification is its
+# gate (the old Access-bypass TODO is obsolete: Access is retired).
 
 # No cron. The CollectorLoop self-perpetuates via continue-as-new; a hard crash
 # is surfaced by Grafana → Discord staleness alerting (observability repo), and a

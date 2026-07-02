@@ -79,10 +79,11 @@ jobs:
             "./node_modules/.bin/wait-on -t 90000 http-get://127.0.0.1:8787/ http-get://127.0.0.1:5173/ && npm run build"
 
   # Continuous deploy to Cloudflare — production only. Runs after the tests pass, and
-  # only on main (a push there, or a manual re-run). Builds the web bundle with the
-  # real Mapbox token and ships it to Pages, then deploys the backend Worker. Auth is
-  # the CLOUDFLARE_API_TOKEN secret (needs Pages:Edit + Workers Scripts:Edit); account
-  # id is not sensitive. Mirrors the gate-if-unset style of deploy-kv.yaml.
+  # only on main (a push there, or a manual re-run). Deploys the backend Worker only:
+  # the web UI moved to the tailnet (Phase 2 of the migration — served from the mini,
+  # see nomad/rgs-web-serve.hcl; the Pages surface is retired). Auth is the
+  # CLOUDFLARE_API_TOKEN secret (Workers Scripts:Edit); account id is not sensitive.
+  # Mirrors the gate-if-unset style of deploy-kv.yaml.
   deploy:
     name: Deploy to Cloudflare (production)
     needs: lint-test-build
@@ -113,26 +114,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.gate.outputs.go == 'true'
-        run: |
-          cd backend && npm install
-          cd ../web && npm install
-
-      - name: Build web (production bundle)
-        if: steps.gate.outputs.go == 'true'
-        working-directory: web
-        env:
-          # The real public rgs_web token (allowlisted to the production domains).
-          VITE_MAPBOX_ACCESS_TOKEN: ${{ secrets.VITE_MAPBOX_ACCESS_TOKEN }}
-        # `vite build` directly — `npm run build`'s postbuild runs the Playwright e2e.
-        run: npx vite build
-
-      - name: Deploy frontend → Cloudflare Pages
-        if: steps.gate.outputs.go == 'true'
-        working-directory: web
-        run: >
-          npx --yes wrangler@4 pages deploy dist
-          --project-name robot-geographical-society-web
-          --branch main
+        run: cd backend && npm install
 
       - name: Deploy backend → Cloudflare Worker
         if: steps.gate.outputs.go == 'true'

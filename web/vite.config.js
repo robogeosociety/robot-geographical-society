@@ -9,11 +9,11 @@ export default defineConfig(({ mode }) => {
   // the browser. See web/BACKEND_AUTH.md.
   const env = loadEnv(mode, process.cwd(), '');
   // The app always talks to the backend via the same-origin `/api` proxy (see
-  // src/apiBase.js). Target the deployed Access-protected Worker when BACKEND_URL is
-  // set, else a local `wrangler dev` backend. When the Access service-token creds are
-  // present (CF_ACCESS_CLIENT_ID/SECRET), the dev server attaches them as request
-  // headers here — server-side, so the browser never holds the secret, and the same
-  // path works against the gated backend. See web/BACKEND_AUTH.md.
+  // src/apiBase.js). Target the deployed Worker when BACKEND_URL is set, else a local
+  // `wrangler dev` backend. The deployed Worker is its own auth boundary (the 404
+  // wall, tailnet migration Phase 2 — Access retired): the dev server attaches the
+  // pre-shared RGS_KEY as the X-RGS-Key header — server-side, so the browser never
+  // holds the secret. Get the key with `rgs-admin env`. See web/BACKEND_AUTH.md.
   const backend = env.BACKEND_URL || 'http://127.0.0.1:8787';
   const proxy = {
     '/api': {
@@ -21,8 +21,7 @@ export default defineConfig(({ mode }) => {
       changeOrigin: true,
       rewrite: (p) => p.replace(/^\/api/, ''),
       headers: {
-        ...(env.CF_ACCESS_CLIENT_ID && { 'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID }),
-        ...(env.CF_ACCESS_CLIENT_SECRET && { 'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET }),
+        ...(env.RGS_KEY && { 'X-RGS-Key': env.RGS_KEY }),
       },
     },
   };

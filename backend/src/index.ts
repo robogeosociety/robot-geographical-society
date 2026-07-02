@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import campsites from './campsites-index.json';
 import { collectSite, HEARTBEAT_KEY, DLQ_PREFIX, listDlqIds, type WfEnv, type DlqEntry } from './workflows';
 import { readApi, edgeCache } from './read-api';
-import { whoami, adminOnly, ROLE_PREFIX } from './auth';
+import { whoami, adminOnly, keyOk, ROLE_PREFIX } from './auth';
 import { listSubscriptions, getSubscription, putSubscription, deleteSubscription, type Subscription } from './subscriptions';
 import { handleInteraction } from './discord-interactions';
 
@@ -16,6 +16,7 @@ type Bindings = WfEnv & {
   WATCH_WF: Workflow;
   BOOTSTRAP_ADMIN?: string; // email that is always admin (RBAC bootstrap)
   DISCORD_APP_PUBLIC_KEY?: string; // for verifying Discord interaction signatures
+  RGS_KEY?: string; // wrangler secret — the 404-wall pre-shared key (unset = local dev, wall open)
 };
 
 // If no heartbeat younger than this, the loop is considered dead → (re)start it.
@@ -30,10 +31,24 @@ async function loopAlive(env: Bindings): Promise<{ alive: boolean; hb?: any }> {
 
 export const app = new Hono<{ Bindings: Bindings }>();
 
-// Discord interactions endpoint — signature-verified, no Access identity needed.
-// Must be registered before CORS/auth middleware.
+// Discord interactions endpoint — signature-verified (Ed25519), publicly reachable.
+// Registered BEFORE the wall middleware below, so it is the one carve-out: Discord's
+// servers can always POST here; the signature check is its gate.
 app.post('/discord/interactions', async (c) => {
   return handleInteraction(c.req.raw, c.env);
+});
+
+// ---- The 404 wall (tailnet migration Phase 2) --------------------------------
+// The public face of the whole domain is a blank 404. This Worker answers
+// api.robogeosociety.xyz (custom domain) plus the apex/www zone routes (see
+// wrangler.toml); any request that doesn't bear the pre-shared X-RGS-Key gets an
+// empty-handed 404 before routing — no login redirect, no team-name leak, no hint
+// that anything exists. Key bearers (the mini's tailnet proxy, vault_sync,
+// rgs-admin) pass through and are admin (auth.ts). Unset RGS_KEY (local
+// `wrangler dev`) leaves the wall open.
+app.use('/*', async (c, next) => {
+  if (!c.env.RGS_KEY || (await keyOk(c.env, c.req.raw))) return next();
+  return c.text('404 Not Found', 404);
 });
 
 app.use('/*', cors());
