@@ -4,7 +4,7 @@
   display (1–2 pages; up to 4 for very complex *code* changes). Most newsworthy
   facts first, supporting detail below, fine print last.
 
-  Full rules + voice: github.com/tommyroar/.github/blob/main/PR_FRAMEWORK.md
+  Full rules + voice: github.com/robogeosociety/.github/blob/main/PR_FRAMEWORK.md
   CI (the `pr-newspaper` workflow) validates this body — readability + page budget,
   no model in the loop. An agent that opens/updates the PR regenerates the body
   from the *full* diff; it is rebuilt from scratch, never appended to.
