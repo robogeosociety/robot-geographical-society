@@ -25,6 +25,14 @@ preview_id = "aad9f04d90e945ffb8d278d7b8e70976"
 binding = "RAW"
 bucket_name = "campsite-raw"
 
+# Rendered Obsidian markdown mirror (per-campsite notes + loop canvases + manifest.json),
+# written by the VaultMarkdownLoop. The local camping vault syncs only an area-of-interest
+# subset from here (obsidian-automations vault_sync). A scoped read token is vended from
+# cloudflare-tfvend for that sync.
+[[r2_buckets]]
+binding = "VAULT"
+bucket_name = "campsite-vault"
+
 # Per-run/per-site collector coverage → queried by the observability "Collector
 # history" Grafana dashboard via the AE SQL API. Schema:
 #   index=site.id  blob1=date blob2=agency blob3=kind blob4=name
@@ -121,6 +129,13 @@ class_name = "CollectorLoop"
 name = "campsite-hot-date-watch"
 binding = "WATCH_WF"
 class_name = "HotDateWatchWorkflow"
+
+# Renders per-campsite Obsidian markdown + loop canvases into the campsite-vault bucket,
+# daily, self-perpetuating. Start once with POST /vault/start.
+[[workflows]]
+name = "campsite-vault"
+binding = "VAULT_WF"
+class_name = "VaultMarkdownLoop"
 
 # Daily prediction-readiness scan (self-schedules via step.sleep 24h, continues-as-new).
 # Start once with POST /readiness/start.

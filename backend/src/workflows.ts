@@ -30,6 +30,8 @@ export interface WfEnv {
   DEMAND_AE?: AnalyticsEngineDataset; // per-campground per-night demand → Grafana
   READINESS_AE?: AnalyticsEngineDataset; // daily prediction-readiness gauge → Grafana
   READINESS_WF: Workflow; // daily readiness Workflow (self-reference for continue-as-new)
+  VAULT: R2Bucket; // markdown mirror bucket (campsite-vault) for the Obsidian sync
+  VAULT_WF: Workflow; // self-reference for the VaultMarkdownLoop continue-as-new
   DISCORD_WEBHOOK_URL?: string; // wrangler secret; when set, the loop posts "newly available" alerts
   HOT_FILL_THRESHOLD?: string; // 0-1 fill rate threshold for the "hottest" feed (default 0.9)
 }
