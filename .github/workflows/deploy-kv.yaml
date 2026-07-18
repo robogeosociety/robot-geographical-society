@@ -15,6 +15,7 @@ on:
 jobs:
   deploy-kv:
     runs-on: ubuntu-latest
+    environment: production
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       # Account id is not sensitive (see CLAUDE.md); a scoped KV-write token is.
