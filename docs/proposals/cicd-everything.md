@@ -1,6 +1,8 @@
 # CICD Everything — migrate the fleet off the Mac mini
 
-**Status:** draft proposal · 2026-07-17
+**Status:** ACCEPTED and DELIVERED · proposed 2026-07-17 · closed 2026-07-25
+**Outcome:** see [Outcome](#outcome) — WS0–WS5 complete; two cutovers and the Obsidian
+Phase-1 gate tracked as follow-on issues.
 **Goal:** total remote lifecycle control — a Claude Code web session opens a PR, merges it,
 and CI/CD deploys the live app. No SSH to the mini in any lifecycle.
 
@@ -155,3 +157,58 @@ WS3 + WS4 in parallel → WS5 last. WS4's bundle-CD items proceed continuously.
 - Which discobots (if any) are irreducibly gateway-bound?
 - Analytics Engine retention limits vs. D1 for long CI history — pick during WS5.
 - Does the iCloud↔git bridge stay a launchd job or fold into the watchdog supervisor?
+
+---
+
+# Outcome
+
+Delivered 2026-07-17 → 2026-07-25. Every workstream is complete or reduced to a scheduled
+cutover, and the whole effort was executed through the machinery it was building: PRs,
+CI, and Discord approvals, with no hand-deploys.
+
+## What shipped
+
+| WS | Result |
+|---|---|
+| **WS0 Gate** | 6 repos flipped public after clean full-history secret scans (rgs#169). GitHub App `rgs-deploy-gate` + Discord app `deploy-gate`; the **deploy-gate Worker** is live and proven end-to-end (card in #dev → Approve → run resumes). Private repos, which can't use environment protection rules without Enterprise, get the same UX via an HMAC-nonce **`repository_dispatch` lane** (discobots#59). |
+| **WS1 Terraform** | Every root (`infra/mapbox`, `infra/valkey`, `cloudflare-tfvend`) on **R2 remote state**; plan-on-PR, Discord-gated apply on the mini runner (infra#17, cloudflare-tfvend#6). The lane immediately paid for itself — it surfaced and fixed pre-existing valkey drift and two latent Mapbox `allowed_urls` rules (schemeless entries and IP addresses are both rejected, validated on every write). |
+| **WS2 Bots** | Inventory found **no gateway-bound bots** (discobots#56). Lifted to Workers: github-heartbeat + daily check-in, transit-panel, skills-feed (+ a mini-side `skills-inventory` publisher, supervisor#30). Retirement was later made **durable** by pruning the roster in `ops/run.sh` + `ops/fleet.toml` (discobots#74) — stopping containers alone was not enough; the CD poller re-materialised them. |
+| **WS3 Obsidian** | Re-scoped by the posture amendment (below). The reported "iCloud sync issues" were **not transport**: macOS `optimize-storage` evicted the shadow tree (11k dataless files) and the publisher `EDEADLK`-crashed under launchd. Hardened with an atomic rename-based publish, per-vault isolation and telemetry compaction (obsidian-automations#270); Phase 0 passed, Phase 1 (phone-lag) continues in obsidian-automations#263. |
+| **WS4 Supervisor** | All 25 registry rows classified: 2 lifted, 1 lift-with-rework, **20 custodian-by-design**, 2 retired. rgs-wiki lifted to a Worker with byte-parity verified against the mini (supervisor#32); campsite shadow landed (supervisor#19). Influx-dead sweep removed in supervisor#33 + obsidian-automations#275. |
+| **WS5 Observability** | Escalated when InfluxDB entered an OOM crash loop. The parked observability-config#149 collector was reborn as the **cicd-collector Worker** (5-min org-wide polls → Analytics Engine, red-CI alerts to #dev; observability-config#158). TIG then retired: Grafana, renderer, InfluxDB, 5 launchd collectors and 7 bot containers stopped, history archived to restic/R2 (snapshot `8fb399c2`) and 2.66 GB reclaimed. |
+
+## Amendments to the original plan
+
+- **Posture (2026-07-19).** The mini's end-state changed from *minimal appliance* to
+  **custodian + agent-dev box**: it permanently owns git working sets, iCloud transport and
+  Obsidian automation, and hosts long-running Claude sessions; the Air stays primary for
+  interactive dev; production is Cloudflare. Consequently obsidian#30 and
+  obsidian-automations#264 (note pipeline → durable Worker) were closed **not planned**, and
+  fleet-sync stays mini-side. This amends the supervisor#1 appliance charter.
+- **No GitHub Team upgrade.** Repos went public instead; environment protection is free there.
+  Private repos ride the `repository_dispatch` lane.
+- **Grafana was not migrated.** The CF-native collector + Discord alerting replaced it
+  outright, so the "Grafana on Cloudflare Containers" fallback was never needed.
+
+## Operating lessons worth keeping
+
+- **Org-level secrets, one capture ceremony.** Repo-level write-only secrets forced repeated
+  credential ceremonies; shared credentials now live at org level. Note the Free-plan caveat:
+  org secrets do **not** reach private repos, which still need repo-level copies.
+- **Nothing pending a human may sit in a chat window.** The gate Worker grew a `/notify`
+  endpoint so agents post blockers to #dev; discobots#73 then made pending cards **re-raise
+  themselves** after a deploy card sat unnoticed for two days.
+- **Retirement means removing the thing from its roster**, not stopping the process.
+- **The mini as a persistent session host works.** Proven 2026-07-25: a desktop SSH session
+  ran **1h38m past the client disconnecting** and completed its tasks. File tools intermittently
+  round-trip to the client (~5% retry tax, rgs#173); Bash does not.
+
+## Still open (tracked elsewhere)
+
+- Cutovers: rgs-wiki (supervisor#35), campsite burn-in → parity → flip (supervisor#36).
+- Obsidian Phase-1 phone-lag gate, then two-way cutover (obsidian-automations#263).
+- `MaterializeDatalessFiles` plist install at a quiet moment (supervisor#31).
+- Host-vitals via Vector → Analytics Engine, which also re-sources the weather stack still
+  reading the retired InfluxDB (observability-config#161).
+- One human sitting: Full Disk Access for sshd, so iCloud paths are visible to remote
+  sessions (rgs#172, rgs#130).
