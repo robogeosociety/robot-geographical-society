@@ -56,7 +56,12 @@ The collector (`backend/`) banks daily availability snapshots to the `campsite-r
 - **`"other"`** = neither bookable nor a confirmed reservation (not-yet-released / not-reservable); seen on rec.gov.
 - Quarantined sites live in `dlq/<id>.json` and stop collecting until reactivated.
 
-Collection owns → R2; the `observability` repo owns R2 → InfluxDB → Grafana. See `backend/README.md`.
+Collection owns → R2. The downstream half changed: **InfluxDB and Grafana were retired
+2026-07-22** (rgs#167 WS5), so the old "R2 → InfluxDB → Grafana" path is gone. Campsite
+monitoring now reads **Cloudflare Analytics Engine** — the backend Worker writes the
+`campsite_collector`, `_runs`, `campsite_availability`, `_demand` and `_readiness` datasets
+directly. See `backend/README.md` and
+[`docs/proposals/cloudflare-posture.md`](./docs/proposals/cloudflare-posture.md).
 
 ## Campsite data sync
 
