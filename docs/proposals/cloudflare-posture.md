@@ -1,6 +1,6 @@
-# Cloudflare Posture — proven capability, held in reserve
+# Cloudflare Posture — stop expanding, finish what's started
 
-**Status:** PROPOSED · 2026-07-26
+**Status:** DECIDED · 2026-07-26 (all six open questions ruled; see [Decisions](#decisions-2026-07-26))
 **Amends:** [`cicd-everything.md`](./cicd-everything.md) (rgs#167, ACCEPTED 2026-07-17,
 posture amended 2026-07-19)
 **Decommissions:** nothing. Every Worker, Pages project, bucket, namespace and dataset
@@ -11,7 +11,7 @@ listed here keeps running exactly as it is.
 | | |
 | --- | --- |
 | **The conflict** | rgs#167 set `cloud = production, mini = custodian` and delivered it. Tommy's stance as of 2026-07-25/26 is *"Cloudflare was a useful PoC, and should be useful in the future, but I'm on my local network now."* Both are on record; neither cites the other. |
-| **The resolution** | Cloudflare stops being the **default target for new work** and becomes a **proven capability held in reserve**. GitHub Actions is the rail for scheduled/CI work. The mini/LAN is the default home for fleet-internal work. |
+| **The resolution** | **Stop expanding, finish what's started, keep what works.** Cloudflare stops being the **default target for new fleet-internal work** — but it is not being unwound: Analytics Engine stays, both in-flight cutovers were ruled on individually, and public surfaces may still use Workers. GitHub Actions is the rail for scheduled/CI work; the mini/LAN is the default home for fleet-internal work. |
 | **What moves** | Nothing, now. This is a posture and documentation change, not a migration. |
 | **What this fixes** | An agent reading the written record today is told to build toward Cloudflare. After this, the record says otherwise, in one citable place. |
 
@@ -19,11 +19,11 @@ listed here keeps running exactly as it is.
 
 ## The resolved posture — three lanes
 
-**1. Cloudflare — reserve, not default.**
+**1. Cloudflare — reserve for fleet-internal work, still first-class for public surfaces.**
 Existing Workers, Pages, R2, KV, Analytics Engine, Access and Tunnel keep running.
-**No new Cloudflare Workers** without an explicit ruling. Cloudflare remains the right
-answer for genuinely public product surfaces and for anything that must be reachable
-from outside the tailnet — it is held, proven, and available, not retired.
+**No new Cloudflare Workers for fleet-internal work** without an explicit ruling — that
+scope is deliberate (ruling 5): a genuinely public product surface has no LAN answer, so
+Workers remain the right choice there. Cloudflare is held, proven, and available, not retired.
 
 **2. GitHub Actions — the rail for scheduled and CI work.**
 Actions is *not* "more cloud" in the sense being stepped back from. It is where
@@ -57,6 +57,11 @@ the trust boundary for private-repo gated jobs.
 Inventoried 2026-07-26 against the account (`d7adee58513c1b2f770ccaac90cf114f`),
 cross-referenced against every `wrangler.toml` in the org.
 
+**One consequence of ruling 1 to keep visible.** The mini's own host telemetry and its
+disk/memory alerting are now *permanently* Cloudflare-resident. That is an accepted
+trade-off, not a gap — but it means a Cloudflare outage costs the fleet its health
+monitoring, and there is no local fallback to reach for.
+
 **A note on verification.** No single credential on this box can enumerate the whole
 surface — by design. `cloudflare-tfvend` vends narrowly-scoped tokens, so Workers, R2 and
 KV each need a different one, and no token holds account-wide Workers or R2 read. Workers
@@ -73,13 +78,13 @@ answerable from one place.
 | **deploy-gate** ✅ | Discord `/deploy approve` gate + `/notify` blocker lane; cron `17 * * * *` | Every gated deploy/apply lane (infra, tfvend, discobots, supervisor); agents posting blockers to #dev | **High** — needs a public endpoint to receive Discord interactions and GitHub webhooks; a LAN home means a tunnel, which is still Cloudflare |
 | **robot-geographical-society-backend** ✅ | `api.robogeosociety.xyz`; read API + durable collector. KV `CAMPSITES`, R2 `campsite-raw`/`campsite-vault`, 5 AE datasets, 2 Workflows | The rgs product frontend; Access SSO boundary | **Very high** — public product surface; Workflows and AE have no LAN equivalent |
 | **cicd-collector** ✅ | Org CI/CD telemetry → AE; red-CI alerts to #dev; **plus the mini's own disk/mem/swap alerting** off `host_vitals` | Org CI visibility; the mini's health alerting | **Medium-high** — moving it to the mini makes the watchdog co-resident with what it watches, which is the exact failure the retired `stack-watchdog` existed to avoid |
-| **host-vitals** ✅ | Ingest for the mini's Vector agent → AE `host_vitals`, `weather_obs` | `com.tommy.vector` (running); Tempest weather feed | **Medium** — needs a local time-series store again (see open question 1) |
+| **host-vitals** ✅ | Ingest for the mini's Vector agent → AE `host_vitals`, `weather_obs` | `com.tommy.vector` (running); Tempest weather feed | **Medium** — but **staying** (ruling 1): no LAN store will be rebuilt |
 | **github-heartbeat** ✅ | Org GitHub activity + daily check-in → #dev; cron `*/30` | #dev signal | **Low** — an Actions cron does this natively |
 | **skills-feed** ✅ | New Claude Code skills → #skills; cron `0 */3` + `33 16` | Mini-side `skills-inventory` publisher (supervisor#30) | **Low–medium** — already half mini-side |
 | **transit-panel** ✅ | GTFS-Realtime per-line status, one #transit message edited in place; cron `* * * * *` | #transit | **Medium** — every-minute cron; Actions' floor is 5 min, so the mini is the better LAN home |
-| **rgs-wiki** ✅ | Serves the dev wiki from KV `rgs-wiki-pages` (10 keys); `REQUIRE_KEY=1` | `dev.robogeosociety.xyz` behind Access | **Low** — the mini already served this on `:5193`; cutover supervisor#35 currently points the other way |
+| **rgs-wiki** ✅ | Serves the wiki from KV `rgs-wiki-pages` (14 pages); `REQUIRE_KEY=0` since the cutover | `wiki.robogeosociety.xyz` behind the `RGS wiki` Access app | **Low** — but **cut over 2026-07-26** (ruling 3); the mini's build+serve rows are retired |
 | **mountain-inference** ✅ | `*/15` inference; Cloudflare **Containers** + Durable Object + R2 `is-the-mountain-out-public` | `is-the-mountain-out` state feed | **Medium** — it replaced a mini job; the container could return, but Containers are a deeper commitment than a plain Worker |
-| **campsite-supervisor** ⚠️ | Durable Object, Queues (`campsite-work` + DLQ), Workflow `campsite-inventory`, KV, R2 `campsite-artifacts`, AE. Shadow env deployed; shadow KV **empty** | Nothing yet — flip pending supervisor#36 | **N/A — this is the one not to flip.** See open question 2 |
+| **campsite-supervisor** ⚠️ | Durable Object, Queues (`campsite-work` + DLQ), Workflow `campsite-inventory`, KV, R2 `campsite-artifacts`, AE. Shadow env deployed; shadow KV **empty** | Nothing — **PARKED** (ruling 2) | **N/A — deliberately not flipped.** Shadow stays up, KV stays empty |
 | **tallest-tree** ❌ | Declared only: Worker + **D1** + Containers. `database_id` is still `REPLACE_WITH_D1_ID` | Nothing | Not deployed; no action |
 
 ✅ confirmed live · ⚠️ deployed, not cut over · ❌ declared in code, not deployed
@@ -96,7 +101,7 @@ answerable from one place.
 | **Zones** (3) | `robogeosociety.xyz`, `walksheds.xyz`, `judkinsparkforpeople.org` | n/a — DNS stays |
 | **Tunnel** | `com.tommydoerr.rgs-dev-tunnel` runs on the mini (token at `~/.config/rgs/dev-tunnel-token`). The legacy `cfd_tunnel` API lists **0** — it is on the newer connector model, or invisible to the vended token | Unverified; low stakes |
 | **Queues / DO / Workflows / D1 / Containers** | Queues `campsite-work` + `campsite-work-dlq`; DOs `SupervisorDO`, `InferenceContainer`; Workflows `campsite-collector`, `campsite-hot-date-watch`, `campsite-inventory`; D1 `tallest-tree-db` (uncreated); Containers `mountain-inference` | **High** — no LAN equivalent for Queues/DO/Workflows |
-| **Tokens** (18) | 16 vended by `cloudflare-tfvend`; 2 hand-made survivors: **`floral-firefly-d65b`** (last used 2026-07-26 — actively in use, unowned by IaC) and **`R2 Account Token`** (never used) | n/a — but see open question 4 |
+| **Tokens** (18) | 16 vended by `cloudflare-tfvend`; 2 hand-made survivors: **`floral-firefly-d65b`** (last used 2026-07-26 — actively in use, unowned by IaC) and **`R2 Account Token`** (never used) | n/a — but see ruling 4 |
 
 `campsites.robogeosociety.xyz` **does not resolve.** The custom domain the migration plan
 describes was never attached or has been removed; the frontend serves on
@@ -164,7 +169,7 @@ to this doc**, not a deletion — history stays readable.
 | observability | `COORDINATION-PLAN.md` | Banner: its subject (Grafana provisioning) is retired |
 | observability | `README.md`, `CLAUDE.md` | Banner: Grafana + InfluxDB are **gone**, not live |
 | discobots | `README.md`, `AGENT.md`, `DISCORD.md`, `docs/infrastructure.md` | Banner: posture + InfluxDB-as-store correction |
-| supervisor | `docs/cloudflare-workers/PLAN.md` | Frontmatter `status: proposed` → superseded pending open question 2 |
+| supervisor | `docs/cloudflare-workers/PLAN.md` | Frontmatter `status: proposed` → `on-hold`; **merged** once ruling 2 came back parked |
 
 **Verified NOT stale:** `Cloudflare-endpoint-plan.md` already reconciled itself (status
 RESOLVED, cites rgs#175). `robogeosociety/.github`'s README carries no Cloudflare posture
@@ -219,49 +224,63 @@ corruption, and nothing alerts on it. Filed as a `machine-task`.
 
 ---
 
-## Open questions — Tommy's calls, not mine
+## Decisions (2026-07-26)
 
-**1. Does local observability come back?**
-The mini's host metrics and the Tempest weather feed now leave the LAN, land in Cloudflare
-AE, and are alerted on by a Worker. There is **no local dashboard at all** — Grafana and
-InfluxDB are gone. This is the sharpest tension with "I'm on my local network now."
-Options: (a) leave it — AE + Discord alerts work; (b) rebuild a LAN TSDB and keep AE as
-the offsite copy; (c) rebuild and retire the AE path. Each is a real amount of work; (a)
-is free but leaves LAN telemetry Cloudflare-dependent.
+All six were ruled the day this doc was written. They are **more permissive than the
+original framing** — which is why the headline changed from a retreat to *stop expanding,
+finish what's started*. Recorded as dated rulings so the record stops drifting.
 
-**2. Does supervisor#36 still flip?**
-`campsite-supervisor` is a Worker that duplicates a mini supervisor job which still runs.
-The burn-in → parity → flip plan is live and pointed at Cloudflare. Under "no new
-Workers," is the flip cancelled (shadow stays a proven spike), or is it grandfathered as
-already-in-flight? Its shadow KV is empty, so cancelling costs nothing today.
+**1. Local observability stays on Analytics Engine — accepted trade-off.**
+The mini's host metrics and the Tempest weather feed leave the LAN, land in AE, and are
+alerted on by the `cicd-collector` Worker. Grafana and InfluxDB are gone and **no local
+dashboard remains**. This is recorded as an *explicit accepted trade-off*, not an
+oversight: LAN telemetry and the mini's own disk/memory alerting are **permanently
+Cloudflare-dependent** under this ruling. Rebuilding a LAN store was considered and
+declined as not worth the work. Revisit if the AE path itself becomes a liability.
 
-**3. Does supervisor#35 flip, or reverse?**
-`rgs-wiki` was lifted to a Worker with byte-parity verified. The mini can serve it. Under
-the new posture, is the cutover still wanted, or does the wiki return to the tailnet — and
-if so, do the three Access-gated Pages wikis follow?
+**2. supervisor#36 — PARKED. Do not advance.**
+`campsite-supervisor` would be a genuinely *new* fleet-internal Worker, which is exactly
+what ruling 5 targets. supervisor#39 stays open and unmerged (merging it deploys the shadow
+Worker, creates the DO namespace and starts burn-in — merging *is* the parked action).
+Shadow resources stay up; parked is not cancelled. The shadow KV remains at 0 keys, so the
+cheap-cancellation window stays open. supervisor#47 (`status: on-hold` on the Workers plan)
+is therefore correct and was merged.
 
-**4. What happens to `floral-firefly-d65b`?**
-A hand-minted, non-IaC token, last used **2026-07-26** — actively load-bearing for
-something, and nobody knows what. Options: trace the caller and re-vend it through tfvend,
-or leave it. Related: `R2 Account Token` has never been used and is a free revoke, but
-revoking is a change to live infrastructure and therefore not mine to make.
+**3. supervisor#35 — GRANDFATHERED, and shipped.**
+The opposite call to #36, on three grounds: the Worker was not new (deployed since #32), an
+Access-gated wiki is the kind of surface ruling 5 still permits, and the mini's serve job
+had been dead since 2026-07-01 (`fails=23469`, exit 127) — so *not* cutting over left the
+wiki broken. Delivered via tfvend#12 → supervisor#42 → #52 → #55.
 
-**5. Is "no new Workers" absolute, or "no new *fleet-internal* Workers"?**
-A genuinely public product surface — the next thing shaped like `walksheds` or the rgs
-frontend — has no LAN answer. Reading it as absolute blocks that; reading it as
-fleet-internal-only keeps Cloudflare available where it is the only option. This doc
-assumes the second reading. **Confirm or correct it** — it is the one place here that
-guesses at intent.
+The cutover produced one finding worth keeping: a probe of the live hostname returned the
+Worker's own 403, proving **no Access app covered it**. Shipping both stages together would
+have published the private wiki. The `RGS wiki` Access app was created first, re-probed, and
+only then was the gate opened. The Pages wikis stay on Cloudflare.
 
-**6. Should the one-way-door recovery be rehearsed?**
-The bootstrap-token path (§1) has never been tested and needs Tommy at the machine.
-A dry run would take minutes and would convert an assumption into a fact.
+**4. `floral-firefly-d65b` — trace it, then report. No credential change.**
+Hand-minted, non-IaC, last used **2026-07-26** — actively load-bearing for something
+unidentified. The ruling is explicitly *investigate before touching*: find the consumer and
+bring back a plan rather than re-vending or revoking. `R2 Account Token` has never been used
+and is a free revoke, but revoking is still a live-infrastructure change and stays out of
+scope under the same ruling.
+
+**5. "No new Workers" means no new *fleet-internal* Workers.**
+Confirmed — this was the one place the doc admitted to guessing at intent, and the guess was
+right. A genuinely public product surface (the next thing shaped like `walksheds` or the rgs
+frontend) has no LAN answer, so Workers remain available there. Fleet-internal work defaults
+to Actions or the mini.
+
+**6. Rehearse the bootstrap recovery — yes, soon.**
+The path in §1 has never been tested and needs Tommy at the machine (the login keychain
+refuses non-interactive reads). A dry run takes minutes and converts the only R2-state
+escape hatch from an assumption into a verified fact. Tracked as a `human-task`.
 
 ---
 
-## What this proposal explicitly does not do
+## What this does not do
 
 - No `wrangler delete`, no Worker removal, no bucket or namespace deletion.
-- No migration of any workload, in either direction.
-- No token revocation — including the unused one.
-- No resolution of the open questions above.
+- No token revocation — including `R2 Account Token`, which is unused and would be a free
+  revoke; ruling 4 keeps it out of scope.
+- No teardown of the parked campsite shadow (ruling 2): parked is not cancelled.
+- No migration of any workload beyond the supervisor#35 cutover that ruling 3 authorised.

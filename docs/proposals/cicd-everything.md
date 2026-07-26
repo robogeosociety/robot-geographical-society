@@ -196,10 +196,12 @@ CI, and Discord approvals, with no hand-deploys.
   Max subscription's CLI auth cannot run inside a Worker), the **mini/LAN** is the default
   home for fleet-internal work, and Cloudflare is held in reserve for public surfaces. **No
   new Workers.** Nothing is decommissioned. Full reconciliation, live inventory, one-way
-  doors and open questions: [`cloudflare-posture.md`](./cloudflare-posture.md). This
-  supersedes "production is Cloudflare" in the 2026-07-19 amendment below, and leaves
-  **WS5** (TIG retired for Analytics Engine) as an open question rather than a settled
-  outcome.
+  doors and the six rulings: [`cloudflare-posture.md`](./cloudflare-posture.md). This
+  supersedes "production is Cloudflare" in the 2026-07-19 amendment below. **WS5 stands**:
+  ruling 1 confirmed the TIG retirement — Analytics Engine keeps the fleet's telemetry and
+  no LAN store will be rebuilt, accepted as a deliberate trade-off. **WS4 split**: the
+  rgs-wiki lift was grandfathered and completed (supervisor#35), while the campsite
+  pipeline is parked (supervisor#36) as a genuinely new fleet-internal Worker.
 - **Posture (2026-07-19).** The mini's end-state changed from *minimal appliance* to
   **custodian + agent-dev box**: it permanently owns git working sets, iCloud transport and
   Obsidian automation, and hosts long-running Claude sessions; the Air stays primary for
