@@ -66,10 +66,11 @@ monitoring, and there is no local fallback to reach for.
 surface — by design. `cloudflare-tfvend` vends narrowly-scoped tokens, so Workers, R2 and
 KV each need a different one, and no token holds account-wide Workers or R2 read. Workers
 below are confirmed live by **HTTP probe**; KV by **key listing**; Pages by the Pages
-token; Access/tokens/zones by the vended Access-admin token. R2 buckets and Analytics
-Engine datasets are enumerated **from code** and could not be confirmed against the API.
-Least-privilege is working as intended; it just means "what is actually deployed" is not
-answerable from one place.
+token; Access, tokens and zones by the **bootstrap** (`~/.cf.tfn.token`). R2 buckets and
+Analytics Engine datasets are enumerated **from code** and could not be confirmed against
+the API. Least-privilege is working as intended; it just means "what is actually deployed"
+is not answerable from one place — and that the one credential which *can* reach across
+Access and token management is the bootstrap, which is its own finding (see one-way doors).
 
 ### Workers
 
@@ -101,7 +102,7 @@ answerable from one place.
 | **Zones** (3) | `robogeosociety.xyz`, `walksheds.xyz`, `judkinsparkforpeople.org` | n/a — DNS stays |
 | **Tunnel** | `com.tommydoerr.rgs-dev-tunnel` runs on the mini (token at `~/.config/rgs/dev-tunnel-token`). The legacy `cfd_tunnel` API lists **0** — it is on the newer connector model, or invisible to the vended token | Unverified; low stakes |
 | **Queues / DO / Workflows / D1 / Containers** | Queues `campsite-work` + `campsite-work-dlq`; DOs `SupervisorDO`, `InferenceContainer`; Workflows `campsite-collector`, `campsite-hot-date-watch`, `campsite-inventory`; D1 `tallest-tree-db` (uncreated); Containers `mountain-inference` | **High** — no LAN equivalent for Queues/DO/Workflows |
-| **Tokens** (18) | 16 vended by `cloudflare-tfvend`; 2 hand-made survivors: **`floral-firefly-d65b`** (last used 2026-07-26 — actively in use, unowned by IaC) and **`R2 Account Token`** (never used) | n/a — but see ruling 4 |
+| **Tokens** (18) | 16 vended by `cloudflare-tfvend`; 2 hand-made: **`floral-firefly-d65b`** — traced under ruling 4 to `~/.cf.tfn.token`, **this is the bootstrap**, the only token with `Account API Tokens Write` (see one-way doors) — and **`R2 Account Token`** (never used; `is-the-mountain-out` bucket item write only) | n/a — but the bootstrap's storage is an open decision |
 
 `campsites.robogeosociety.xyz` **does not resolve.** The custom domain the migration plan
 describes was never attached or has been removed; the frontend serves on
@@ -122,16 +123,36 @@ bucket: `cloudflare-tfvend`, `infra/mapbox`, `infra/valkey`, and the rgs `infra/
 backend → verify plans are empty → then, only if the bucket is being abandoned,
 re-vend `tfstate-r2` from the bootstrap token.
 
-**The catch, verified 2026-07-26.** The documented recovery path is the bootstrap token in
-the mini's Keychain (service `cloudflare-tfvend-bootstrap`). That item **exists and is
-intact** — created 2026-06-07. But the login keychain refuses non-interactive reads
-(`User interaction is not allowed`), so the recovery path **cannot be exercised from a
-headless remote session** — which is precisely the mode rgs#167 was built to enable. It
-needs Tommy at the machine, and it has never been rehearsed. That is the real risk here,
-not the circularity itself.
+**Corrected 2026-07-26 — the door is not the risk; the key's storage is.**
+An earlier draft of this doc claimed the recovery path was blocked because the bootstrap
+token lives in the mini's Keychain and the login keychain refuses non-interactive reads
+(`User interaction is not allowed`). Both halves of that are true but the conclusion was
+wrong: the Makefile's documented fallback is `TOKEN_FILE ?= $(HOME)/.cf.tfn.token`, and
+**that file works headlessly.** It was used on 2026-07-26 to run a real
+`terraform apply` against `cloudflare_account_token.supervisor_ci` from a remote session.
+So headless recovery *is* possible, and ruling 6's rehearsal is a prudence exercise rather
+than a rescue from a dead end.
 
-Note also that `~/.cf.tfn.token` is a **vended** token (Access + tokens-read + zones), not
-the bootstrap. Anything assuming that file is the bootstrap is wrong.
+The earlier draft also asserted that `~/.cf.tfn.token` is a *vended* token and "anything
+assuming that file is the bootstrap is wrong." **That was backwards.** Traced under ruling 4:
+the file is `floral-firefly-d65b`, and it is **the only token in the account holding
+`Account API Tokens Write`** — which is precisely the bootstrap capability, and is what let
+that apply modify a token at all.
+
+**The real finding is a blast-radius one.** The account's most privileged credential is a
+hand-minted, non-IaC, never-expiring token sitting in a plaintext file (mode 600) that any
+agent session on the mini can read. It can:
+
+- **mint, modify and revoke any account API token** — i.e. re-vend or destroy everything
+  `cloudflare-tfvend` manages, including its own state credentials;
+- **rewrite the Access boundary** (`Apps and Policies Revoke/Write`) — i.e. remove the gate
+  in front of `wiki.`, `api.` and `atlas.robogeosociety.xyz`;
+- **mint Access service tokens** (`Service Tokens Write`) — i.e. create bypass credentials.
+
+The tension is real and is Tommy's to resolve: `make save-token` moves it into the Keychain
+and prints *"You can now: rm $(TOKEN_FILE)"* — which is the safer posture, and is also
+exactly what would make headless recovery impossible. Pick one deliberately; today the
+account is running on the convenient end by default rather than by decision.
 
 ### 2. Analytics Engine history
 
