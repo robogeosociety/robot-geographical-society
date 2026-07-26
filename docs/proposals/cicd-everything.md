@@ -6,6 +6,15 @@ Phase-1 gate tracked as follow-on issues.
 **Goal:** total remote lifecycle control — a Claude Code web session opens a PR, merges it,
 and CI/CD deploys the live app. No SSH to the mini in any lifecycle.
 
+> [!IMPORTANT]
+> **Posture superseded 2026-07-26 — see [`cloudflare-posture.md`](./cloudflare-posture.md).**
+> The `cloud = production` default below no longer holds. Cloudflare is now a **proven
+> capability held in reserve**: existing Workers keep running, but **no new Cloudflare
+> Workers**, and GitHub Actions is the rail for scheduled/CI work. What this document
+> *delivered* is untouched and still accurate — the deploy gate, R2 remote state, the
+> `repository_dispatch` lane and the mini's custodian role all stand. Only the **default
+> target for new work** changed.
+
 ## Context
 
 Only four workflows use the mini's self-hosted runner today (all CD/fleet-sync:
@@ -16,8 +25,10 @@ and Terraform state are mini-bound, so remote sessions can't complete a lifecycl
 **Primary objectives: get discobots, obsidian (+ obsidian-automations), and supervisor off
 the mini.** End-state:
 
-- **Cloud-native by default** — apps deploy to Cloudflare (Workers/Pages/KV/R2/Containers)
-  or GitHub Pages via GitHub-hosted Actions.
+- ~~**Cloud-native by default**~~ **SUPERSEDED 2026-07-26** ([`cloudflare-posture.md`](./cloudflare-posture.md))
+  — apps deploy to Cloudflare (Workers/Pages/KV/R2/Containers) or GitHub Pages via
+  GitHub-hosted Actions. *New work no longer defaults to Cloudflare; Actions and the
+  mini/LAN do.*
 - **Mini = appliance for truly-local work only** (MLX, iCloud transport, camera capture, big
   local disk), deployed via Actions + the self-hosted runner, never by hand. The runner is
   also the trust boundary for private-repo deploy/apply jobs.
@@ -179,6 +190,16 @@ CI, and Discord approvals, with no hand-deploys.
 
 ## Amendments to the original plan
 
+- **Posture (2026-07-26) — Cloudflare to reserve.** Tommy: *"Cloudflare was a useful PoC,
+  and should be useful in the future, but I'm on my local network now."* The org default
+  flips back: **GitHub Actions** is the rail for scheduled/CI work (structurally, because a
+  Max subscription's CLI auth cannot run inside a Worker), the **mini/LAN** is the default
+  home for fleet-internal work, and Cloudflare is held in reserve for public surfaces. **No
+  new Workers.** Nothing is decommissioned. Full reconciliation, live inventory, one-way
+  doors and open questions: [`cloudflare-posture.md`](./cloudflare-posture.md). This
+  supersedes "production is Cloudflare" in the 2026-07-19 amendment below, and leaves
+  **WS5** (TIG retired for Analytics Engine) as an open question rather than a settled
+  outcome.
 - **Posture (2026-07-19).** The mini's end-state changed from *minimal appliance* to
   **custodian + agent-dev box**: it permanently owns git working sets, iCloud transport and
   Obsidian automation, and hosts long-running Claude sessions; the Air stays primary for
