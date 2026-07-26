@@ -7,13 +7,15 @@ Phase-1 gate tracked as follow-on issues.
 and CI/CD deploys the live app. No SSH to the mini in any lifecycle.
 
 > [!IMPORTANT]
-> **Posture superseded 2026-07-26 — see [`cloudflare-posture.md`](./cloudflare-posture.md).**
-> The `cloud = production` default below no longer holds. Cloudflare is now a **proven
-> capability held in reserve**: existing Workers keep running, but **no new Cloudflare
-> Workers**, and GitHub Actions is the rail for scheduled/CI work. What this document
-> *delivered* is untouched and still accurate — the deploy gate, R2 remote state, the
-> `repository_dispatch` lane and the mini's custodian role all stand. Only the **default
-> target for new work** changed.
+> **Posture superseded 2026-07-26 — see [`cloudflare-posture.md`](./cloudflare-posture.md)
+> (DECIDED; six rulings recorded there).**
+> The `cloud = production` default below no longer holds. The posture is **stop expanding,
+> finish what's started**: existing Workers keep running, and **no new Cloudflare Workers for
+> fleet-internal work** — public product surfaces may still use them. GitHub Actions is the
+> rail for scheduled/CI work; the mini/LAN is the default home for fleet-internal work.
+> What this document *delivered* is untouched and still accurate — the deploy gate, R2 remote
+> state, the `repository_dispatch` lane and the mini's custodian role all stand. Only the
+> **default target for new work** changed.
 
 ## Context
 
@@ -27,8 +29,8 @@ the mini.** End-state:
 
 - ~~**Cloud-native by default**~~ **SUPERSEDED 2026-07-26** ([`cloudflare-posture.md`](./cloudflare-posture.md))
   — apps deploy to Cloudflare (Workers/Pages/KV/R2/Containers) or GitHub Pages via
-  GitHub-hosted Actions. *New work no longer defaults to Cloudflare; Actions and the
-  mini/LAN do.*
+  GitHub-hosted Actions. *New **fleet-internal** work no longer defaults to Cloudflare —
+  Actions and the mini/LAN do. Public product surfaces still may.*
 - **Mini = appliance for truly-local work only** (MLX, iCloud transport, camera capture, big
   local disk), deployed via Actions + the self-hosted runner, never by hand. The runner is
   also the trust boundary for private-repo deploy/apply jobs.
