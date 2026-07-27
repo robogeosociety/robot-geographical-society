@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "codex": "node scripts/build-codex.js",
+    "codex:fixture": "node scripts/make-codex-fixture.js && CODEX_DB=../data/campsite-codex.fixture.db npm run codex",
+    "prebuild": "npm run codex",
     "build": "vite build",
     "postbuild": "npm run e2e",
     "e2e": "npx playwright test",
