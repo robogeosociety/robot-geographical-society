@@ -33,11 +33,12 @@ GitHub offers two ways to pause a deployment, and they differ in **who can appro
 | Approval from a phone | ✅ Discord | ⚠️ GitHub UI only |
 | Bypass when broken | `/deploy approve` slash command | admin can approve in UI |
 
-**Recommendation: custom protection rules via the App**, because approval-from-Discord is
-the property that makes gating survivable — it is the difference between a gate you clear
-in ten seconds and one that waits until you are at a laptop. Required reviewers are worth
-adding **only** on `human-gate` (below), where GitHub-UI approval is acceptable and the
-independence from our own Worker is a feature.
+**Decided: use both, on the same environment.** The App's custom rule is what makes gating
+survivable — approval from Discord is the difference between a gate you clear in ten seconds
+and one that waits until you are at a laptop. A **required reviewer on the same environment**
+is the floor underneath it: if the Worker is down, the run still pauses and is approvable in
+the GitHub UI. Neither alone is enough; the App alone dies with the Worker, and reviewers
+alone cost you the phone.
 
 ## What to gate — three tiers
 
@@ -76,18 +77,19 @@ than advisory.
 
 ## Human approval inside a workflow
 
-A dedicated **`human-gate`** environment with **required reviewers = tommyroar**, referenced
-by any job that must stop for a person:
+No separate environment. Any job that must stop for a person references **`production`**,
+which carries both rule types:
 
 ```yaml
 jobs:
   apply:
-    environment: human-gate   # pauses until approved in the GitHub UI
+    environment: production   # App rule → Discord card; required reviewer → GitHub UI floor
 ```
 
-Deliberately built on required reviewers, not the App: this is the lane you want when the
-Worker itself is broken, so it must not depend on the Worker. Phase 2 can add a Discord card
-via a PAT-backed approval, but the GitHub-UI path stays the floor.
+The required reviewer is the part that must not depend on our own Worker — it is the lane
+you want *because* something is broken. The accepted cost of folding it into `production`
+is coupling: a change to that environment's config affects routine deploys and human steps
+together, so changes there deserve more care than a per-lane toggle would.
 
 ## Failure modes this design must survive
 
@@ -111,7 +113,7 @@ Each of these actually happened on 2026-07-26:
 | 1 | Branch protection on `main` in discobots + supervisor: PR required, checks green | deleting the rule |
 | 2 | Enable the App as a custom protection rule on `discobots/production`; verify a card posts and Approve works end to end | disabling the rule |
 | 3 | Extend Tier 2 to the remaining Worker repos | per-environment toggle |
-| 4 | Create `human-gate` with required reviewers; move `terraform apply` behind it | deleting the environment |
+| 4 | Attach a required reviewer to `production` alongside the App rule; move `terraform apply` behind it | removing the reviewer |
 | 5 | Alert on approvals waiting > 12 h | revert |
 
 Phase 2 is the one to prove first: it is the exact configuration that was live before, and
