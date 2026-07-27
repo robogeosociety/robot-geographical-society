@@ -245,6 +245,18 @@ describe('reference notes', () => {
     expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
   });
 
+  it('drops the contents column when a note has nothing to list', async () => {
+    // `Travel times` in the real corpus: a lede and one big table, no headings.
+    built.referenceArticles.set('travel-times', {
+      slug: 'travel-times', name: 'Travel times', updated: 'u', toc: [], footnotes: [],
+      body: [{ t: 'p', c: [{ t: 'text', v: 'Origin: Seattle.' }] }],
+    });
+    const { container } = renderAt('/codex/reference/travel-times');
+    expect(await screen.findByRole('heading', { level: 1, name: 'Travel times' })).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: 'Contents' })).not.toBeInTheDocument();
+    expect(container.querySelector('.codex-layout-notoc')).not.toBeNull();
+  });
+
   it('reports a reference slug the codex does not carry', async () => {
     renderAt('/codex/reference/campsite-template');
     expect(await screen.findByRole('heading', { name: 'Not in the codex' })).toBeInTheDocument();

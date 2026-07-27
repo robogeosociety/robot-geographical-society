@@ -4,7 +4,7 @@ import { siteHref } from './build.js';
 import { loadCampground } from './data.js';
 import { Footnotes, Markdown } from './Markdown.jsx';
 import { Infobox } from './Infobox.jsx';
-import { Toc } from './Toc.jsx';
+import { Toc, tocEntries } from './Toc.jsx';
 import { useResource } from './useResource.js';
 
 /** One loop's site roster. */
@@ -52,6 +52,7 @@ export default function CampgroundView() {
   const cg = data;
   const multiLoop = cg.loops.length > 1;
   const total = cg.loops.reduce((n, l) => n + l.sites.length, 0);
+  const toc = tocEntries(cg.toc, total ? [{ id: 'sites', depth: 2, text: `Sites (${total})` }] : []);
 
   return (
     <article className="codex-article">
@@ -64,8 +65,8 @@ export default function CampgroundView() {
       <h1 className="codex-title">{cg.name}</h1>
       {cg.unit && <p className="codex-subtitle">{cg.unit}</p>}
 
-      <div className="codex-layout">
-        <Toc items={cg.toc} extra={total ? [{ id: 'sites', depth: 2, text: `Sites (${total})` }] : []} />
+      <div className={toc.length ? 'codex-layout' : 'codex-layout codex-layout-notoc'}>
+        <Toc entries={toc} />
 
         <div className="codex-body">
           <Markdown blocks={cg.body} />

@@ -72,7 +72,7 @@ Full context: `data/CLAUDE.md`.
 ## Campsite codex (the `/codex` viewer)
 
 `data/campsite-codex.db` is a **SQLite export of the Obsidian camping vault** — 192
-campground articles, 9,205 per-campsite notes and 24 shared reference notes as
+campground articles, 9,205 per-campsite notes and 44 shared reference notes as
 Markdown, in three tables (`codex_campground`, `codex_site`, `codex_reference`). The
 vault evicted that corpus; the SQLite store is now its canonical home, and a copy is
 committed here as a build input beside `data/campsites.json`. It is the **only**
@@ -85,8 +85,9 @@ JSON AST at build time (`web/src/codex/markdown.js`) and rendered as React eleme
 no vault prose is ever passed through `dangerouslySetInnerHTML`.
 
 `[[wikilinks]]` resolve against campgrounds first and reference notes second; anything
-in neither table renders as plain text, never a dead link (94.7% of links in the
-campground/reference bodies resolve; every site body resolves). Sites route on the
+in neither table renders as plain text, never a dead link (11,883 of 11,885 wikilinks
+in the corpus resolve; the two that do not are a Bases view with no note behind it and
+a cross-vault link, both correctly inert). Sites route on the
 artifact's own `codex_site.site_slug`, which is unique per campground. The build prints
 the link-health tally and the unresolved targets on every run.
 

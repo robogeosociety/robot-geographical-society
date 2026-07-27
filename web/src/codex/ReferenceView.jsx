@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { loadReference } from './data.js';
 import { Footnotes, Markdown } from './Markdown.jsx';
-import { Toc } from './Toc.jsx';
+import { Toc, tocEntries } from './Toc.jsx';
 import { useResource } from './useResource.js';
 
 /**
@@ -34,6 +34,8 @@ export default function ReferenceView() {
     );
   }
 
+  const toc = tocEntries(data.toc);
+
   return (
     <article className="codex-article">
       <nav className="codex-crumbs" aria-label="Breadcrumb">
@@ -47,8 +49,8 @@ export default function ReferenceView() {
       <h1 className="codex-title">{data.name}</h1>
       <p className="codex-subtitle">Shared reference note</p>
 
-      <div className="codex-layout codex-layout-wide">
-        <Toc items={data.toc} />
+      <div className={`codex-layout codex-layout-wide${toc.length ? '' : ' codex-layout-notoc'}`}>
+        <Toc entries={toc} />
         <div className="codex-body">
           <Markdown blocks={data.body} />
           <Footnotes notes={data.footnotes} />
