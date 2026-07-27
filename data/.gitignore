@@ -2,3 +2,8 @@
 *.db-wal
 *.db-shm
 .metaflow/
+
+# ...but the campsite codex artifact IS shipped: the viewer reads it at build
+# time the way the map reads campsites.json. Local fixtures use the
+# *.fixture.db name and stay ignored by the rule above.
+!campsite-codex.db

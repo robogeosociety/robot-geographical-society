@@ -1,0 +1,449 @@
+/* ============================================================================
+   CAMPSITE CODEX — the reading surface.
+
+   Everything here is built from the design-system tokens in ds/tokens/*, so the
+   encyclopedia reads as the same product as the map cockpit: alpine-dusk field,
+   glacier text, agency hues, glass hairlines. What changes is the POSTURE — the
+   cockpit is a fixed, overflow-hidden HUD; an article has to scroll, breathe,
+   and hold a measured column of prose.
+
+   Layout is Wikipedia's: a table of contents rail, an article column capped at
+   a readable measure, and an infobox of the structured fields. Below 1100px the
+   three columns stack (infobox first, the way mobile Wikipedia does it) and the
+   ToC collapses to a one-line disclosure.
+   ============================================================================ */
+
+.codex-app {
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--twilight-700) 0%, transparent 60%),
+    var(--twilight-900);
+}
+
+/* The app shell is height-locked and overflow-hidden; the codex opens its own
+   scroll context inside it rather than fighting that. */
+.codex-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.codex-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5) var(--space-16);
+}
+
+/* Anchor jumps must clear nothing (the topbar is outside the scroller), but a
+   little breathing room reads better than a heading pinned to the edge. */
+.codex-page :target { scroll-margin-top: var(--space-5); }
+
+/* ---- Type ---------------------------------------------------------------- */
+
+.codex-page { color: var(--text-primary); line-height: var(--leading-body); }
+
+.codex-title {
+  font-size: clamp(28px, 4.5vw, 40px);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.codex-title-site { color: var(--accent); font-weight: var(--weight-medium); }
+
+.codex-subtitle {
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-md);
+}
+
+.codex-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums lining-nums; }
+
+.codex-body { font-size: 15px; }
+.codex-body p { margin: var(--space-4) 0; }
+.codex-body ul, .codex-body ol { margin: var(--space-4) 0 var(--space-4) var(--space-5); }
+.codex-body li { margin: var(--space-2) 0; }
+
+.codex-h {
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-snug);
+  margin: var(--space-8) 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-faint);
+}
+h2.codex-h { font-size: 22px; }
+h3.codex-h { font-size: 17px; border-bottom: none; margin-top: var(--space-6); }
+h4.codex-h, h5.codex-h, h6.codex-h { font-size: 15px; border-bottom: none; color: var(--text-secondary); }
+
+/* ---- Links --------------------------------------------------------------- */
+
+.codex-page a { color: var(--accent); text-decoration: none; }
+.codex-page a:hover { text-decoration: underline; }
+
+.codex-extlink::after {
+  content: ' ↗';
+  font-size: 0.85em;
+  opacity: 0.6;
+}
+
+/* A wikilink the exporter DID carry — a real internal article. */
+.codex-wikilink { border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+
+/* A wikilink to a note that is not in the codex (shared reference notes such as
+   "Weather & winter", which stayed in the vault). Plain text with a dotted
+   underline: it reads as a term of art, not as something to click. */
+.codex-unlinked {
+  color: var(--text-secondary);
+  border-bottom: 1px dotted var(--glass-stroke-soft);
+  cursor: help;
+}
+
+/* ---- Article layout ------------------------------------------------------ */
+
+.codex-layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr) 300px;
+  gap: var(--space-8);
+  align-items: start;
+  margin-top: var(--space-5);
+}
+
+.codex-toc { position: sticky; top: var(--space-4); }
+.codex-toc-spacer { display: block; }
+
+.codex-toc summary {
+  cursor: pointer;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.codex-toc-list { list-style: none; margin: var(--space-3) 0 0; padding: 0; }
+.codex-toc-list li { margin: var(--space-1) 0; font-size: var(--text-sm); }
+.codex-toc-list li[data-depth='3'] { padding-left: var(--space-4); font-size: var(--text-xs); }
+.codex-toc-list a { color: var(--text-muted); }
+.codex-toc-list a:hover { color: var(--text-primary); }
+
+/* ---- Infobox ------------------------------------------------------------- */
+
+.codex-infobox {
+  position: sticky;
+  top: var(--space-4);
+  background: var(--glass-sheen), var(--surface-glass-strong);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-glass);
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.codex-infobox-head { padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-faint); }
+.codex-infobox-head h2 { font-size: var(--text-lg); margin-top: var(--space-1); }
+
+.codex-infobox dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+}
+.codex-infobox dt {
+  color: var(--text-muted);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  padding-top: 2px;
+}
+.codex-infobox dd { overflow-wrap: anywhere; }
+
+.codex-hazards { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.codex-hazard {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-faint);
+  background: var(--surface-chip);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-secondary);
+}
+.codex-hazard[data-hazard='wildfire'] { border-color: color-mix(in srgb, var(--avail-low) 55%, transparent); color: var(--avail-low); }
+.codex-hazard[data-hazard='tsunami'] { border-color: color-mix(in srgb, var(--sky-cyan) 55%, transparent); color: var(--sky-cyan); }
+.codex-hazard[data-hazard='lahar'] { border-color: color-mix(in srgb, var(--avail-none) 55%, transparent); color: var(--avail-none); }
+.codex-hazard[data-hazard='water'] { border-color: color-mix(in srgb, var(--haze-300) 70%, transparent); color: var(--haze-300); }
+.codex-hazard[data-hazard='weather'] { border-color: color-mix(in srgb, var(--sun-amber) 45%, transparent); color: var(--sun-amber); }
+
+/* ---- Breadcrumbs + pager ------------------------------------------------- */
+
+.codex-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+.codex-crumbs span[aria-hidden='true'] { opacity: 0.4; }
+.codex-crumb-loop { color: var(--text-faint); }
+
+.codex-pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-faint);
+  font-size: var(--text-sm);
+}
+
+/* ---- Site facts ---------------------------------------------------------- */
+
+.codex-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-chip);
+  border: 1px solid var(--border-faint);
+  border-radius: var(--radius-md);
+}
+.codex-fact dt {
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-muted);
+}
+.codex-fact dd { font-size: var(--text-sm); }
+
+/* ---- Site roster --------------------------------------------------------- */
+
+.codex-loop { margin-top: var(--space-5); }
+.codex-loop-title { font-size: var(--text-sm); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-secondary); }
+.codex-loop-count { color: var(--text-faint); margin-left: var(--space-2); }
+
+.codex-sites {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+}
+.codex-sites li { margin: 0; }
+
+.codex-site-chip {
+  display: block;
+  padding: 7px 4px;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-faint);
+  background: var(--surface-chip);
+  color: var(--text-secondary) !important;
+  font-size: var(--text-sm);
+  transition: var(--transition-hover);
+}
+.codex-site-chip:hover {
+  text-decoration: none !important;
+  border-color: var(--accent);
+  color: var(--text-primary) !important;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* ---- Blocks -------------------------------------------------------------- */
+
+.codex-table-scroll { overflow-x: auto; margin: var(--space-4) 0; }
+.codex-table { border-collapse: collapse; width: 100%; font-size: var(--text-sm); }
+.codex-table th, .codex-table td {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-faint);
+  vertical-align: top;
+}
+.codex-table th {
+  background: var(--surface-chip);
+  color: var(--text-secondary);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+.codex-quote {
+  margin: var(--space-4) 0;
+  padding: var(--space-1) var(--space-4);
+  border-left: 3px solid var(--border-hairline);
+  color: var(--text-secondary);
+}
+
+.codex-callout {
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-faint);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--surface-chip);
+}
+.codex-callout p { margin: var(--space-2) 0 0; }
+.codex-callout-title {
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--accent);
+}
+.codex-callout-warning { border-left-color: var(--warning); }
+.codex-callout-warning .codex-callout-title { color: var(--warning); }
+.codex-callout-danger, .codex-callout-caution { border-left-color: var(--danger); }
+.codex-callout-danger .codex-callout-title, .codex-callout-caution .codex-callout-title { color: var(--danger); }
+.codex-callout-tip, .codex-callout-success { border-left-color: var(--success); }
+.codex-callout-tip .codex-callout-title, .codex-callout-success .codex-callout-title { color: var(--success); }
+
+.codex-code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  padding: 1px 5px;
+  border-radius: var(--radius-xs);
+  background: var(--surface-chip);
+  border: 1px solid var(--border-faint);
+}
+.codex-pre {
+  margin: var(--space-4) 0;
+  padding: var(--space-3);
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  background: var(--twilight-800);
+  border: 1px solid var(--border-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.codex-hr { border: none; border-top: 1px solid var(--border-faint); margin: var(--space-6) 0; }
+.codex-img { max-width: 100%; border-radius: var(--radius-sm); }
+
+/* ---- Missing attachments ------------------------------------------------- */
+
+/* The vault's 447 attachments are not in the artifact. Name what is missing
+   rather than drawing a broken frame — and always keep the credit line, which
+   is what makes the photo legally usable in the first place. */
+.codex-figure { margin: var(--space-5) 0; }
+.codex-figure-slot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-4);
+  border: 1px dashed var(--glass-stroke-soft);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(160deg, var(--surface-glass) 0%, transparent 70%);
+}
+.codex-asset { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.codex-asset-kind {
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-muted);
+}
+.codex-asset-name { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--text-secondary); overflow-wrap: anywhere; }
+.codex-asset-note { margin-left: auto; font-size: var(--text-2xs); color: var(--text-faint); font-style: italic; }
+.codex-figure-caption { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--text-muted); }
+.codex-embed-inline { font-family: var(--font-mono); font-size: 0.9em; color: var(--text-faint); }
+
+/* ---- Footnotes ----------------------------------------------------------- */
+
+.codex-fnref { font-size: 0.75em; }
+.codex-fnref a { padding: 0 2px; }
+.codex-footnotes { margin-top: var(--space-8); font-size: var(--text-sm); color: var(--text-secondary); }
+.codex-footnotes ol { margin-left: var(--space-5); }
+.codex-footnotes li { margin: var(--space-2) 0; }
+.codex-fnback { opacity: 0.7; }
+
+/* ---- Index page ---------------------------------------------------------- */
+
+.codex-index-head h1 { font-size: clamp(30px, 5vw, 44px); letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); }
+.codex-dek { margin-top: var(--space-3); max-width: 62ch; color: var(--text-secondary); font-size: var(--text-lg); }
+
+.codex-filters { margin: var(--space-6) 0 var(--space-3); display: flex; flex-direction: column; gap: var(--space-3); }
+
+.codex-search {
+  width: 100%;
+  max-width: 520px;
+  padding: 10px var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-faint);
+  background: var(--surface-chip);
+  -webkit-backdrop-filter: var(--glass-filter-chip);
+  backdrop-filter: var(--glass-filter-chip);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+}
+.codex-search::placeholder { color: var(--text-faint); }
+.codex-search:focus { outline: none; border-color: var(--accent); }
+
+.codex-chiprow { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.codex-count { color: var(--text-faint); font-size: var(--text-xs); margin-bottom: var(--space-3); }
+
+.codex-cards {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.codex-card {
+  display: block;
+  height: 100%;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-faint);
+  background: var(--glass-sheen), var(--surface-glass);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  color: var(--text-primary) !important;
+  transition: var(--transition-hover);
+}
+.codex-card:hover { text-decoration: none !important; border-color: var(--border-hairline); box-shadow: var(--elevation-glass); }
+.codex-card h2 { font-size: var(--text-title); margin-top: var(--space-1); letter-spacing: var(--tracking-tight); }
+.codex-card-unit { color: var(--text-muted); font-size: var(--text-xs); }
+.codex-card-dek { margin-top: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary); }
+.codex-card-meta { margin-top: var(--space-3); font-size: var(--text-xs); color: var(--text-faint); }
+
+/* ---- Notes / empty states ------------------------------------------------ */
+
+.codex-note { margin: var(--space-4) 0; color: var(--text-muted); font-size: var(--text-sm); max-width: 68ch; }
+.codex-note-quiet { color: var(--text-faint); font-style: italic; }
+.codex-note-bad { color: var(--danger); font-style: normal; }
+.codex-empty { padding-top: var(--space-6); }
+.codex-empty h1 { font-size: clamp(24px, 4vw, 34px); }
+
+/* ---- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .codex-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  /* Mobile Wikipedia order: facts, then contents, then the article. */
+  .codex-infobox { position: static; order: -2; }
+  .codex-toc { position: static; order: -1; }
+  .codex-toc-spacer { display: none; }
+  .codex-toc-details { border: 1px solid var(--border-faint); border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); }
+  .codex-toc summary { border-bottom: none; padding-bottom: 0; }
+}
+
+@media (max-width: 640px) {
+  .codex-page { padding: var(--space-5) var(--space-4) var(--space-12); }
+  .codex-body { font-size: 16px; }
+  .codex-sites { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .codex-scroll { scroll-behavior: auto; }
+}

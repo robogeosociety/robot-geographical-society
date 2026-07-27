@@ -69,6 +69,35 @@ vault by the obsidian-automations `campsite_inventory` doit task. Availability i
 collected by the Cloudflare collector (see the "Availability data" section above).
 Full context: `data/CLAUDE.md`.
 
+## Campsite codex (the `/codex` viewer)
+
+`data/campsite-codex.db` is a **SQLite export of the Obsidian camping vault** — 192
+campground articles and 9,205 per-campsite notes as Markdown, in two tables
+(`codex_campground`, `codex_site`). The vault evicted that corpus; the SQLite store is
+now its canonical home, and a copy ships into this repo as a build input beside
+`data/campsites.json`. It is the **only** committed `*.db` under `data/` (see that
+directory's `.gitignore`).
+
+`web/scripts/build-codex.js` derives static JSON from it into `web/public/codex-data/`
+(gitignored) — an index of campground metadata plus, per campground, one article file
+and one site-bodies file. Markdown is parsed to a JSON AST at build time
+(`web/src/codex/markdown.js`) and rendered as React elements, so no vault prose is ever
+passed through `dangerouslySetInnerHTML`. `[[wikilinks]]` resolve to `/codex/<slug>`
+only when the target is a campground the artifact carries; everything else renders as
+plain text, never a dead link.
+
+```bash
+cd web
+npm run codex            # derive from data/campsite-codex.db (no-op + honest empty
+                         # state when the artifact is absent; also runs as prebuild)
+npm run codex:fixture    # build a small fixture db + derive from it, for local dev
+```
+
+The viewer is `web/src/codex/` at `/codex`, `/codex/:slug`, `/codex/:slug/site/:site`.
+It is the one route that does **not** mount the Mapbox shell — `web/src/Root.jsx`
+switches between the map cockpit and the codex reading surface. Requires Node ≥ 22.5
+(built-in `node:sqlite`) to build the artifact; everything downstream is plain JSON.
+
 ## Pull request descriptions
 
 PR descriptions follow the "newspaper / information-pyramid" framework vendored at

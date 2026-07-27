@@ -1030,6 +1030,21 @@ button.demand-row:hover .demand-row-name { color: var(--text); }
 }
 @media (max-width: 600px) { .telemetry-strip { display: none; } }
 
+/* Six view tabs no longer fit a phone-width masthead — the Codex tab is the one
+   that tipped it — so let the strip scroll sideways instead of clipping tabs
+   off the right edge. */
+@media (max-width: 720px) {
+  .nav-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab { flex: 0 0 auto; }
+  .brand { flex: 0 1 auto; min-width: 0; }
+}
+
 /* Pre-tiles backdrop: the gradient valley shows until Mapbox paints. */
 .map-container { background: var(--valley-sky); }
 

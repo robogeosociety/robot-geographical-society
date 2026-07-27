@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Routes, Route, Navigate, NavLink } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import mapboxgl from 'mapbox-gl';
 import { MapContext } from './map/MapContext';
+import TopBar from './components/TopBar.jsx';
 import {
   MAP_STYLE, MAP_LIGHT_PRESET, MAP_PITCH, TERRAIN_EXAGGERATION, WA_BOUNDS,
 } from './constants';
-import logoUrl from './ds/assets/logo.svg';
 import AvailabilityView from './views/AvailabilityView';
 import DemandView from './views/DemandView';
 import CalendarView from './views/CalendarView';
@@ -122,19 +122,7 @@ export default function App() {
   return (
     <MapContext.Provider value={{ map, ready }}>
       <div className="app">
-        <header className="topbar">
-          <div className="brand">
-            <img className="brand-logo" src={logoUrl} alt="" aria-hidden="true" />
-            Robot Geographical Society
-          </div>
-          <nav className="nav-tabs">
-            <NavLink to="/availability" className="nav-tab">Availability</NavLink>
-            <NavLink to="/demand" className="nav-tab">Demand</NavLink>
-            <NavLink to="/calendar" className="nav-tab">Calendar</NavLink>
-            <NavLink to="/watch" className="nav-tab">Watch</NavLink>
-            <NavLink to="/collectors" className="nav-tab">Collectors</NavLink>
-          </nav>
-        </header>
+        <TopBar />
 
         <div className="map-wrapper">
           {mapError && (

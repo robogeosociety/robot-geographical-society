@@ -66,6 +66,17 @@ test.describe('Robot Geographical Society - Integration', () => {
     await expect(page.getByText('Fleet health')).toBeVisible();
   });
 
+  // The codex is the one route that does NOT mount the map shell, and it reads
+  // static JSON rather than the backend. It renders in every build — with the
+  // artifact present it lists campgrounds, without it, an honest empty state —
+  // so this asserts the shell and the nav, which hold either way.
+  test('codex renders its own (map-free) shell', async ({ page }) => {
+    await page.goto(`${BASE_URL}/codex`, { waitUntil: 'domcontentloaded' });
+    await expect(page.getByRole('heading', { name: 'Campsite Codex' })).toBeVisible();
+    await expect(page.locator('.map-container')).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /Availability/i })).toBeVisible();
+  });
+
   test('clicking a nav tab switches the route', async ({ page }) => {
     await page.goto(`${BASE_URL}/availability`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('link', { name: /Collectors/i }).click();
