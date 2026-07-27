@@ -117,10 +117,27 @@ Each of these actually happened on 2026-07-26:
 Phase 2 is the one to prove first: it is the exact configuration that was live before, and
 the only one whose failure mode we have already seen in production.
 
-## Open questions
+## Decisions (2026-07-27)
 
-1. **Which repos get branch protection first** — discobots and supervisor, or all seven private repos at once?
-2. **Does the App's merge survive required checks?** The merge gate merges via the App; if
-   "do not allow bypassing" is set, that path needs verifying before Tier 1 relies on it.
-3. **Is `human-gate` worth a second environment**, or should Tier 1 simply reuse `production`
-   with both an App rule and a required reviewer?
+1. **Branch protection lands on `discobots` + `supervisor` first.** Enough surface to find
+   friction — active CI, a self-hosted-runner lane, the wiki render — while a bad rule stays
+   a two-repo fix. Extend after a week of real PRs.
+2. **Admins and the App keep a bypass.** Tonight is the argument: repairing a broken gate
+   needed direct pushes and manual merges. A rule you cannot override during an incident
+   *becomes* the incident. The merge gate's App path therefore stays viable even if a check
+   lane is itself broken — which also settles the open question about App merges under
+   required checks: it is allowed to bypass, so it cannot be locked out.
+3. **No separate `human-gate`.** Tier 1 reuses `production`, carrying **both** an App custom
+   rule and a required reviewer. Fewer moving parts; the accepted cost is coupling — a change
+   to the environment's config affects routine deploys and human steps together.
+
+   The required reviewer on `production` is what preserves the property `human-gate` existed
+   for: approval that does not depend on the Discord Worker. If the Worker is down, the run
+   still pauses and can be approved in the GitHub UI.
+
+## Still to verify during rollout
+
+- Whether a required reviewer on `production` changes the behaviour of the App's custom rule
+  (both attached to one environment is the untested combination this decision creates).
+- Whether `AUTO_APPROVE_ACTORS` self-dispatch still short-circuits when a required reviewer
+  is also present — if not, Tier 2 gets a second tap it was designed to avoid.
