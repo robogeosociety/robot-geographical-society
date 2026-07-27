@@ -6,11 +6,12 @@
  *
  * Output shape (served from `web/public/codex-data/`):
  *
- *   index.json            — every campground's METADATA (no bodies). ~200 rows,
- *                           the search/filter corpus for the index page.
- *   cg/<slug>.json        — one article: parsed body AST, ToC, footnotes, and
- *                           the loop → site roster (labels only).
- *   cg/<slug>.sites.json  — that campground's site bodies, keyed by site key.
+ *   index.json            — every campground's METADATA (no bodies) + the
+ *                           reference list. The search/filter corpus.
+ *   cg/<slug>.json        — one campground article: body AST, ToC, footnotes,
+ *                           and the loop → site roster (labels only).
+ *   cg/<slug>.sites.json  — that campground's site bodies, keyed by site_slug.
+ *   ref/<slug>.json       — one shared reference article.
  *
  * The split matters: the campground page never downloads several hundred site
  * bodies just to draw a roster, and the site page pulls exactly one extra file
@@ -24,82 +25,81 @@ export function codexHref(slug) {
   return `/codex/${slug}`;
 }
 
-/** Article href for one site within a campground. */
-export function siteHref(slug, key) {
-  return `/codex/${slug}/site/${key}`;
+/** Article href for one site within a campground (keyed on `codex_site.site_slug`). */
+export function siteHref(slug, siteSlug) {
+  return `/codex/${slug}/site/${siteSlug}`;
+}
+
+/** Article href for a shared reference note. */
+export function refHref(slug) {
+  return `/codex/reference/${slug}`;
 }
 
 /**
- * A wikilink resolver over a known set of campgrounds.
+ * Reference rows that are not articles.
+ *
+ * `campsite-template` is the blank note new campground pages are stamped from —
+ * it lives beside the real reference notes and therefore rides along in the
+ * export, but it has no reader-facing content. Dropping it here removes it from
+ * the index AND from the resolver, so a stray `[[Campsite template]]` link
+ * degrades to plain text rather than opening a page of empty headings.
+ */
+export const NON_ARTICLE_REFERENCES = new Set(['campsite-template']);
+
+/**
+ * A wikilink resolver over the codex's two article tables.
  *
  * Obsidian resolves `[[Adams Fork]]` by NOTE TITLE, and the exporter's slug is
  * derived from that same title — so matching is: exact slug, then slugified
  * title, then a punctuation-insensitive fold of the name (so `[[Heart O' the
- * Hills]]` and `[[Heart O the Hills]]` land in the same place). Anything with
- * no hit returns null and renders as plain text.
+ * Hills]]` and `[[Heart O the Hills]]` land in the same place).
  *
- * Ambiguity is resolved by refusing: if two campgrounds fold to the same key we
- * drop the key entirely rather than send readers to a coin-flip article.
+ * Campgrounds are matched first and references second: a campground is the more
+ * specific thing, and a reference note is named for a unit or a topic. Anything
+ * with no hit in either table returns null and renders as plain text.
+ *
+ * Ambiguity is resolved by refusing: if two entries in the same tier fold to
+ * the same key we drop the key rather than send readers to a coin-flip article.
+ * (The shipped corpus has no duplicate campground names, so this branch is dead
+ * today — it is kept because a future export cannot promise that.)
  */
-export function buildResolver(campgrounds) {
-  const bySlug = new Map();
-  const byFold = new Map();
-  const ambiguous = new Set();
-
+export function buildResolver(campgrounds, references = []) {
   const fold = (s) => slugify(String(s).replace(/['’]/g, ''));
 
-  for (const cg of campgrounds) {
-    bySlug.set(cg.slug, cg.slug);
-    for (const key of [fold(cg.slug), fold(cg.name)]) {
-      if (!key) continue;
-      if (byFold.has(key) && byFold.get(key) !== cg.slug) ambiguous.add(key);
-      else byFold.set(key, cg.slug);
+  const tier = (rows, href) => {
+    const bySlug = new Map();
+    const byFold = new Map();
+    const ambiguous = new Set();
+    for (const row of rows) {
+      bySlug.set(row.slug, row.slug);
+      for (const key of [fold(row.slug), fold(row.name)]) {
+        if (!key) continue;
+        if (byFold.has(key) && byFold.get(key) !== row.slug) ambiguous.add(key);
+        else byFold.set(key, row.slug);
+      }
     }
-  }
-  for (const key of ambiguous) byFold.delete(key);
+    for (const key of ambiguous) byFold.delete(key);
+    return (leaf) => {
+      const slug = bySlug.get(leaf) || byFold.get(fold(leaf));
+      return slug ? href(slug) : null;
+    };
+  };
+
+  const tiers = [
+    tier(campgrounds, codexHref),
+    tier(references.filter((r) => !NON_ARTICLE_REFERENCES.has(r.slug)), refHref),
+  ];
 
   return (target) => {
     if (!target) return null;
-    const raw = String(target).trim();
     // Obsidian links may carry a folder path — only the leaf is the note title.
-    const leaf = raw.split('/').pop();
-    const slug = bySlug.get(leaf) || byFold.get(fold(leaf));
-    return slug ? codexHref(slug) : null;
-  };
-}
-
-/**
- * `codex_campground.guid` is NULL in the artifact by design — `campsite_inventory`
- * owns that identity in `backend/src/campsites-index.json`. Rather than invent
- * one, we JOIN to the inventory (read-only; that file belongs to another
- * automation and is never written here) so an article can state which inventory
- * entry it describes.
- *
- * Match order: `official_url`, then a folded name. Anything unmatched keeps a
- * null guid — the article renders fine without one.
- */
-export function joinInventory(campgrounds, inventory = []) {
-  const fold = (s) => slugify(String(s || '').replace(/['’]/g, ''));
-  const byUrl = new Map();
-  const byName = new Map();
-  for (const e of inventory) {
-    const guid = e.guid || null;
-    if (!guid) continue;
-    for (const u of [e.reservation_url, e.official_url, e.url]) {
-      if (u) byUrl.set(String(u).replace(/\/+$/, ''), guid);
+    const leaf = String(target).trim().split('/').pop();
+    for (const t of tiers) {
+      const href = t(leaf);
+      if (href) return href;
     }
-    const key = fold(e.name);
-    if (key && !byName.has(key)) byName.set(key, guid);
-  }
-
-  let matched = 0;
-  const out = campgrounds.map((cg) => {
-    const url = cg.official_url ? String(cg.official_url).replace(/\/+$/, '') : null;
-    const guid = cg.guid || (url && byUrl.get(url)) || byName.get(fold(cg.name)) || null;
-    if (guid) matched += 1;
-    return { ...cg, guid };
-  });
-  return { campgrounds: out, matched, total: campgrounds.length };
+    return null;
+  };
 }
 
 /**
@@ -111,27 +111,6 @@ export function joinInventory(campgrounds, inventory = []) {
  */
 export function compareSiteLabels(a, b) {
   return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: 'base' });
-}
-
-/**
- * The URL key for a site.
- *
- * The schema's site labels are only unique per (campground, loop), so a bare
- * `011` can collide across loops. We key on the label when it is unique in the
- * campground and fall back to `<label>--<loop-slug>` when it is not — stable,
- * readable, and computed once at build time so the router never has to
- * disambiguate at read time.
- */
-export function siteKeys(sites) {
-  const counts = new Map();
-  for (const s of sites) counts.set(s.site, (counts.get(s.site) || 0) + 1);
-  const keys = new Map();
-  for (const s of sites) {
-    const base = slugify(s.site) || String(s.id);
-    const key = counts.get(s.site) > 1 ? `${base}--${slugify(s.loop || 'loop')}` : base;
-    keys.set(s.id, key);
-  }
-  return keys;
 }
 
 function parseHazards(raw) {
@@ -165,14 +144,20 @@ function meta(cg) {
   };
 }
 
-/** Group a campground's sites into loops, in label order. */
-export function groupLoops(sites, keys) {
+/**
+ * Group a campground's sites into loops, in label order.
+ *
+ * `site_slug` is the artifact's own routing key — unique per campground under a
+ * UNIQUE INDEX — so the viewer routes on it directly and never has to
+ * disambiguate labels that repeat across loops.
+ */
+export function groupLoops(sites) {
   const loops = new Map();
   for (const s of sites) {
     const name = s.loop || 'Ungrouped';
     if (!loops.has(name)) loops.set(name, { name, slug: slugify(name) || 'ungrouped', sites: [] });
     loops.get(name).sites.push({
-      key: keys.get(s.id),
+      key: s.site_slug,
       site: s.site,
       type: s.type ?? null,
       use: s.use ?? null,
@@ -188,11 +173,15 @@ export function groupLoops(sites, keys) {
 /**
  * Build the full static payload.
  *
- * @param {{campgrounds: object[], sites: object[]}} rows  raw table rows
- * @returns {{index: object, articles: Map<string, object>, siteBundles: Map<string, object>}}
+ * @param {{campgrounds: object[], sites: object[], references: object[]}} rows
+ * @returns {{index, articles: Map, siteBundles: Map, referenceArticles: Map}}
  */
-export function buildCodex({ campgrounds = [], sites = [] }, { generated = new Date().toISOString() } = {}) {
-  const resolve = buildResolver(campgrounds);
+export function buildCodex(
+  { campgrounds = [], sites = [], references = [] },
+  { generated = new Date().toISOString() } = {},
+) {
+  const articleRefs = references.filter((r) => !NON_ARTICLE_REFERENCES.has(r.slug));
+  const resolve = buildResolver(campgrounds, articleRefs);
 
   const byCg = new Map();
   for (const s of sites) {
@@ -208,13 +197,12 @@ export function buildCodex({ campgrounds = [], sites = [] }, { generated = new D
     const m = meta(cg);
     const { blocks, toc, footnotes } = parseMarkdown(cg.body, { resolve, dropTitle: true });
     const mine = byCg.get(cg.slug) || [];
-    const keys = siteKeys(mine);
-    const loops = groupLoops(mine, keys);
+    const loops = groupLoops(mine);
 
     articles.set(cg.slug, {
       ...m,
-      // The stored `site_count` is the exporter's number; `sites` is what we
-      // actually carry. Showing both keeps a partial export honest.
+      // The stored `site_count` is the exporter's number; `sites_present` is
+      // what we actually carry. Showing both keeps a partial export honest.
       sites_present: mine.length,
       body: blocks,
       toc,
@@ -225,8 +213,8 @@ export function buildCodex({ campgrounds = [], sites = [] }, { generated = new D
     const bundle = {};
     for (const s of mine) {
       const parsed = parseMarkdown(s.body, { resolve, dropTitle: true });
-      bundle[keys.get(s.id)] = {
-        key: keys.get(s.id),
+      bundle[s.site_slug] = {
+        key: s.site_slug,
         site: s.site,
         loop: s.loop ?? null,
         type: s.type ?? null,
@@ -250,19 +238,41 @@ export function buildCodex({ campgrounds = [], sites = [] }, { generated = new D
     });
   }
 
+  const referenceArticles = new Map();
+  const referenceRows = [];
+  for (const ref of [...articleRefs].sort((a, b) => a.name.localeCompare(b.name))) {
+    const { blocks, toc, footnotes } = parseMarkdown(ref.body, { resolve, dropTitle: true });
+    referenceArticles.set(ref.slug, {
+      slug: ref.slug,
+      name: ref.name,
+      updated: ref.updated ?? null,
+      body: blocks,
+      toc,
+      footnotes,
+    });
+    referenceRows.push({
+      slug: ref.slug,
+      name: ref.name,
+      updated: ref.updated ?? null,
+      summary: summarize(blocks, 160),
+    });
+  }
+
   const index = {
     available: true,
     generated,
     counts: {
       campgrounds: indexRows.length,
       sites: sites.length,
+      references: referenceRows.length,
       agencies: [...new Set(indexRows.map((r) => r.agency).filter(Boolean))].sort(),
       hazards: [...new Set(indexRows.flatMap((r) => r.hazards))].sort(),
     },
     campgrounds: indexRows,
+    references: referenceRows,
   };
 
-  return { index, articles, siteBundles };
+  return { index, articles, siteBundles, referenceArticles };
 }
 
 /** The index page's client-side filter. Exported so it can be tested directly. */

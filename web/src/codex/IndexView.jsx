@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AgencyTag, FilterChip, agencyMeta } from '../ds';
-import { codexHref, filterCampgrounds } from './build.js';
+import { codexHref, filterCampgrounds, refHref } from './build.js';
 import { loadIndex } from './data.js';
 import { useResource } from './useResource.js';
 
@@ -20,6 +20,7 @@ export default function IndexView() {
   const [reservable, setReservable] = useState(null);
 
   const rows = useMemo(() => data?.campgrounds || [], [data]);
+  const refs = useMemo(() => data?.references || [], [data]);
   const shown = useMemo(
     () => filterCampgrounds(rows, { q, agency, hazard, reservable }),
     [rows, q, agency, hazard, reservable],
@@ -53,9 +54,10 @@ export default function IndexView() {
         <h1>Campsite Codex</h1>
         <p className="codex-dek">
           The camping vault&rsquo;s field notes, one article per campground —
-          {' '}<strong className="codex-num">{counts.campgrounds}</strong> campgrounds and
-          {' '}<strong className="codex-num">{counts.sites}</strong> individual sites,
-          exported {data.generated?.slice(0, 10)}.
+          {' '}<strong className="codex-num">{counts.campgrounds}</strong> campgrounds,
+          {' '}<strong className="codex-num">{counts.sites}</strong> individual sites and
+          {' '}<strong className="codex-num">{counts.references ?? 0}</strong> shared
+          reference notes, exported {data.generated?.slice(0, 10)}.
         </p>
       </header>
 
@@ -115,6 +117,26 @@ export default function IndexView() {
       </ul>
 
       {shown.length === 0 && <p className="codex-note">No campground matches those filters.</p>}
+
+      {refs.length > 0 && (
+        <section className="codex-refs" aria-labelledby="codex-refs-h">
+          <h2 id="codex-refs-h" className="codex-h">Reference notes</h2>
+          <p className="codex-note">
+            The cross-cutting pages the campground articles link into — forest and park
+            units, the hazard explainers, and the booking primers.
+          </p>
+          <ul className="codex-reflist">
+            {refs.map((r) => (
+              <li key={r.slug}>
+                <Link to={refHref(r.slug)} className="codex-refcard">
+                  <span className="codex-refcard-name">{r.name}</span>
+                  {r.summary && <span className="codex-refcard-dek">{r.summary}</span>}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

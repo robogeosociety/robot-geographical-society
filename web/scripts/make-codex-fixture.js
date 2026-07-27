@@ -48,6 +48,7 @@ CREATE TABLE codex_site (
     id                INTEGER PRIMARY KEY,
     campground_slug   TEXT NOT NULL REFERENCES codex_campground(slug),
     site              TEXT NOT NULL,
+    site_slug         TEXT NOT NULL,
     loop              TEXT,
     type              TEXT,
     use               TEXT,
@@ -58,6 +59,14 @@ CREATE TABLE codex_site (
     updated           TEXT NOT NULL
 );
 CREATE INDEX codex_site_cg ON codex_site (campground_slug, loop, site);
+CREATE UNIQUE INDEX codex_site_slug ON codex_site (campground_slug, site_slug);
+
+CREATE TABLE codex_reference (
+    slug     TEXT PRIMARY KEY,
+    name     TEXT NOT NULL,
+    body     TEXT NOT NULL,
+    updated  TEXT NOT NULL
+);
 `;
 
 if (existsSync(OUT)) rmSync(OUT);
@@ -66,7 +75,7 @@ mkdirSync(dirname(OUT), { recursive: true });
 const db = new DatabaseSync(OUT);
 db.exec(SCHEMA);
 
-const { campgrounds, sites } = fixtureRows();
+const { campgrounds, sites, references } = fixtureRows();
 
 const insertCg = db.prepare(`INSERT INTO codex_campground
   (slug, name, guid, agency, agency_full, unit, lat, lng, elev_m, reservable, hazards, official_url, body, site_count, updated)
@@ -77,12 +86,17 @@ for (const c of campgrounds) {
 }
 
 const insertSite = db.prepare(`INSERT INTO codex_site
-  (id, campground_slug, site, loop, type, use, reservable, provider_site_id, official_url, body, updated)
-  VALUES (?,?,?,?,?,?,?,?,?,?,?)`);
+  (id, campground_slug, site, site_slug, loop, type, use, reservable, provider_site_id, official_url, body, updated)
+  VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`);
 for (const s of sites) {
-  insertSite.run(s.id, s.campground_slug, s.site, s.loop, s.type, s.use, s.reservable,
+  insertSite.run(s.id, s.campground_slug, s.site, s.site_slug, s.loop, s.type, s.use, s.reservable,
     s.provider_site_id, s.official_url, s.body, s.updated);
 }
 
+const insertRef = db.prepare(
+  'INSERT INTO codex_reference (slug, name, body, updated) VALUES (?,?,?,?)',
+);
+for (const r of references) insertRef.run(r.slug, r.name, r.body, r.updated);
+
 db.close();
-console.log(`codex fixture: ${campgrounds.length} campgrounds, ${sites.length} sites → ${OUT}`);
+console.log(`codex fixture: ${campgrounds.length} campgrounds, ${sites.length} sites, ${references.length} references → ${OUT}`);

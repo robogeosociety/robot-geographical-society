@@ -20,7 +20,9 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # >= 22.5 for the built-in `node:sqlite` — the codex build step reads
+          # data/campsite-codex.db with it (web/scripts/build-codex.js).
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -97,7 +99,9 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # >= 22.5 for the built-in `node:sqlite` — the codex build step reads
+          # data/campsite-codex.db with it (web/scripts/build-codex.js).
+          node-version: '22'
           cache: 'npm'
           cache-dependency-path: web/package-lock.json
 
@@ -116,6 +120,14 @@ jobs:
         run: |
           cd backend && npm install
           cd ../web && npm install
+
+      # `npm run build` would carry this as its `prebuild` hook, but the deploy
+      # calls `vite build` directly (to skip the e2e postbuild), so the codex
+      # derivation has to be its own step or production ships an empty codex.
+      - name: Derive the campsite codex
+        if: steps.gate.outputs.go == 'true'
+        working-directory: web
+        run: npm run codex
 
       - name: Build web (production bundle)
         if: steps.gate.outputs.go == 'true'

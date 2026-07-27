@@ -4,6 +4,7 @@ import TopBar from '../components/TopBar.jsx';
 import IndexView from './IndexView.jsx';
 import CampgroundView from './CampgroundView.jsx';
 import SiteView from './SiteView.jsx';
+import ReferenceView from './ReferenceView.jsx';
 import './codex.css';
 
 /**
@@ -77,6 +78,9 @@ export default function CodexApp() {
         <div className="codex-page">
           <Routes>
             <Route path="/codex" element={<IndexView />} />
+            {/* Static segment, so it outranks `/codex/:slug` — no campground
+                slug may be "reference" (none is). */}
+            <Route path="/codex/reference/:slug" element={<ReferenceView />} />
             <Route path="/codex/:slug" element={<CampgroundView />} />
             <Route path="/codex/:slug/site/:site" element={<SiteView />} />
           </Routes>

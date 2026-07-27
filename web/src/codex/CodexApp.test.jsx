@@ -13,6 +13,7 @@ const CG = [
     name: 'Adams Fork',
     agency: 'usfs',
     agency_full: 'US Forest Service',
+    guid: 'dec6235f-1c72-5fd6-abc0-d9c67fff8c51',
     unit: 'Gifford Pinchot NF',
     lat: 46.3411,
     lng: -121.5442,
@@ -20,7 +21,7 @@ const CG = [
     reservable: 1,
     hazards: '["weather","lahar"]',
     official_url: 'https://www.recreation.gov/camping/campgrounds/232473',
-    body: '# Adams Fork\n\n![[heading-adams-fork.jpg]]\n*Photo: Lowe, Jet — Public domain*\n\nAt the confluence, near [[Takhlakh Lake]] and [[Weather & winter]].\n\n## Access\n\nFR-21 from Randle.\n\n## Hazards\n\nLahar, distal.\n',
+    body: '# Adams Fork\n\n![[heading-adams-fork.jpg]]\n*Photo: Lowe, Jet — Public domain*\n\nAt the confluence, near [[Takhlakh Lake]], in the [[Gifford Pinchot NF]]; see [[Travel times]].\n\n## Access\n\nFR-21 from Randle.\n\n## Hazards\n\nLahar, distal.\n',
     site_count: 4,
     updated: '2026-07-24T09:12:00Z',
   },
@@ -46,19 +47,37 @@ const CG = [
   },
 ];
 
+// Site bodies are the H1 plus the blockquote — the exporter strips the metadata
+// bullets that the structured facts strip already carries.
 const SITES = [
-  { id: 1, campground_slug: 'adams-fork', site: '002', loop: 'AREA ADAMS FORK', type: 'STANDARD NONELECTRIC', use: 'Overnight', reservable: 1, provider_site_id: '82921', official_url: 'https://www.recreation.gov/camping/campsites/82921', body: '# Adams Fork — 002\n\n> Site 002 in AREA ADAMS FORK at [[Adams Fork]].\n', updated: 'u' },
-  { id: 2, campground_slug: 'adams-fork', site: '011', loop: 'AREA ADAMS FORK', type: 'STANDARD NONELECTRIC', use: 'Overnight', reservable: 1, provider_site_id: '82922', official_url: 'https://www.recreation.gov/camping/campsites/82922', body: '# Adams Fork — 011\n\n> Site 011 in AREA ADAMS FORK at [[Adams Fork]]. Canonical data from recreation.gov.\n', updated: 'u' },
-  { id: 3, campground_slug: 'adams-fork', site: '012', loop: 'AREA ADAMS FORK', type: 'TENT ONLY NONELECTRIC', use: 'Overnight', reservable: 1, provider_site_id: '82923', official_url: null, body: '# Adams Fork — 012\n', updated: 'u' },
-  { id: 4, campground_slug: 'deception-pass', site: '001', loop: 'CRANBERRY LAKE', type: null, use: null, reservable: 1, provider_site_id: '1', official_url: null, body: '# Deception Pass — 001\n', updated: 'u' },
-  { id: 5, campground_slug: 'deception-pass', site: '001', loop: 'QUARRY POND', type: null, use: null, reservable: 1, provider_site_id: '2', official_url: null, body: '# Deception Pass — 001 (Quarry Pond)\n', updated: 'u' },
+  { id: 1, campground_slug: 'adams-fork', site: '002', site_slug: '002', loop: 'AREA ADAMS FORK', type: 'STANDARD NONELECTRIC', use: 'Overnight', reservable: 1, provider_site_id: '82921', official_url: 'https://www.recreation.gov/camping/campsites/82921', body: '# Adams Fork — 002\n\n> Site 002 in AREA ADAMS FORK at [[Adams Fork]].\n', updated: 'u' },
+  { id: 2, campground_slug: 'adams-fork', site: '011', site_slug: '011', loop: 'AREA ADAMS FORK', type: 'STANDARD NONELECTRIC', use: 'Overnight', reservable: 1, provider_site_id: '82922', official_url: 'https://www.recreation.gov/camping/campsites/82922', body: '# Adams Fork — 011\n\n> Site 011 in AREA ADAMS FORK at [[Adams Fork]]. Canonical data from recreation.gov.\n', updated: 'u' },
+  { id: 3, campground_slug: 'adams-fork', site: '012', site_slug: '012', loop: 'AREA ADAMS FORK', type: 'TENT ONLY NONELECTRIC', use: 'Overnight', reservable: 1, provider_site_id: '82923', official_url: null, body: '# Adams Fork — 012\n', updated: 'u' },
+  // Colliding labels: the exporter appends the provider id to the site_slug.
+  { id: 4, campground_slug: 'deception-pass', site: '001', site_slug: '001-80131', loop: 'CRANBERRY LAKE', type: null, use: null, reservable: 1, provider_site_id: '80131', official_url: null, body: '# Deception Pass — 001\n', updated: 'u' },
+  { id: 5, campground_slug: 'deception-pass', site: '001', site_slug: '001-80767', loop: 'QUARRY POND', type: null, use: null, reservable: 1, provider_site_id: '80767', official_url: null, body: '# Deception Pass — 001 (Quarry Pond)\n', updated: 'u' },
+];
+
+const REFS = [
+  {
+    slug: 'gifford-pinchot-nf',
+    name: 'Gifford Pinchot NF',
+    body: '# Gifford Pinchot NF\n\nThe south Washington Cascades.\n\n## Campgrounds\n\n[[Adams Fork]], [[Takhlakh Lake]]\n',
+    updated: '2026-07-24T09:12:00Z',
+  },
+  {
+    slug: 'campsite-template',
+    name: 'Campsite template',
+    body: '# Campsite template\n\n## Access\n',
+    updated: '2026-07-24T09:12:00Z',
+  },
 ];
 
 let built;
 let missing; // when true, serve the "artifact not shipped" index
 
 beforeEach(() => {
-  built = buildCodex({ campgrounds: CG, sites: SITES }, { generated: '2026-07-26T00:00:00Z' });
+  built = buildCodex({ campgrounds: CG, sites: SITES, references: REFS }, { generated: '2026-07-26T00:00:00Z' });
   missing = false;
   _resetCodexCache();
   vi.spyOn(global, 'fetch').mockImplementation((url) => {
@@ -70,6 +89,8 @@ beforeEach(() => {
     }
     const site = /\/cg\/(.+)\.sites\.json$/.exec(u);
     if (site) return maybe(built.siteBundles.get(site[1]), u);
+    const ref = /\/ref\/(.+)\.json$/.exec(u);
+    if (ref) return maybe(built.referenceArticles.get(ref[1]), u);
     const cg = /\/cg\/(.+)\.json$/.exec(u);
     if (cg) return maybe(built.articles.get(cg[1]), u);
     return Promise.resolve({ ok: false, status: 404 });
@@ -143,12 +164,16 @@ describe('campground article', () => {
 
     // Body prose + a resolved cross-reference to another article.
     expect(screen.getByRole('link', { name: 'Takhlakh Lake' })).toHaveAttribute('href', '/codex/takhlakh-lake');
-    // ...and an unresolved reference note that stayed plain text.
-    expect(screen.queryByRole('link', { name: 'Weather & winter' })).not.toBeInTheDocument();
+    // ...a link up into the reference tier...
+    expect(screen.getByRole('link', { name: 'Gifford Pinchot NF' }))
+      .toHaveAttribute('href', '/codex/reference/gifford-pinchot-nf');
+    // ...and a note in neither table, which stayed plain text.
+    expect(screen.queryByRole('link', { name: 'Travel times' })).not.toBeInTheDocument();
 
     const box = within(screen.getByRole('complementary', { name: /Adams Fork facts/ }));
     expect(box.getByText('Gifford Pinchot NF')).toBeInTheDocument();
     expect(box.getByText('46.3411°N 121.5442°W')).toBeInTheDocument();
+    expect(box.getByText('dec6235f-1c72-5fd6-abc0-d9c67fff8c51')).toBeInTheDocument();
     expect(box.getByText('lahar')).toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: '011' })).toHaveAttribute('href', '/codex/adams-fork/site/011');
@@ -174,8 +199,8 @@ describe('campground article', () => {
     expect(screen.getByRole('heading', { level: 3, name: /QUARRY POND/ })).toBeInTheDocument();
     const links = screen.getAllByRole('link', { name: '001' }).map((a) => a.getAttribute('href'));
     expect(links).toEqual([
-      '/codex/deception-pass/site/001--cranberry-lake',
-      '/codex/deception-pass/site/001--quarry-pond',
+      '/codex/deception-pass/site/001-80131',
+      '/codex/deception-pass/site/001-80767',
     ]);
   });
 
@@ -194,6 +219,34 @@ describe('campground article', () => {
 
   it('reports a slug the codex does not carry instead of hanging', async () => {
     renderAt('/codex/not-a-campground');
+    expect(await screen.findByRole('heading', { name: 'Not in the codex' })).toBeInTheDocument();
+  });
+});
+
+describe('reference notes', () => {
+  it('lists the reference notes on the index, minus the note template', async () => {
+    renderAt('/codex');
+    const section = within(await screen.findByRole('region', { name: /Reference notes/i }));
+    expect(section.getByRole('link', { name: /Gifford Pinchot NF/ }))
+      .toHaveAttribute('href', '/codex/reference/gifford-pinchot-nf');
+    expect(section.queryByText(/Campsite template/i)).not.toBeInTheDocument();
+  });
+
+  it('renders a reference article that links back down to campgrounds', async () => {
+    renderAt('/codex/reference/gifford-pinchot-nf');
+    expect(await screen.findByRole('heading', { level: 1, name: 'Gifford Pinchot NF' })).toBeInTheDocument();
+    expect(screen.getByText('Shared reference note')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Adams Fork' })).toHaveAttribute('href', '/codex/adams-fork');
+  });
+
+  it('has no infobox — there is no structured row behind a reference', async () => {
+    renderAt('/codex/reference/gifford-pinchot-nf');
+    await screen.findByRole('heading', { level: 1, name: 'Gifford Pinchot NF' });
+    expect(screen.queryByRole('complementary')).not.toBeInTheDocument();
+  });
+
+  it('reports a reference slug the codex does not carry', async () => {
+    renderAt('/codex/reference/campsite-template');
     expect(await screen.findByRole('heading', { name: 'Not in the codex' })).toBeInTheDocument();
   });
 });

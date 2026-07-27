@@ -77,6 +77,30 @@ test.describe('Robot Geographical Society - Integration', () => {
     await expect(page.getByRole('link', { name: /Availability/i })).toBeVisible();
   });
 
+  // Walks the nesting for real: index → campground → campsite. Skips when the
+  // build has no artifact (a clone that has not fetched data/campsite-codex.db),
+  // so it asserts hard when there is something to assert against.
+  test('codex nests index → campground → campsite', async ({ page }) => {
+    await page.goto(`${BASE_URL}/codex`, { waitUntil: 'domcontentloaded' });
+    const cards = page.locator('.codex-card');
+    await expect(page.getByRole('heading', { name: 'Campsite Codex' })).toBeVisible();
+    if ((await cards.count()) === 0) {
+      test.skip(true, 'no codex artifact in this build');
+      return;
+    }
+
+    await cards.first().click();
+    await expect(page).toHaveURL(/\/codex\/[a-z0-9-]+$/);
+    await expect(page.locator('.codex-infobox')).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Contents' })).toBeVisible();
+
+    const site = page.locator('.codex-site-chip').first();
+    await site.click();
+    await expect(page).toHaveURL(/\/codex\/[a-z0-9-]+\/site\/[a-z0-9-]+$/i);
+    const crumbs = page.getByRole('navigation', { name: 'Breadcrumb' });
+    await expect(crumbs.getByRole('link', { name: 'Codex' })).toBeVisible();
+  });
+
   test('clicking a nav tab switches the route', async ({ page }) => {
     await page.goto(`${BASE_URL}/availability`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('link', { name: /Collectors/i }).click();

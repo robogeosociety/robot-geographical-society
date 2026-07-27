@@ -6,10 +6,11 @@
  * no auth, and no backend call on this path — the codex renders even when the
  * Worker is unreachable.
  *
- * Three fetches at most for any page:
- *   index       once, ~200 metadata rows — powers search and the index page
+ * Four kinds of fetch, at most two per page:
+ *   index       once, 192 metadata rows + 23 references — powers search
  *   article     per campground — body AST, ToC, loop roster
  *   siteBundle  per campground — every site body, fetched only on a site page
+ *   reference   per shared reference note (unit / hazard / booking primers)
  *
  * Each is memoised as a PROMISE, so concurrent callers share one request and a
  * re-visit is free. Failures are evicted so a retry actually retries.
@@ -45,6 +46,11 @@ export function loadCampground(slug) {
 /** Every site body for one campground, keyed by site key. */
 export function loadSiteBundle(slug) {
   return once(`sites:${slug}`, () => getJSON(`${base()}/cg/${encodeURIComponent(slug)}.sites.json`));
+}
+
+/** One shared reference note. */
+export function loadReference(slug) {
+  return once(`ref:${slug}`, () => getJSON(`${base()}/ref/${encodeURIComponent(slug)}.json`));
 }
 
 /** Test-only — drop the memoised promises. */

@@ -9,13 +9,17 @@
  * It is deliberately shaped to hit the awkward cases the real export contains:
  *
  *   - a very rich body (headings, GFM table, callout, footnotes, `![[embeds]]`
- *     with attribution lines, wikilinks to both known and unknown notes)
+ *     with attribution lines, wikilinks to campgrounds, to reference notes, and
+ *     to notes that are in neither table)
  *   - a campground with ZERO sites (the codex only covered reservable
  *     recreation.gov campgrounds)
  *   - a single-loop campground (must not render a pointless nesting level)
- *   - a multi-loop campground whose site labels COLLIDE across loops
+ *   - a multi-loop campground whose site LABELS collide across loops, so their
+ *     `site_slug`s carry the provider id
  *   - NULL loops, NULL types, non-reservable campgrounds
  *   - zero-padded string site labels
+ *   - a `campsite-template` reference row, which is a note template and must
+ *     never reach the index or the resolver
  */
 
 const ADAMS_FORK_BODY = `# Adams Fork
@@ -364,6 +368,91 @@ const CAMPGROUNDS = [
   },
 ];
 
+/**
+ * `codex_reference` — the shared notes campground articles link into. Slugs
+ * fold exactly like campground slugs, and `campsite-template` is deliberately
+ * present so the build's exclusion of it is exercised.
+ */
+const REFERENCES = [
+  {
+    slug: 'gifford-pinchot-nf',
+    name: 'Gifford Pinchot NF',
+    body: `# Gifford Pinchot NF
+
+Spans the south Washington Cascades around Mt. Adams, Mt. St. Helens, and the
+Cispus/Lewis river country — some of the state's best dispersed camping.
+
+## Campgrounds in this forest
+
+**Reservable:** [[Adams Fork]], [[Takhlakh Lake]]
+
+For booking see [[Reservation systems]]; for the general rules see
+[[Dispersed camping & parking]].
+`,
+  },
+  {
+    slug: 'weather-winter',
+    name: 'Weather & winter',
+    body: `# Weather & winter
+
+Cascade weather turns on elevation. Above 4,000 ft expect hard freezes in any
+month; the outer coast trades cold for Pacific storms.
+
+Unit-specific notes live in [[Gifford Pinchot NF]] and [[Mt. Rainier NP]].
+`,
+  },
+  {
+    slug: 'reservation-systems',
+    name: 'Reservation systems',
+    body: `# Reservation systems
+
+Federal campgrounds book through recreation.gov on a six-month rolling window;
+Washington State Parks uses goingtocamp with a nine-month window.
+
+See also [[First-come, first-served]].
+`,
+  },
+  {
+    slug: 'first-come-first-served',
+    name: 'First-come, first-served',
+    body: `# First-come, first-served
+
+Un-reservable campgrounds fill by arrival. [[Beacon Rock]] is one of them.
+`,
+  },
+  {
+    slug: 'mt-rainier-np',
+    name: 'Mt. Rainier NP',
+    body: `# Mt. Rainier NP
+
+The park's campgrounds are [[Ohanapecosh]] and [[Cougar Rock]]. Lahar exposure
+is covered in [[Volcanic & lahar]].
+`,
+  },
+  {
+    slug: 'dispersed-camping-parking',
+    name: 'Dispersed camping & parking',
+    body: `# Dispersed camping & parking
+
+Outside developed campgrounds, dispersed camping is allowed on most national
+forest land with a Northwest Forest Pass for the trailhead.
+`,
+  },
+  {
+    // NOT an article — a note template that rides along in the same folder.
+    slug: 'campsite-template',
+    name: 'Campsite template',
+    body: `# Campsite template
+
+## Access
+
+## Hazards
+
+## Sources
+`,
+  },
+];
+
 const TYPES = [
   ['STANDARD NONELECTRIC', 'Overnight'],
   ['STANDARD ELECTRIC', 'Overnight'],
@@ -385,12 +474,16 @@ function siteBody({ cgName, label, loop, type, use, providerId }) {
 `;
 }
 
-/** Expand the seed into `codex_campground` / `codex_site` rows. */
+/** Expand the seed into `codex_campground` / `codex_site` / `codex_reference` rows. */
 export function fixtureRows(updated = '2026-07-24T09:12:00Z') {
   const campgrounds = [];
   const sites = [];
   let siteId = 1;
   let providerId = 82900;
+
+  // The real export populates 156/192 guids — every campground that has an
+  // inventory row. Mirror the partial coverage: the last three get none.
+  const withGuid = new Set(CAMPGROUNDS.slice(0, -3).map((c) => c.slug));
 
   for (const cg of CAMPGROUNDS) {
     const body = cg.body || genericBody({
@@ -405,7 +498,9 @@ export function fixtureRows(updated = '2026-07-24T09:12:00Z') {
     campgrounds.push({
       slug: cg.slug,
       name: cg.name,
-      guid: null, // NULL in the real artifact too — joined from the inventory.
+      // Populated in the real artifact (156/192); the 36 without one simply
+      // have no inventory row.
+      guid: withGuid.has(cg.slug) ? `fixture-${cg.slug}-guid` : null,
       agency: cg.agency,
       agency_full: cg.agency_full,
       unit: cg.unit,
@@ -427,10 +522,14 @@ export function fixtureRows(updated = '2026-07-24T09:12:00Z') {
       const loop = loops.length ? loops[cg.collide ? n % loops.length : Math.floor(n / Math.ceil(cg.siteCount / loops.length))] : null;
       const label = String((cg.collide ? Math.floor(n / loops.length) : n) + 1).padStart(3, '0');
       const [type, use] = TYPES[n % TYPES.length];
+      // The exporter's rule: the readable label when it is unique inside the
+      // campground, else `<label>-<provider_site_id>`.
+      const siteSlug = cg.collide ? `${label}-${providerId}` : label;
       sites.push({
         id: siteId,
         campground_slug: cg.slug,
         site: label,
+        site_slug: siteSlug,
         loop,
         type: cg.agency === 'wa-state-parks' ? null : type, // WA leaves type null
         use: cg.agency === 'wa-state-parks' ? null : use,
@@ -445,5 +544,7 @@ export function fixtureRows(updated = '2026-07-24T09:12:00Z') {
     }
   }
 
-  return { campgrounds, sites };
+  const references = REFERENCES.map((r) => ({ ...r, updated }));
+
+  return { campgrounds, sites, references };
 }
