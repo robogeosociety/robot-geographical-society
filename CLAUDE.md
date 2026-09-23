@@ -104,9 +104,9 @@ The viewer is `web/src/codex/` at `/codex`, `/codex/:slug`,
 and the codex reading surface.
 
 **Building it requires Node ≥ 22.5** (built-in `node:sqlite`); CI is pinned to 22 for
-this reason. Everything downstream is plain JSON. The Pages deploy job runs
-`npm run codex` explicitly because it calls `vite build` directly and so misses the
-`prebuild` hook.
+this reason. Everything downstream is plain JSON. (The Pages deploy job that used to
+run `npm run codex` explicitly is gone with the Pages project — 2026-09 reduction. The
+codex still builds under the CI e2e job via the `prebuild` hook.)
 
 ## Pull request descriptions
 

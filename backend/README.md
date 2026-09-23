@@ -4,9 +4,11 @@ A Cloudflare Worker that serves the campsite API (Hono) **and** runs the
 availability collector as **Cloudflare Workflows** (durable execution). The raw
 collection half of the campsite availability → projection pipeline.
 
-- Live: `https://robot-geographical-society-backend.tommy-b-doerr.workers.dev`
-- Cron: `0 13 * * *` (06:00 PT) → creates a `CampsiteCollectorWorkflow` instance
-- On-demand: `POST /collect/run` (`?limit=N`), `POST /watch?id=&date=&every=`
+- Live: `https://api.robogeosociety.xyz` (the only route — `workers.dev` is disabled)
+- Schedule: **none.** The `CollectorLoop` Workflow self-schedules via `step.sleep` +
+  continue-as-new (`MAX_STALENESS_DAYS`); `ReadinessWorkflow` wakes itself every 24h.
+  There is no `[triggers]` cron in `wrangler.toml`.
+- On-demand: `POST /collect/run` (`?limit=N`), `POST /collect/start?force=1`
 
 Collection uses **plain `fetch()`** (verified to clear both the recreation.gov
 and WA goingtocamp WAFs from Worker IPs) — no Browser Rendering, no queue.
@@ -22,11 +24,9 @@ This repo owns **collection → R2**. The `observability` repo owns
 ```mermaid
 flowchart LR
   subgraph CF["☁️ Cloudflare — this repo (collection)"]
-    cron([cron 13:00 UTC]) --> wf["CampsiteCollectorWorkflow<br/>step.do per site · retry + resume"]
-    watch["HotDateWatchWorkflow<br/>adaptive step.sleep loop"]
-    wf & watch -->|plain fetch, 6 mo| src[recreation.gov / WA goingtocamp]
-    wf -->|"PUT raw/ + summary/<date>/<id>"| r2[("R2 campsite-raw")]
-    watch -->|"PUT watch/<id>/<targetDate> (fill-curve)"| r2
+    wf["CollectorLoop<br/>self-scheduling · step.do per site · retry + resume"]
+    wf -->|plain fetch, 6 mo| src[recreation.gov / WA goingtocamp]
+    wf -->|"PUT raw/ + summary/<date>/<id>"| r2[("R2 campsite-raw<br/>90-day retention")]
   end
   subgraph MAC["🖥️ Home Mac — observability repo (ingest)"]
     ingest["launchd 07:30<br/>campsites/ingest.py"] --> influx[("InfluxDB campsites")] --> graf["Grafana<br/>Campsite Availability"]
@@ -53,7 +53,6 @@ goingtocamp resourceLocation id (negative, e.g. `-2147483476`) — **not** the
 | `raw/<date>/<agency>/<id>.json` | untouched upstream payload | audit trail; two un-normalized schemas (rec.gov vs goingtocamp) |
 | `summary/<date>/<id>.json` | `{id,name,agency,kind, by_date: {date → {available,reserved,total}}}` | campground rollup; consumed by the Mac ingest |
 | `sites/<date>/<id>.json` | `{id,name,agency,kind,collected_date, sites: {siteId → {label,loop,type,use, by_date}}}` | **per individual site**; `by_date[date]` ∈ `available\|reserved\|other` |
-| `watch/<id>/<targetDate>.json` | `{id,name,agency,kind,target_date,lat,lng,started_at,updated_at,done,sold_out, points: [{ts,available,reserved,total}]}` | hot-date **fill-curve** (one object per (campground, target night); read-modify-write append). Read by the webapp's `GET /watch` (was the `campsite_watch` Analytics Engine dataset — re-plumbed AE → R2, #107). |
 | `dlq/<id>.json` | quarantine marker | presence == site skipped until reactivated |
 
 `summary/` and `sites/` are normalized **identically across both providers** —
@@ -89,31 +88,12 @@ sequenceDiagram
   G->>I: query burn-down + Holt-Winters projection
 ```
 
-## Data flow — adaptive hot-date watch (the projection edge)
+## (Removed 2026-09) adaptive hot-date watch
 
-```mermaid
-sequenceDiagram
-  autonumber
-  participant U as POST /watch?id=&date=
-  participant W as HotDateWatchWorkflow
-  participant S as rec.gov / WA
-  participant R2 as R2 campsite-raw
-  U->>W: create({ site, targetDate })
-  loop until sold out or date passes
-    W->>S: fetch availability for targetDate
-    W->>R2: GET watch/<id>/<targetDate>.json  (prev curve)
-    W->>R2: PUT watch/<id>/<targetDate>.json  (append point)
-    Note over W: cadence = hourly if near/filling, else daily
-    W->>W: step.sleep(interval)
-  end
-```
-
-This emits *dense, adaptive* burn-down data for the specific high-demand dates
-you care about — what uniform daily snapshots can't — for materially better
-sell-out projections. Durable: survives eviction and resumes mid-loop. The series
-is banked as one read-modify-write **fill-curve** object per (campground, target
-night) so the webapp reads it back in a single `GET /watch/:guid/:date` — re-plumbed
-off the `campsite_watch` Analytics Engine dataset (now droppable; #107, work item 2).
+The `HotDateWatchWorkflow` (`campsite-hot-date-watch`), its `POST /watch` trigger and the
+`GET /watch` read endpoints are gone — zero instances since June. The `watch/` objects it
+banked in `campsite-raw` are left in place and will age out under the bucket's new 90-day
+retention rule.
 
 ## Dev
 

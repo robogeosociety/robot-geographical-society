@@ -1,22 +1,26 @@
 # infra/cloudflare — RGS data-plane resources (Terraform)
 
 Terraform that owns the durable, previously click-ops'd Cloudflare **data-plane**
-resources behind the RGS backend + frontend:
+resources behind the RGS backend:
 
 - `cloudflare_workers_kv_namespace.campsites` — the **CAMPSITES** KV namespace
   (id `aad9f04d…`; authoritative inventory `_inventory` + per-campsite detail).
 - `cloudflare_r2_bucket.campsite_raw` — the **campsite-raw** R2 bucket (banked
-  availability snapshots: `raw/ · summary/ · sites/ · watch/ · dlq/ · scheduler/`).
-- `cloudflare_pages_project.web` — the **robot-geographical-society-web** Pages project.
+  availability snapshots: `raw/ · summary/ · sites/ · dlq/ · scheduler/`).
+- `cloudflare_r2_bucket_lifecycle.campsite_raw` — its **retention rule**: delete objects
+  older than **90 days**, abort incomplete multipart uploads after **7 days**. Added in
+  the 2026-09 reduction so the bucket stops growing against the 10 GB free allowance.
+
+(Removed 2026-09) `cloudflare_pages_project.web` — the **robot-geographical-society-web**
+Pages project has been deleted in Cloudflare and is no longer modelled here.
 
 ## What this does NOT manage (by design)
 
-- **Worker / Pages code** → `wrangler deploy` / `wrangler pages deploy` (OAuth). Terraform
-  owns the resource shells; wrangler deploys code into them.
-- **Worker + Pages custom-domain attachment** → wrangler OAuth (same split as the Worker
-  domain bind). The DNS *records* live in `../dns`.
-- **Access boundary** → `../access`. **Worker bindings / vars / AE datasets / Workflows**
-  → `backend/wrangler.toml` (the deploy manifest — single source for those).
+- **Worker code** → `wrangler deploy` (OAuth). Terraform owns the resource shells;
+  wrangler deploys code into them.
+- **Worker custom-domain attachment** → wrangler OAuth. The DNS *records* live in `../dns`.
+- **Worker bindings / vars / AE datasets / Workflows** → `backend/wrangler.toml` (the
+  deploy manifest — single source for those).
 
 So `wrangler.toml` and this root must agree on **identity only** (the KV id and bucket
 name); the outputs here surface them to keep the two from drifting.
@@ -25,7 +29,7 @@ name); the outputs here surface them to keep the two from drifting.
 
 Uses the **vended** `rgs-infra` token from `../../../cloudflare-tfvend` (KV Write + R2
 Storage Write + Pages Write, account-scoped — it cannot touch Access, DNS, or deploy
-code). The Makefile reads it from that repo's Terraform output; no bootstrap needed.
+code). It already carries the R2 Storage Write scope the lifecycle rule needs. The Makefile reads it from that repo's Terraform output; no bootstrap needed.
 
 ## Import, never recreate
 

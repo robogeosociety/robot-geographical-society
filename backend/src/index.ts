@@ -8,13 +8,11 @@ import { listSubscriptions, getSubscription, putSubscription, deleteSubscription
 import { handleInteraction } from './discord-interactions';
 
 // Cloudflare Workflows must be exported from the entry module by class name.
-export { CollectorLoop, HotDateWatchWorkflow } from './workflows';
+export { CollectorLoop } from './workflows';
 export { ReadinessWorkflow } from './readiness-workflow';
-export { VaultMarkdownLoop } from './vault-markdown';
 
 type Bindings = WfEnv & {
   CAMPSITES: KVNamespace;
-  WATCH_WF: Workflow;
   BOOTSTRAP_ADMIN?: string; // email that is always admin (RBAC bootstrap)
   DISCORD_APP_PUBLIC_KEY?: string; // for verifying Discord interaction signatures
 };
@@ -118,51 +116,6 @@ app.post('/readiness/start', adminOnly(), async (c) => {
   return c.json({ status: 'started', instanceId: i.id });
 });
 
-// Start (or re-kick) the VaultMarkdownLoop — renders per-campsite Obsidian markdown +
-// loop canvases into the campsite-vault R2 bucket, daily, self-perpetuating. One-time
-// start after deploy (or to force a regen).
-app.post('/vault/start', adminOnly(), async (c) => {
-  const i = await c.env.VAULT_WF.create({ params: {} });
-  return c.json({ status: 'started', instanceId: i.id });
-});
-
-// Read endpoints for the local Obsidian sync (obsidian-automations vault_sync). Open to any
-// Access-authenticated caller (like the other read routes). The geo manifest drives the
-// area-of-interest filter; /vault/bundle returns one campground's rendered files in a single
-// response so the sync pulls per-campground, not per-file.
-app.get('/vault/manifest', async (c) => {
-  const o = await c.env.VAULT.get('manifest.json');
-  if (!o) return c.json({ error: 'manifest not generated yet' }, 404);
-  return new Response(o.body, { headers: { 'content-type': 'application/json' } });
-});
-
-app.get('/vault/bundle', async (c) => {
-  const cg = c.req.query('cg');
-  if (!cg) return c.json({ error: 'cg query param required' }, 400);
-  const prefix = `Campsites/${cg}/`;
-  // List all keys first, then fetch in parallel batches — a big campground is hundreds of
-  // objects, and sequential gets blow the client timeout. Batched to stay well under the
-  // Workers subrequest limit while keeping wall time low.
-  const keys: string[] = [];
-  let cursor: string | undefined;
-  do {
-    const r = await c.env.VAULT.list({ prefix, cursor });
-    for (const obj of r.objects) keys.push(obj.key);
-    cursor = r.truncated ? r.cursor : undefined;
-  } while (cursor);
-  const files: Record<string, string> = {};
-  const BATCH = 50;
-  for (let i = 0; i < keys.length; i += BATCH) {
-    await Promise.all(
-      keys.slice(i, i + BATCH).map(async (key) => {
-        const f = await c.env.VAULT.get(key);
-        if (f) files[key] = await f.text();
-      }),
-    );
-  }
-  return c.json({ cg, count: Object.keys(files).length, files });
-});
-
 // Freshness/observability snapshot (the loop's heartbeat).
 app.get('/scheduler/status', async (c) => {
   const obj = await c.env.RAW.get(HEARTBEAT_KEY);
@@ -219,17 +172,6 @@ app.post('/collect/site', adminOnly(), async (c) => {
   } catch (e: any) {
     return c.json({ status: 'error', error: String(e?.message ?? e) }, 502);
   }
-});
-
-// Watch a single (campsite, target_date) with adaptive cadence until sold out.
-app.post('/watch', adminOnly(), async (c) => {
-  const id = c.req.query('id');
-  const date = c.req.query('date');
-  const every = c.req.query('every') || undefined;
-  const site = (campsites as any[]).find((s) => s.id === id);
-  if (!site || !date) return c.json({ error: 'need ?id=<campsite id>&date=YYYY-MM-DD [&every=]' }, 400);
-  const i = await c.env.WATCH_WF.create({ params: { ...site, targetDate: date, every } });
-  return c.json({ workflow: 'campsite-hot-date-watch', instanceId: i.id, watching: site.name, targetDate: date, every });
 });
 
 // --- Subscriptions -----------------------------------------------------------

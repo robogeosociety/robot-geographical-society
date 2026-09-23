@@ -1,43 +1,41 @@
-# infra/dns — DNS for the rgs frontend custom domains
+# infra/dns — the one Terraform root left for robogeosociety.xyz
 
-Terraform that manages the **DNS records** for the deployed frontend custom domains:
+After the 2026-09 reduction this is the **only** TF root that still describes live
+intent (`../cloudflare` holds imported data-plane resources; `../access` holds a single
+IdP). It manages one record:
 
 | Hostname | Record |
 | --- | --- |
-| `campsites.robogeosociety.xyz` | proxied `CNAME` → `robot-geographical-society-web.pages.dev` |
-| `collectors.robogeosociety.xyz` | proxied `CNAME` → `robot-geographical-society-web.pages.dev` |
+| `mountainisout.robogeosociety.xyz` | **DNS-only** (grey cloud) `CNAME` → `robogeosociety.github.io` |
 
-Both are **gated by Cloudflare Access** (`../access/frontend.tf`). This is a private
-project — every hostname must require an Owner SSO login. **Apply the Access gate
-first**, so a record never resolves to an unauthenticated app.
+DNS-only is the point: is-the-mountain-out is served directly by GitHub Pages, with no
+Worker, Container or R2 in the path. Pages terminates TLS for the custom domain itself,
+which only works unproxied. The record already exists in the dashboard — **import it**
+before the first apply (the command is in `dns.tf`).
 
-## Division of labour (why DNS is the only thing here)
+## Removed in the reduction
 
-- **Access boundary** → `../access` (Terraform, vended `rgs-access-admin` token).
-- **Pages custom-domain attachment** → done on the **wrangler OAuth flow** (like the
-  Worker custom-domain bind), because OAuth carries Pages Write.
-- **DNS record** → here. OAuth has zone *read* but not DNS *write*, so the record is
-  managed with the least-privilege vended **`rgs-frontend-dns`** token (zone DNS Write,
-  `robogeosociety.xyz` only — nothing else).
+- `campsites.` and `collectors.` — proxied CNAMEs to the deleted
+  `robot-geographical-society-web` Pages project. Dead records.
+- `dev.` — the rgs-dev-wiki Cloudflare Tunnel target, retired with `infra/tunnel`.
+
+## Apex and www
+
+`robogeosociety.xyz` / `www.robogeosociety.xyz` stay as they are (dashboard-managed).
+Once the apex/www **Worker routes** are removed they will serve **522/1016**, because
+they are proxied records with nothing behind them. The proposed follow-up is a free
+**Bulk Redirect** to a live destination rather than deleting the records. See the
+comment block at the bottom of `dns.tf`.
 
 ## Auth
 
-Uses the **vended** `rgs-frontend-dns` token from `../../../cloudflare-tfvend` (read
-from its Terraform output — offline, no bootstrap token needed). State is local and
-gitignored.
+Uses the **vended** `rgs-frontend-dns` token from `../../../cloudflare-tfvend` (zone
+DNS Write, `robogeosociety.xyz` only), read from that repo's Terraform output.
 
 ## Use
 
 ```sh
 terraform init
 make plan
-make apply        # creates the two proxied CNAMEs
+make apply
 ```
-
-## Adding a frontend domain
-
-1. Add the hostname to `frontend_hostnames` here **and** to `frontend_hostnames` in
-   `../access/frontend.tf` (the gate) — keep them in lockstep.
-2. Attach it to the Pages project on the OAuth flow (Cloudflare API
-   `POST /accounts/{acc}/pages/projects/{project}/domains`).
-3. `make apply` here for the record.

@@ -5,11 +5,17 @@ The Royal Geographical Society was founded in 1830 to advance geographical scien
 
 The Robot Geographical Society performs the same job using computers, foregoing the patriarchal, paper-based excesses of the past.
 
+> **Reduced scope (2026-09).** This repo is now the campsite **collector** and its read
+> API: one Worker on `api.robogeosociety.xyz`, the `CollectorLoop` and `ReadinessWorkflow`
+> Workflows, the `CAMPSITES` KV, the `campsite-raw` R2 bucket (90-day retention) and the
+> five `campsite_*` Analytics Engine datasets. The Pages frontend, the Cloudflare Access
+> boundary, the vault-markdown and hot-date-watch Workflows, and the dev-wiki tunnel are
+> retired. `web/` still builds and is e2e-tested in CI, but it is no longer deployed.
+
 ## Functional Prototype
-A **two-view Mapbox app** (React + Vite) over the live Cloudflare collector data, served
-through the Access-gated backend. The browser never holds a credential — local dev reaches
-the deployed Worker through a same-origin `/api` proxy that attaches the Access service token
-server-side (see [Deployment Architecture](#deployment-architecture)).
+A **two-view Mapbox app** (React + Vite) over the live Cloudflare collector data. It runs
+locally against the Worker; its Cloudflare Pages deployment has been deleted (see
+[Deployment Architecture](#deployment-architecture)).
 
 * **Availability view** (`/availability`) — one pin per collected campground, recolored by the
   available/total ratio for a chosen night (the date picker recolors the whole map). Click a
@@ -39,8 +45,7 @@ The Robot Geographical Society is built on a modern, serverless stack designed f
 - **[Cloudflare KV](https://developers.cloudflare.com/kv/)**: Low-latency, key-value data store for campsite metadata and reservation details.
 - **[Cloudflare R2](https://developers.cloudflare.com/r2/)**: Object store for collected availability snapshots, the collector heartbeat, and the dead-letter queue.
 - **[Workers Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/)**: Time-series event sink for per-collection telemetry, queried by Grafana.
-- **[Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/applications/)**: The identity-backed auth boundary. The Worker is reachable **only** via the custom domain `api.robogeosociety.xyz` (the `*.workers.dev` route is disabled) — gated by owner SSO and a service token. This is a private project: there is no unauthenticated path.
-- **[Terraform](https://www.terraform.io/)**: Infrastructure-as-code for the Access application, policies, and the dev service token (`infra/access/`), authenticated with a token vended from a dedicated [`cloudflare-tfvend`](https://github.com/robogeosociety/cloudflare-tfvend) repo (one bootstrap token → all long-lived tokens, declaratively).
+- **[Terraform](https://www.terraform.io/)**: Infrastructure-as-code for the one DNS record that is left (`infra/dns/`), the imported data-plane resources and the `campsite-raw` retention rule (`infra/cloudflare/`), and the account's GitHub Access IdP (`infra/access/`), authenticated with tokens vended from a dedicated [`cloudflare-tfvend`](https://github.com/robogeosociety/cloudflare-tfvend) repo (one bootstrap token → all long-lived tokens, declaratively).
 
 ### Testing & Quality
 - **[Playwright](https://playwright.dev/)**: End-to-end and integration testing framework.
@@ -49,24 +54,35 @@ The Robot Geographical Society is built on a modern, serverless stack designed f
 
 ## Deployment Architecture
 
-The backend is a single Cloudflare Worker reachable **only** through a Cloudflare Access boundary on the custom domain `api.robogeosociety.xyz` — the `*.workers.dev` route is disabled, so there is no public, unauthenticated path. Humans authenticate via **SSO**; the local-dev frontend reaches the backend through a Vite `/api` proxy that attaches an Access **service token** server-side, so the token never enters the browser bundle. The same Worker serves the **read API** (`/availability`, `/collectors`) and runs the durable availability **collector**; both read from R2, KV, and Analytics Engine. The Access app, its policies, and the service token are managed as code in [`infra/access/`](./infra/access/) (Terraform), authenticated with a token vended from the [`cloudflare-tfvend`](https://github.com/robogeosociety/cloudflare-tfvend) repo (one bootstrap token → all long-lived tokens). `wrangler` (OAuth) handles Worker deploys and the custom-domain bind.
+The backend is a single Cloudflare Worker on the custom domain `api.robogeosociety.xyz`
+— the `*.workers.dev` route is disabled, so that hostname is the only way in. The same
+Worker serves the **read API** (`/availability`, `/collectors`) and runs the durable
+availability **collector**; both read from R2, KV, and Analytics Engine. `wrangler`
+(OAuth) handles Worker deploys and the custom-domain bind.
+
+> **Auth is mid-migration.** Cloudflare Access used to front this hostname, and
+> `backend/src/auth.ts` still reads identity from the Access JWT. The 2026-09 reduction
+> removes the Access application from Terraform ([`infra/access/`](./infra/access/) now
+> holds only the account's GitHub IdP). **Until an in-Worker credential lands, destroying
+> the Access app leaves every read route public and locks the admin routes out** — the
+> details, and the ordering that avoids it, are in
+> [`infra/access/README.md`](./infra/access/README.md).
 
 ```mermaid
 flowchart TB
   subgraph CLIENTS["Clients"]
-    DEV["Local dev — Vite<br/>/api proxy + Access service token"]
-    USER["Browser (future Pages frontend)<br/>Access SSO cookie"]
+    DEV["Local dev — Vite<br/>/api proxy"]
   end
 
   subgraph EDGE["Cloudflare"]
-    ACCESS["Cloudflare Access — api.robogeosociety.xyz<br/>SSO + service token · workers.dev disabled"]
+    EDGEIN["api.robogeosociety.xyz<br/>custom domain · workers.dev disabled"]
     subgraph WORKER["Worker — robot-geographical-society-backend"]
       direction TB
       READ["Read API<br/>/availability · /collectors"]
-      CTRL["Collector control<br/>/collect/* · /scheduler/status · /watch"]
+      CTRL["Collector control<br/>/collect/* · /scheduler/status"]
       LOOP["CollectorLoop Workflow<br/>self-scheduling · ≤ MAX_STALENESS_DAYS"]
     end
-    R2[("R2 campsite-raw<br/>summary/ · sites/ · dlq/ · heartbeat")]
+    R2[("R2 campsite-raw<br/>summary/ · sites/ · dlq/ · heartbeat<br/>90-day retention")]
     KV[("KV — campsite metadata")]
     AE[("Analytics Engine<br/>campsite_collector · campsite_availability")]
   end
@@ -76,31 +92,26 @@ flowchart TB
     WA["WA goingtocamp"]
   end
 
-  subgraph OBS["Observability — Mac mini (private repo)"]
-    INFLUX[("InfluxDB · campsites")]
-    GRAF["Grafana"]
+  subgraph OBS["Alerting"]
     DISC["Discord #alerts"]
   end
 
   subgraph IAC["Infrastructure-as-code"]
     TFVEND["cloudflare-tfvend<br/>bootstrap → vended tokens"]
-    INFRA["infra/access — Terraform<br/>Access app · policies · service token"]
+    INFRA["infra/dns + infra/cloudflare — Terraform<br/>DNS record · imported KV/R2 · retention"]
   end
 
-  DEV --> ACCESS
-  USER --> ACCESS
-  ACCESS --> READ
-  ACCESS --> CTRL
+  DEV --> EDGEIN
+  EDGEIN --> READ
+  EDGEIN --> CTRL
   CTRL --> LOOP
   LOOP --> REC & WA
   LOOP -->|"raw / summary / sites · dlq · heartbeat"| R2
   LOOP --> AE
   READ --> R2
   READ --> KV
-  R2 -->|"daily ingest (07:30)"| INFLUX --> GRAF
-  AE --> GRAF
-  GRAF -->|"failure ratio · quarantine · staleness"| DISC
-  TFVEND -->|"rgs-access-admin token"| INFRA -->|manages| ACCESS
+  LOOP -->|"newly available · hot campgrounds"| DISC
+  TFVEND -->|"vended scoped tokens"| INFRA -->|manages| R2
 ```
 
 The section below zooms into the collector loop itself.
@@ -187,7 +198,8 @@ The project employs a robust testing and automation pipeline via GitHub Actions 
 ### Automated Pipeline
 Every Pull Request and push to `main` triggers the following lifecycle:
 1.  **Environment Setup:** Node.js environment initialization and dependency installation for both `web/` and `backend/`.
-2.  **Data Synchronization:** Regenerates the campsite GeoJSON index and seeds the local Cloudflare KV store for the backend.
+2.  **Data Synchronization:** Regenerates the campsite GeoJSON index and seeds the *local* Cloudflare KV store for the backend. The `data-ci` and `deploy-kv` lanes were deleted in the 2026-09 reduction: the inventory's upstream producer (obsidian-automations `campsite_inventory`) is retired, so `backend/src/campsites-index.json` now changes only by hand. An edit to it needs a one-off live KV write, because the collector prefers the KV `_inventory` key over the bundled copy:
+    `npx wrangler kv key put _inventory --path backend/src/campsites-index.json --binding CAMPSITES --preview false --remote`
 3.  **Verification:** Runs Linting and Unit Tests in parallel.
 4.  **Production Build & E2E:** Executes the production build of the React application, which triggers a suite of Playwright integration tests against a live local service stack.
 
