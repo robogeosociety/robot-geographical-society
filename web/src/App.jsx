@@ -9,7 +9,6 @@ import {
 import AvailabilityView from './views/AvailabilityView';
 import DemandView from './views/DemandView';
 import CalendarView from './views/CalendarView';
-import WatchView from './views/WatchView';
 import CollectorsView from './views/CollectorsView';
 
 // The cockpit telemetry strip etched along the bottom edge — live camera readout
@@ -143,7 +142,6 @@ export default function App() {
             <Route path="/availability" element={<AvailabilityView />} />
             <Route path="/demand" element={<DemandView />} />
             <Route path="/calendar" element={<CalendarView />} />
-            <Route path="/watch" element={<WatchView />} />
             <Route path="/collectors" element={<CollectorsView />} />
             <Route path="*" element={<Navigate to={defaultPath()} replace />} />
           </Routes>
