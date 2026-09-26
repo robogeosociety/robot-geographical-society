@@ -8,7 +8,9 @@
  *     MAX_STALENESS_DAYS) with no fixed schedule. Periodically continue-as-new to
  *     keep step history bounded. State rides in the payload; the heartbeat in R2 is
  *     the recovery snapshot. See SCHEDULER-PLAN.md.
- *  2. HotDateWatchWorkflow — adaptive dense watcher for one (campsite, target_date).
+ *
+ * (Removed 2026-09) HotDateWatchWorkflow — the adaptive hot-date watcher. Zero
+ * instances since June; dropped with the campsite-hot-date-watch Workflow binding.
  */
 import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:workers";
 import { loadInventory } from "./inventory";
@@ -25,13 +27,10 @@ export interface WfEnv {
   COLLECTOR_AE?: AnalyticsEngineDataset; // per-site coverage → Grafana
   RUNS_AE?: AnalyticsEngineDataset; // (kept for compatibility)
   AVAIL_AE?: AnalyticsEngineDataset; // per-site availability rollup
-  // (Removed) WATCH_AE — the hot-date watcher now banks its fill-curve to R2
-  // (watch/<id>/<date>.json) for the webapp, not Analytics Engine (#107, item 2).
+  // (Removed) WATCH_AE / the hot-date watcher entirely — see the module docstring.
   DEMAND_AE?: AnalyticsEngineDataset; // per-campground per-night demand → Grafana
   READINESS_AE?: AnalyticsEngineDataset; // daily prediction-readiness gauge → Grafana
   READINESS_WF: Workflow; // daily readiness Workflow (self-reference for continue-as-new)
-  VAULT: R2Bucket; // markdown mirror bucket (campsite-vault) for the Obsidian sync
-  VAULT_WF: Workflow; // self-reference for the VaultMarkdownLoop continue-as-new
   DISCORD_WEBHOOK_URL?: string; // wrangler secret; when set, the loop posts "newly available" alerts
   HOT_FILL_THRESHOLD?: string; // 0-1 fill rate threshold for the "hottest" feed (default 0.9)
 }
@@ -357,116 +356,5 @@ export class CollectorLoop extends WorkflowEntrypoint<WfEnv, LoopPayload> {
       return { handedOff: true };
     });
     return { handedOff: true, sites: Object.keys(due).length, inactive: Object.keys(probe).length, collectedTotal };
-  }
-}
-
-// --- 2. Adaptive hot-date watcher ----------------------------------------------
-
-type WatchParams = Site & {
-  targetDate: string;
-  every?: string;
-  maxChecks?: number;
-  lat?: number | null;
-  lng?: number | null;
-};
-
-// One fill-curve observation: the campground-night counts at a point in time.
-export type WatchPoint = { ts: string; available: number; reserved: number; total: number };
-
-// The fill-curve object the watcher banks to R2 at `watch/<id>/<targetDate>.json`.
-// One object per (campground, target night), growing a `points` series over the life
-// of the watch — read straight back by the webapp's GET /watch endpoints.
-export type WatchCurve = {
-  id: string;
-  name: string;
-  agency: string;
-  kind: "rec" | "wa";
-  target_date: string;
-  lat?: number | null;
-  lng?: number | null;
-  started_at: string;
-  updated_at: string;
-  done: boolean;
-  sold_out: boolean;
-  points: WatchPoint[];
-};
-
-export const watchKey = (id: string, targetDate: string) => `watch/${id}/${targetDate}.json`;
-
-// Append one observation to the (read-modify-write) fill-curve object in R2. The whole
-// series lives in a single object so the read API can serve a curve in one R2 get; the
-// watch cadence is slow (hours, capped at ~500 checks) so the rewrite cost is trivial.
-export async function appendWatchPoint(
-  env: WfEnv,
-  p: WatchParams,
-  point: WatchPoint,
-  done: boolean,
-  soldOut: boolean,
-): Promise<WatchCurve> {
-  const key = watchKey(p.id, p.targetDate);
-  const existing = await env.RAW.get(key);
-  const prev = existing ? ((await existing.json()) as WatchCurve) : null;
-  const curve: WatchCurve = {
-    id: p.id,
-    name: p.name,
-    agency: p.agency,
-    kind: p.kind,
-    target_date: p.targetDate,
-    lat: p.lat ?? prev?.lat ?? null,
-    lng: p.lng ?? prev?.lng ?? null,
-    started_at: prev?.started_at ?? point.ts,
-    updated_at: point.ts,
-    done,
-    sold_out: soldOut,
-    points: [...(prev?.points ?? []), point],
-  };
-  await env.RAW.put(key, JSON.stringify(curve));
-  return curve;
-}
-
-export class HotDateWatchWorkflow extends WorkflowEntrypoint<WfEnv, WatchParams> {
-  async run(event: WorkflowEvent<WatchParams>, step: WorkflowStep) {
-    const p = event.payload;
-    const cap = p.maxChecks ?? 500;
-
-    for (let checks = 0; checks < cap; checks++) {
-      const res = await step.do(
-        `check ${checks}`,
-        { retries: { limit: 3, delay: "30 seconds", backoff: "exponential" }, timeout: "2 minutes" },
-        async () => {
-          // Fetch only the target date's month (daily granularity for both rec and
-          // wa) instead of a full year — far fewer requests per check, and
-          // a.by[targetDate] now resolves for WA too (was monthly-keyed before).
-          const target = new Date(`${p.targetDate}T00:00:00Z`);
-          const monthStart = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth(), 1));
-          const a = await fetchAvailability(p.kind, p.ref, 1, monthStart);
-          const c: Counts = a.by[p.targetDate] ?? { available: 0, reserved: 0, total: 0 };
-          const ts = new Date().toISOString();
-          const now = Date.now();
-          const daysOut = (Date.parse(p.targetDate) - now) / 86_400_000;
-          const fill = c.total ? 1 - c.available / c.total : 0;
-          const done = c.available === 0 || daysOut <= 0;
-          // Bank the fill-curve to R2 (was the campsite_watch Analytics Engine dataset):
-          // AE → R2 re-plumb so the webapp reads the curve directly with no AE round-trip
-          // (robot-geographical-society#107, work item 2). Adaptive cadence is unchanged;
-          // only the sink moved. The campsite_watch AE dataset is now unused and can be
-          // dropped — its binding/IaC live in observability-config (follow-up there).
-          await appendWatchPoint(
-            this.env,
-            p,
-            { ts, available: c.available, reserved: c.reserved, total: c.total },
-            done,
-            c.available === 0,
-          );
-          const interval =
-            p.every ?? (daysOut < 7 || fill > 0.8 ? "1 hour" : daysOut < 30 ? "6 hours" : "24 hours");
-          return { c, done, interval, daysOut: Math.round(daysOut), fill: Math.round(fill * 100) };
-        },
-      );
-
-      if (res.done) return { soldOut: res.c.available === 0, checks: checks + 1, last: res.c };
-      await step.sleep(`wait ${checks}`, res.interval as any);
-    }
-    return { stopped: "maxChecks", checks: cap };
   }
 }

@@ -3,12 +3,23 @@ main = "src/index.ts"
 compatibility_date = "2026-03-16"
 compatibility_flags = ["nodejs_compat"]
 
-# PRIVATE project: the Worker is reachable ONLY via the Access-protected custom
-# domain below. The *.workers.dev route stays disabled (no ungated public path);
-# api.robogeosociety.xyz is fronted by the Cloudflare Access app defined in
-# infra/access (Terraform). Do not enable workers_dev without a gate in front.
+# The Worker is reachable ONLY via the custom domain below; the *.workers.dev
+# route stays disabled.
+#
+# !! AUTH CHANGE IN FLIGHT (2026-09 reduction) !! The Terraform that defines the
+# Cloudflare Access app in front of this hostname is removed in this change, but
+# src/auth.ts still derives identity from the Access JWT (Cf-Access-Jwt-Assertion).
+# Once the Access app is actually destroyed, the read routes are UNAUTHENTICATED
+# and no caller can reach `admin` (mutations fail closed with 403). Land an
+# in-Worker credential (the plan calls it RGS_KEY) BEFORE destroying the app.
+# Do not enable workers_dev.
 workers_dev = false
 
+# The ONE route. The apex `robogeosociety.xyz/*` and `www.robogeosociety.xyz/*`
+# Worker routes are retired: they were dashboard-managed (never in this file), so
+# they must also be deleted in the Cloudflare dashboard. Until they are, those two
+# hostnames keep matching a Worker that no longer answers for them. See infra/dns
+# for the apex/www follow-up (a Bulk Redirect).
 [[routes]]
 pattern        = "api.robogeosociety.xyz"
 custom_domain  = true
@@ -24,14 +35,6 @@ preview_id = "aad9f04d90e945ffb8d278d7b8e70976"
 [[r2_buckets]]
 binding = "RAW"
 bucket_name = "campsite-raw"
-
-# Rendered Obsidian markdown mirror (per-campsite notes + loop canvases + manifest.json),
-# written by the VaultMarkdownLoop. The local camping vault syncs only an area-of-interest
-# subset from here (obsidian-automations vault_sync). A scoped read token is vended from
-# cloudflare-tfvend for that sync.
-[[r2_buckets]]
-binding = "VAULT"
-bucket_name = "campsite-vault"
 
 # Per-run/per-site collector coverage → queried by the observability "Collector
 # history" Grafana dashboard via the AE SQL API. Schema:
@@ -111,8 +114,8 @@ BOOTSTRAP_ADMIN = "tommy.b.doerr@gmail.com"
 # Slash commands: /subscribe, /subscriptions, /unsubscribe — registered via
 # scripts/register-discord-commands.sh (needs DISCORD_APP_ID + DISCORD_BOT_TOKEN).
 # Interactions endpoint: POST /discord/interactions (set as the app's Interactions URL
-# in the Discord Developer Portal). The Cloudflare Access policy must bypass this path
-# (add a Service Auth → Bypass rule for path=/discord/interactions in infra/access).
+# in the Discord Developer Portal). It verifies Discord's Ed25519 signature itself —
+# with Access retired there is no bypass rule to maintain.
 
 # No cron. The CollectorLoop self-perpetuates via continue-as-new; a hard crash
 # is surfaced by Grafana → Discord staleness alerting (observability repo), and a
@@ -124,18 +127,6 @@ BOOTSTRAP_ADMIN = "tommy.b.doerr@gmail.com"
 name = "campsite-collector"
 binding = "COLLECTOR_WF"
 class_name = "CollectorLoop"
-
-[[workflows]]
-name = "campsite-hot-date-watch"
-binding = "WATCH_WF"
-class_name = "HotDateWatchWorkflow"
-
-# Renders per-campsite Obsidian markdown + loop canvases into the campsite-vault bucket,
-# daily, self-perpetuating. Start once with POST /vault/start.
-[[workflows]]
-name = "campsite-vault"
-binding = "VAULT_WF"
-class_name = "VaultMarkdownLoop"
 
 # Daily prediction-readiness scan (self-schedules via step.sleep 24h, continues-as-new).
 # Start once with POST /readiness/start.

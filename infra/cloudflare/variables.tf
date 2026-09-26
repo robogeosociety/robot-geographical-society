@@ -15,15 +15,3 @@ variable "r2_bucket_name" {
   type        = string
   default     = "campsite-raw"
 }
-
-variable "pages_project_name" {
-  description = "Cloudflare Pages project for the RGS frontend."
-  type        = string
-  default     = "robot-geographical-society-web"
-}
-
-variable "pages_production_branch" {
-  description = "Production branch for the Pages project."
-  type        = string
-  default     = "main"
-}

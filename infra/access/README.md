@@ -1,58 +1,46 @@
-# infra/access — Cloudflare Access boundary for the backend Worker
+# infra/access — the account's GitHub Access IdP (all that is left)
 
-Terraform that defines the **trusted auth boundary** in front of the backend Worker.
-This is a private project: the Worker must never be reachable without satisfying one
-of these policies.
+> **This root no longer gates the backend Worker.** As of the 2026-09 reduction it
+> manages exactly one resource: the account-level **GitHub identity provider** used by
+> the surviving `atlas.robogeosociety.xyz` Access app. Everything else — the
+> `api.robogeosociety.xyz` gate, the two frontend gates, the `*.pages.dev` wildcard
+> gate, the dev-wiki gate, the local-dev service token and the Google IdP — was
+> removed from the configuration.
 
-## What it manages
+## Read this before you run `apply`
 
-- A **self-hosted Access application** on `api.robogeosociety.xyz`.
-- Two **policies**: owner SSO (email, via the account IdP / one-time PIN) and a
-  **service token** for the local Vite dev proxy.
-- The **service token** itself (its secret flows to `web/.env.local`).
+The resources above were deleted from the **configuration**, not from Cloudflare. They
+are still in this root's remote state (R2, `rgs/access.tfstate`), so **the next
+`make apply` here plans their destruction.** That is the intended rollout — but it has
+two consequences, in order of severity:
 
-The Worker custom-domain bind (`api.robogeosociety.xyz` → the Worker) is done with
-**wrangler**, not here — Workers stay on the OAuth flow. Order matters: apply this
-**first** (the gate), then bind the domain, so there is never an unauthenticated window.
+1. **The api Worker loses its only authentication.** `backend/src/auth.ts` derives
+   identity from the Access JWT (`Cf-Access-Jwt-Assertion`). With the Access app gone,
+   every read route on `api.robogeosociety.xyz` is **public**, and no caller can reach
+   the `admin` role, so `/collect/*`, `/readiness/start` and the subscription
+   mutations all fail closed with 403. Land an in-Worker credential first (the
+   consolidation plan calls it `RGS_KEY`).
+2. The local-dev service token disappears, so `web/.env.local` stops working. The web
+   frontend's Pages project is already deleted, so this only affects local dev.
+
+The GitHub IdP is deliberately **kept**: it is account-scoped and the atlas app is not
+managed by Terraform anywhere, so nothing in code proves atlas does not log in through
+it. Verify in the dashboard (Zero Trust → Settings → Authentication) before touching
+it. See the comment block in `idp-github.tf`.
 
 ## Auth
 
 Uses the **vended** `rgs-access-admin` token from `../../../cloudflare-tfvend` (read
-from its Terraform output — offline, no bootstrap token needed). State holds the
-service-token secret and is gitignored.
+from its Terraform output — offline, no bootstrap token needed). State is remote (R2);
+credentials come from the vended `tfstate-r2` token, both exported by the Makefile.
 
 ## Use
 
 ```sh
 terraform init
-make plan
-make apply        # creates the Access app + service token
-make envfile      # writes ../../web/.env.local (BACKEND_URL + service token)
-# then bind the domain:  cd ../../backend && wrangler ... (see PR)
+make plan     # expect: destroy the retired apps/token/IdP, no change to the GitHub IdP
+make apply    # only after item 1 above is resolved
 ```
 
-## Recovering after a lost state file
-
-State is local and gitignored, so a fresh clone (or a removed worktree) has no record
-of the live Access app + service token. Don't `apply` blind — that creates duplicates.
-Instead re-adopt the existing resources, then rotate the (unrecoverable) token secret:
-
-```sh
-terraform init
-ACC=d7adee58513c1b2f770ccaac90cf114f
-export CLOUDFLARE_API_TOKEN=$(terraform -chdir=../../../cloudflare-tfvend output -raw rgs_access_admin_token)
-# Look up the live ids (one app, one service token):
-curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  "https://api.cloudflare.com/client/v4/accounts/$ACC/access/apps" | jq '.result[]|{id,domain}'
-curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  "https://api.cloudflare.com/client/v4/accounts/$ACC/access/service_tokens" | jq '.result[]|{id,name}'
-
-terraform import cloudflare_zero_trust_access_application.backend "accounts/$ACC/<app-id>"
-terraform import cloudflare_zero_trust_access_service_token.dev   "accounts/$ACC/<token-id>"
-
-# Import can't recover the secret (Cloudflare emits it once), so rotate it. The
-# create_before_destroy lifecycle mints the replacement and re-points the app policy
-# before deleting the old token (Cloudflare won't delete a token a policy references):
-terraform apply -replace=cloudflare_zero_trust_access_service_token.dev
-make envfile
-```
+Applying with an empty `TF_VAR_github_client_secret` would overwrite the live GitHub
+OAuth secret — the long-standing stomp gotcha. Always read the plan first.

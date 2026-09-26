@@ -1,4 +1,6 @@
-output "frontend_records" {
-  description = "The managed frontend CNAMEs (hostname → target)."
-  value       = { for h, r in cloudflare_dns_record.frontend : h => "${r.type} → ${r.content} (proxied=${r.proxied})" }
+output "managed_records" {
+  description = "The records this root manages (hostname → target)."
+  value = {
+    (cloudflare_dns_record.mountainisout.name) = "${cloudflare_dns_record.mountainisout.type} → ${cloudflare_dns_record.mountainisout.content} (proxied=${cloudflare_dns_record.mountainisout.proxied})"
+  }
 }

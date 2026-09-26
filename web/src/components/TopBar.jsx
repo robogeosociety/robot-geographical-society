@@ -18,7 +18,6 @@ export default function TopBar() {
         <NavLink to="/availability" className="nav-tab">Availability</NavLink>
         <NavLink to="/demand" className="nav-tab">Demand</NavLink>
         <NavLink to="/calendar" className="nav-tab">Calendar</NavLink>
-        <NavLink to="/watch" className="nav-tab">Watch</NavLink>
         <NavLink to="/collectors" className="nav-tab">Collectors</NavLink>
         <NavLink to="/codex" className="nav-tab">Codex</NavLink>
       </nav>

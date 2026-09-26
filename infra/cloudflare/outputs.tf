@@ -9,8 +9,3 @@ output "r2_bucket_name" {
   description = "campsite-raw R2 bucket name (matches wrangler.toml [[r2_buckets]].bucket_name)."
   value       = cloudflare_r2_bucket.campsite_raw.name
 }
-
-output "pages_project_name" {
-  description = "RGS frontend Pages project name."
-  value       = cloudflare_pages_project.web.name
-}
