@@ -43,9 +43,11 @@ jobs:
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
+      # --ignore-scripts: the native postinstalls (sharp, via wrangler) are not needed
+      # to bundle the CLI and do not build on the mini.
       - name: Build the runner
         working-directory: backend
-        run: npm ci --no-audit --no-fund && npm run build:cli
+        run: npm ci --no-audit --no-fund --ignore-scripts && npm run build:cli
 
       - name: Run
         working-directory: backend
