@@ -1,30 +1,21 @@
-# infra/dns — DNS for the rgs frontend custom domains
+# infra/dns — DNS for robogeosociety.xyz
 
-Terraform that manages the **DNS records** for the deployed frontend custom domains:
+Terraform for the records left on `robogeosociety.xyz` after the Cloudflare
+decommission (2026-10-28, robogeosociety/infra `docs/cloudflare-decommission.md`):
 
 | Hostname | Record |
 | --- | --- |
-| `campsites.robogeosociety.xyz` | proxied `CNAME` → `robot-geographical-society-web.pages.dev` |
-| `collectors.robogeosociety.xyz` | proxied `CNAME` → `robot-geographical-society-web.pages.dev` |
+| `robogeosociety.xyz`, `www.robogeosociety.xyz` | proxied `A` → `192.0.2.1`, reserved for short URLs |
+| `mountainisout.robogeosociety.xyz` | DNS-only `CNAME` → `robogeosociety.github.io` (is-the-mountain-out) |
 
-Both are **gated by Cloudflare Access** (`../access/frontend.tf`). This is a private
-project — every hostname must require an Owner SSO login. **Apply the Access gate
-first**, so a record never resolves to an unauthenticated app.
-
-## Division of labour (why DNS is the only thing here)
-
-- **Access boundary** → `../access` (Terraform, vended `rgs-access-admin` token).
-- **Pages custom-domain attachment** → done on the **wrangler OAuth flow** (like the
-  Worker custom-domain bind), because OAuth carries Pages Write.
-- **DNS record** → here. OAuth has zone *read* but not DNS *write*, so the record is
-  managed with the least-privilege vended **`rgs-frontend-dns`** token (zone DNS Write,
-  `robogeosociety.xyz` only — nothing else).
+Gone: the Pages frontend CNAMEs (`campsites.`, `collectors.`), `dev.` (dev wiki), `api.`
+(the backend Worker) and `atlas.` (travel wiki, now on the tailnet).
 
 ## Auth
 
-Uses the **vended** `rgs-frontend-dns` token from `../../../cloudflare-tfvend` (read
-from its Terraform output — offline, no bootstrap token needed). State is local and
-gitignored.
+Uses the **vended** `rgs-frontend-dns` token from `cloudflare-tfvend` (zone DNS Write,
+this zone only), read from its Terraform output on the mini. State is on R2
+(`tommyroar-tfstate/rgs/dns.tfstate`); the backend creds are the vended `tfstate-r2` pair.
 
 ## Use
 
