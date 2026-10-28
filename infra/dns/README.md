@@ -11,6 +11,18 @@ decommission (2026-10-28, robogeosociety/infra `docs/cloudflare-decommission.md`
 Gone: the Pages frontend CNAMEs (`campsites.`, `collectors.`), `dev.` (dev wiki), `api.`
 (the backend Worker) and `atlas.` (travel wiki, now on the tailnet).
 
+## Short URLs
+
+`redirects.tf` attaches Single Redirect Rules to the reserved apex. They're free-plan,
+run no compute, and the edge answers `302` without dialing the placeholder origin.
+
+| URL | Target |
+| --- | --- |
+| `https://robogeosociety.xyz/dash` | `https://dash.tail59a169.ts.net/`: the mini dashboards, a Tailscale Service, tailnet-only |
+
+To add one, add an entry to `short_urls` and run `make apply`. The token needs
+**Dynamic URL Redirects Write** next to DNS Write (cloudflare-tfvend `tokens.tf`).
+
 ## Auth
 
 Uses the **vended** `rgs-frontend-dns` token from `cloudflare-tfvend` (zone DNS Write,

@@ -5,3 +5,8 @@ output "records" {
     { (cloudflare_dns_record.mountainisout.name) = "CNAME → ${cloudflare_dns_record.mountainisout.content} (proxied=false)" },
   )
 }
+
+output "short_urls" {
+  description = "The managed short URLs (URL → redirect target)."
+  value       = { for name, target in var.short_urls : "https://robogeosociety.xyz/${name}" => target }
+}
