@@ -1,0 +1,60 @@
+# Campsite collector + readiness on the Mac mini. Replaces the CollectorLoop and
+# ReadinessWorkflow Cloudflare Workflows (Cloudflare decommission, 2026-10-28:
+# robogeosociety/infra docs/cloudflare-decommission.md). See backend/src/node/cli.ts.
+#
+# Runs on the `public-pinned` runner group: this repo is public, so the group only
+# accepts this workflow file at refs/heads/main. A fork PR cannot reach the mini.
+# Data lives on the mini's dev disk at /Volumes/dev/rgs; the CLI refuses to run when
+# the disk isn't mounted.
+name: Campsites
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # collect
+    - cron: '17 9 * * *'     # readiness (daily)
+  workflow_dispatch:
+    inputs:
+      command:
+        description: collect or readiness
+        type: choice
+        options: [collect, readiness]
+        default: collect
+
+permissions:
+  contents: read
+
+concurrency:
+  group: campsites
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: [self-hosted, macOS, public-pinned]
+    timeout-minutes: 30
+    env:
+      RGS_DATA: /Volumes/dev/rgs
+      DISCORD_WEBHOOK_URL: ${{ secrets.RGS_DISCORD_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Build the runner
+        working-directory: backend
+        run: npm ci --no-audit --no-fund && npm run build:cli
+
+      - name: Run
+        working-directory: backend
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            cmd="${{ inputs.command }}"
+          elif [ "${{ github.event.schedule }}" = "17 9 * * *" ]; then
+            cmd=readiness
+          else
+            cmd=collect
+          fi
+          node dist/cli.mjs "$cmd"

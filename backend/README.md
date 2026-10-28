@@ -1,4 +1,20 @@
-# RGS backend worker
+# RGS backend
+
+> **Since 2026-10-28 the collector runs on the Mac mini, not Cloudflare.**
+> `.github/workflows/campsites.yml` runs `src/node/cli.ts` on the mini's `public-pinned`
+> runner: `collect` every 15 minutes (one wake of the old `CollectorLoop`, at most
+> `MAX_PER_RUN` campgrounds) and `readiness` daily. Data is on the dev disk at
+> `/Volumes/dev/rgs`: `bucket/` has the old `campsite-raw` layout (`raw/`, `summary/`,
+> `sites/`, `dlq/`, `scheduler/heartbeat.json`), `datasets/*.jsonl` replaces the
+> `campsite_*` Analytics Engine datasets. The Worker, its API, the Discord slash commands
+> and the KV inventory copy are gone (robogeosociety/infra
+> `docs/cloudflare-decommission.md`); the sections below describe the retired Worker.
+>
+> ```sh
+> npm run build:cli && RGS_DATA=/Volumes/dev/rgs node dist/cli.mjs collect   # or readiness
+> ```
+>
+> Set the `RGS_DISCORD_WEBHOOK_URL` repo secret to turn the hot-campground alerts back on.
 
 A Cloudflare Worker that serves the campsite API (Hono) **and** runs the
 availability collector as **Cloudflare Workflows** (durable execution). The raw

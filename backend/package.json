@@ -8,7 +8,8 @@
     "deploy": "wrangler deploy --minify",
     "seed": "node scripts/generate-seed.cjs && npx wrangler kv:bulk put kv-seed.json --binding=CAMPSITES --local",
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:cli": "esbuild src/node/cli.ts --bundle --platform=node --format=esm --target=node22 --alias:cloudflare:workers=./src/node/cf-stub.ts --outfile=dist/cli.mjs"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260219.0",
     "@types/node": "^25.3.0",
+    "esbuild": "^0.25.10",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18",
     "wrangler": "^4.67.0"
