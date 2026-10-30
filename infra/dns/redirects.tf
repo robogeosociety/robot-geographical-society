@@ -15,8 +15,10 @@ variable "short_urls" {
   description = "Path on robogeosociety.xyz (and www.) → redirect target. `/x` and `/x/` both match."
   type        = map(string)
   default = {
-    # Dashboards on the mini, tailnet-only (robogeosociety/infra docs/mini-dashboards.md).
-    dash = "https://dash.tail59a169.ts.net/"
+    # Kiro Crew dashboard on the MacBook Air (tailscale serve), tailnet-only. Interim:
+    # retarget to https://dash.tail59a169.ts.net/ once the mini's Tailscale Service exists
+    # (robogeosociety/infra docs/mini-dashboards.md).
+    dash = "https://macbook-air.tail59a169.ts.net/"
   }
 }
 
