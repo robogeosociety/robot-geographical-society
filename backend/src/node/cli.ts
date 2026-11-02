@@ -8,7 +8,8 @@
 //   node dist/cli.mjs collect      # collect what is due, probe one quarantined site
 //   node dist/cli.mjs readiness    # daily prediction-readiness row
 //
-// Data lives under RGS_DATA (default /Volumes/dev/rgs): bucket/ is the old campsite-raw
+// Data lives under RGS_DATA (default /Users/tommydoerr/rgs-data, the mini's internal
+// disk; see campsites.yml for why not /Volumes/dev): bucket/ is the old campsite-raw
 // layout, datasets/ the old Analytics Engine datasets as JSONL.
 import { existsSync } from "node:fs";
 import { join } from "node:path";
@@ -20,7 +21,7 @@ import { seedDue, mergeDue, selectDue, jitterMs, retryBackoffMs, type DueMap, ty
 import { notifyHotCampground } from "../discord";
 import { type CampgroundFile, emptyPartial, finalize, foldCampground, mergePartials } from "../readiness";
 
-const DATA = process.env.RGS_DATA ?? "/Volumes/dev/rgs";
+const DATA = process.env.RGS_DATA ?? "/Users/tommydoerr/rgs-data";
 const DAY_MS = 86_400_000;
 
 // Same tuning as the Workflow loop (see workflows.ts), plus a per-run cap: the loop
@@ -42,7 +43,7 @@ function env(): WfEnv {
   // A missing marker means the dev disk is not mounted (or the path moved): fail
   // closed rather than seeding a fresh scheduler state on the boot volume.
   if (!existsSync(join(DATA, ".rgs-data"))) {
-    console.error(`${DATA}/.rgs-data missing — is /Volumes/dev mounted? Refusing to run.`);
+    console.error(`${DATA}/.rgs-data missing — wrong RGS_DATA, or the data moved? Refusing to run.`);
     process.exit(1);
   }
   const datasets = join(DATA, "datasets");
