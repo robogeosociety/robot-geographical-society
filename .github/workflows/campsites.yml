@@ -4,8 +4,10 @@
 #
 # Runs on the `public-pinned` runner group: this repo is public, so the group only
 # accepts this workflow file at refs/heads/main. A fork PR cannot reach the mini.
-# Data lives on the mini's dev disk at /Volumes/dev/rgs; the CLI refuses to run when
-# the disk isn't mounted.
+# Data lives on the mini's internal disk at ~/rgs-data, not the external /Volumes/dev:
+# the runner is a LaunchDaemon, and a daemon gets EPERM on an external volume without a
+# Full Disk Access grant, which needs a human at the mini's screen. The CLI refuses to
+# run when the .rgs-data marker is missing.
 name: Campsites
 
 on:
@@ -32,7 +34,7 @@ jobs:
     runs-on: [self-hosted, macOS, public-pinned]
     timeout-minutes: 30
     env:
-      RGS_DATA: /Volumes/dev/rgs
+      RGS_DATA: /Users/tommydoerr/rgs-data
       DISCORD_WEBHOOK_URL: ${{ secrets.RGS_DISCORD_WEBHOOK_URL }}
     steps:
       - uses: actions/checkout@v4

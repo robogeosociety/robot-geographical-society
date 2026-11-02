@@ -3,15 +3,16 @@
 > **Since 2026-10-28 the collector runs on the Mac mini, not Cloudflare.**
 > `.github/workflows/campsites.yml` runs `src/node/cli.ts` on the mini's `public-pinned`
 > runner: `collect` every 15 minutes (one wake of the old `CollectorLoop`, at most
-> `MAX_PER_RUN` campgrounds) and `readiness` daily. Data is on the dev disk at
-> `/Volumes/dev/rgs`: `bucket/` has the old `campsite-raw` layout (`raw/`, `summary/`,
+> `MAX_PER_RUN` campgrounds) and `readiness` daily. Data is on the mini's internal disk at
+> `~/rgs-data` (moved off `/Volumes/dev` 2026-11-02 so the daemon runner needs no Full
+> Disk Access): `bucket/` has the old `campsite-raw` layout (`raw/`, `summary/`,
 > `sites/`, `dlq/`, `scheduler/heartbeat.json`), `datasets/*.jsonl` replaces the
 > `campsite_*` Analytics Engine datasets. The Worker, its API, the Discord slash commands
 > and the KV inventory copy are gone (robogeosociety/infra
 > `docs/cloudflare-decommission.md`); the sections below describe the retired Worker.
 >
 > ```sh
-> npm run build:cli && RGS_DATA=/Volumes/dev/rgs node dist/cli.mjs collect   # or readiness
+> npm run build:cli && RGS_DATA=~/rgs-data node dist/cli.mjs collect   # or readiness
 > ```
 >
 > Set the `RGS_DISCORD_WEBHOOK_URL` repo secret to turn the hot-campground alerts back on.
